@@ -31,6 +31,7 @@ impl Logger {
                 writeln!(buf, "{} - {}", style.value(record.level()), record.args())
             })
             .filter(None, log::LevelFilter::Info)
+            .filter(Some("backend"), log::LevelFilter::Trace)
             .init();
     }
 }

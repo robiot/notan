@@ -1,72 +1,66 @@
 use axum::{response::IntoResponse, Json};
 use hyper::StatusCode;
+use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 pub mod health;
 pub mod root;
 
-#[derive(serde::Serialize)]
-#[serde(rename_all = "lowercase")]
-pub enum ErrorLocation {
-    Body,
-    Header,
-    Path,
-}
-
-#[derive(serde::Serialize)]
+#[derive(Serialize)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum ResponseStatus {
     Success,
     Failure,
 }
 
-#[derive(serde::Serialize)]
-pub struct ErrorField {
-    pub field: String,
-    pub description: String,
-    pub location: ErrorLocation,
-}
-
-#[derive(serde::Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ResponseError {
     pub name: String,
     pub message: String,
 }
 
-#[derive(serde::Serialize)]
-pub struct Response {
+#[derive(Serialize)]
+pub struct Response<T> {
     pub status: ResponseStatus,
     #[serde(skip_serializing)]
     pub status_code: StatusCode,
     pub errors: Option<Vec<ResponseError>>,
-    pub fields: Option<Vec<ErrorField>>,
+    pub data: Option<T>,
 }
 
-impl Response {
-    pub fn new_success(status: StatusCode) -> Self {
-        Response {
-            status: ResponseStatus::Success,
-            status_code: status,
-            errors: None,
-            fields: None,
-        }
-    }
+// Non-generic variant for errors
+pub type ErrorResponse = Response<serde_json::Value>;
 
-    pub fn new_failure(
-        status: StatusCode,
-        errors: Vec<ResponseError>,
-        fields: Vec<ErrorField>,
-    ) -> Self {
+impl ErrorResponse {
+    pub fn new_failure(status: StatusCode, errors: Vec<ResponseError>) -> Self {
         Response {
             status: ResponseStatus::Failure,
             status_code: status,
             errors: Some(errors),
-            fields: Some(fields),
+            data: None,
         }
     }
 }
 
-impl IntoResponse for Response {
+// Implementations for the generic Response struct
+impl<T> Response<T>
+where
+    T: Serialize,
+{
+    pub fn new_success(status: StatusCode, data: Option<T>) -> Self {
+        Response {
+            status: ResponseStatus::Success,
+            status_code: status,
+            errors: None,
+            data,
+        }
+    }
+}
+
+impl<T> IntoResponse for Response<T>
+where
+    T: Serialize,
+{
     fn into_response(self) -> axum::response::Response {
         let status = self.status_code;
         let json: Json<Value> = self.into();
@@ -75,14 +69,20 @@ impl IntoResponse for Response {
     }
 }
 
-impl From<Response> for Json<Value> {
-    fn from(value: Response) -> Self {
+impl<T> From<Response<T>> for Json<Value>
+where
+    T: Serialize,
+{
+    fn from(value: Response<T>) -> Self {
         Json(json!(value))
     }
 }
 
-impl Default for Response {
+impl<T> Default for Response<T>
+where
+    T: serde::Serialize,
+{
     fn default() -> Self {
-        Response::new_success(StatusCode::OK)
+        Response::new_success(StatusCode::OK, None)
     }
 }

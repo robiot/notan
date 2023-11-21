@@ -83,7 +83,6 @@ impl IntoResponse for Error {
                     name: "missing_name".to_string(),
                     message: "Missing name for file".to_string(),
                 }],
-                vec![],
             ),
             Error::MultiPartMissingFiles => routes::Response::new_failure(
                 StatusCode::BAD_GATEWAY,
@@ -91,7 +90,6 @@ impl IntoResponse for Error {
                     name: "missing_files".to_string(),
                     message: "Missing files".to_string(),
                 }],
-                vec![],
             ),
             Error::UserDoesNotExist => routes::Response::new_failure(
                 StatusCode::NOT_FOUND,
@@ -99,7 +97,6 @@ impl IntoResponse for Error {
                     name: "user_not_found".to_string(),
                     message: "User was not found".to_string(),
                 }],
-                vec![],
             ),
             Error::Unauthorized => routes::Response::new_failure(
                 StatusCode::UNAUTHORIZED,
@@ -107,12 +104,10 @@ impl IntoResponse for Error {
                     name: "unauthorized".to_string(),
                     message: "Unauthorized".to_string(),
                 }],
-                vec![],
             ),
             Error::UnprocessableEntity(identifier) => routes::Response::new_failure(
                 StatusCode::UNPROCESSABLE_ENTITY,
                 vec![identifier],
-                vec![],
             ),
             _ => routes::Response::new_failure(
                 StatusCode::INTERNAL_SERVER_ERROR,
@@ -121,7 +116,6 @@ impl IntoResponse for Error {
                     message: "This error should not have occurred. Please fix it yourself."
                         .to_string(),
                 }],
-                vec![],
             ),
         }
         .into_response()
