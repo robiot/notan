@@ -5,6 +5,7 @@ use serde_json::{json, Value};
 
 pub mod health;
 pub mod root;
+pub mod auth;
 
 #[derive(Serialize)]
 #[serde(rename_all = "UPPERCASE")]

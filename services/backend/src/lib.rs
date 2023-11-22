@@ -92,6 +92,7 @@ url: http://{}:{}
     let app: Router = Router::new()
         .route("/", get(routes::root::handler))
         .route("/health", get(routes::health::handler))
+        .nest("/auth", routes::auth::router(app_state.clone()))
         .layer(
             CorsLayer::new()
                 .allow_methods([Method::GET, Method::POST, Method::DELETE])
