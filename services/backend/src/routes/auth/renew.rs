@@ -1,13 +1,29 @@
-use crate::{error::Result, routes::Response};
+use crate::{auth::check_auth, error::Result, jwt, routes::Response, state::AppState};
 
 use {
-    crate::state::AppState, axum::extract::State, serde::Serialize,
+    axum::extract::State,
+    hyper::{HeaderMap, StatusCode},
+    serde::Serialize,
     std::sync::Arc,
 };
 
 #[derive(Serialize)]
-pub struct XResponse {}
+pub struct RenewResponse {
+    token: String,
+}
 
-pub async fn handler(State(_state): State<Arc<AppState>>) -> Result<Response<XResponse>> {
-    todo!("Implement me! 2");
+pub async fn handler(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+) -> Result<Response<RenewResponse>> {
+    let config = &state.config;
+
+    let id = check_auth(headers.clone(), state.clone()).await?;
+
+    let token = jwt::user::User::generate(&id, &config.jwt_secret)?;
+
+    Ok(Response::new_success(
+        StatusCode::OK,
+        Some(RenewResponse { token }),
+    ))
 }

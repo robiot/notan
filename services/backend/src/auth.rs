@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::{
     error::{self, Error},
-    state::AppState,
+    state::AppState, jwt, schemas,
 };
 
 use hyper::{header, HeaderMap};
@@ -20,14 +20,44 @@ pub fn get_jwt_from_headers(headers: HeaderMap) -> Option<String> {
         })
 }
 
-pub async fn check_auth(_headers: HeaderMap, _state: Arc<AppState>) -> bool {
-    true
-}
+/// Checks if the request is authenticated.
+/// 
+/// If the request is authenticated, returns the user id.
+/// 
+/// If the request is not authenticated, returns an error.
+pub async fn check_auth(headers: HeaderMap, state: Arc<AppState>) -> error::Result<String> {
+    let config = &state.config;
+    let jwt = match get_jwt_from_headers(headers.clone()) {
+        Some(jwt) => jwt,
+        None => {
+            return Err(Error::Unauthorized);
+        }
+    };
 
-pub async fn use_auth(headers: HeaderMap, state: Arc<AppState>) -> error::Result<()> {
-    if check_auth(headers, state).await == false {
-        return Err(Error::Unauthorized);
-    }
+    let token_data = match jwt::user::User::decode(&jwt, &config.jwt_secret) {
+        Ok(token_data) => token_data,
+        Err(_) => {
+            return Err(Error::Unauthorized);
+        }
+    };
 
-    Ok(())
+    // check if exists in db
+    match sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
+        r#"SELECT * FROM public.users WHERE id = $1"#,
+    )
+    .bind(token_data.id.clone())
+    .fetch_one(&state.db)
+    .await
+    {
+        Ok(user) => user,
+        Err(error) => {
+            if let sqlx::Error::RowNotFound = error {
+                return Err(Error::Unauthorized);
+            } else {
+                return Err(error.into());
+            }
+        }
+    };
+
+    Ok(token_data.id)
 }
