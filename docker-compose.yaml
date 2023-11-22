@@ -2,6 +2,7 @@ version: '3.9'
 services:
   postgres:
       image: postgres
+      profiles: ["services"]
       ports:
         - "5432:5432"
       environment:
@@ -11,6 +12,7 @@ services:
 
   redis:
       image: "redis:6.2.13-alpine3.18"
+      profiles: ["services"]
       environment:
           - ALLOW_EMPTY_PASSWORD=yes
       volumes:
@@ -20,6 +22,7 @@ services:
 
   backend:
       build: services/backend
+      profiles: ["backend"]
       volumes:
         - ./services/backend:/usr/src/app
         - backend-target:/usr/src/app/target

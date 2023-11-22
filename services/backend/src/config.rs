@@ -1,14 +1,14 @@
 use {crate::error::Result, serde::Deserialize};
 
-fn default_db() -> String {
-    "postgres://postgres:root@postgres:5432/postgres".to_string()
+fn default_port() -> u16 {
+    8000
 }
 
 #[derive(Deserialize, Debug, Clone, Eq, PartialEq)]
 pub struct Config {
+    #[serde(default = "default_port")]
     pub port: u16,
 
-    #[serde(default = "default_db")]
     pub database_url: String,
     pub redis_url: String,
 
