@@ -69,12 +69,12 @@ pub async fn check_auth_unverified_email_allowed(
 pub async fn check_auth(headers: HeaderMap, state: Arc<AppState>) -> error::Result<String> {
     let id = check_auth_unverified_email_allowed(headers.clone(), state.clone()).await?;
 
-    return Ok(id);
-    // check if exists in db
+
+    // For if we want to require verified emails
     // match sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
-    //     r#"SELECT * FROM public.users WHERE id = $1"#,
+    //     r#"SELECT * FROM public.users WHERE id = $1 AND verified_mail = true"#,
     // )
-    // .bind(token_data.id.clone())
+    // .bind(id.clone())
     // .fetch_one(&state.db)
     // .await
     // {
@@ -88,5 +88,5 @@ pub async fn check_auth(headers: HeaderMap, state: Arc<AppState>) -> error::Resu
     //     }
     // };
 
-    // Ok(token_data.id)
+    return Ok(id);
 }
