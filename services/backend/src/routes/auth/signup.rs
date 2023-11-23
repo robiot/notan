@@ -1,13 +1,132 @@
-use crate::{error::Result, routes::Response};
+use std::net::SocketAddr;
+
+use crate::{
+    error::{Error, Result},
+    jwt,
+    routes::{Response, ResponseError},
+    schemas,
+    state::AppState,
+};
 
 use {
-    crate::state::AppState, axum::extract::State, serde::Serialize,
+    argon2::{password_hash::SaltString, Argon2, PasswordHasher},
+    axum::{
+        extract::{ConnectInfo, State},
+        Json,
+    },
+    hyper::{HeaderMap, StatusCode},
+    rand::rngs::OsRng,
+    serde::{Deserialize, Serialize},
     std::sync::Arc,
 };
 
-#[derive(Serialize)]
-pub struct XResponse {}
+#[derive(Serialize, Deserialize)]
+pub struct SignupBody {
+    pub email: String,
+    pub username: String,
+    pub password: String,
+}
 
-pub async fn handler(State(_state): State<Arc<AppState>>) -> Result<Response<XResponse>> {
-    todo!("Implement me! 3");
+#[derive(Serialize)]
+pub struct SignupResponse {
+    token: String,
+}
+
+pub async fn handler(
+    State(state): State<Arc<AppState>>,
+    _headers: HeaderMap,
+    ConnectInfo(addr): ConnectInfo<SocketAddr>,
+    Json(body): Json<SignupBody>,
+) -> Result<Response<SignupResponse>> {
+    if body.password.len() < 8 {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Password must be at least 8 characters long".to_string(),
+            name: "password_invalid".to_string(),
+        }));
+    }
+
+    if body.username.len() < 4 {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Username is too short".to_string(),
+            name: "username_short".to_string(),
+        }));
+    }
+
+    if body.username.len() > 12 {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Username is too long".to_string(),
+            name: "username_long".to_string(),
+        }));
+    }
+
+    // Check if user already exists with email
+    match sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
+        r#"SELECT * FROM public.users WHERE email = $1"#,
+    )
+    .bind(body.email.clone())
+    .fetch_optional(&state.db)
+    .await
+    {
+        Ok(user) => {
+            if user.is_some() {
+                return Err(Error::UnprocessableEntity(ResponseError {
+                    message: "Another account with this mail already exists".to_string(),
+                    name: "email_exists".to_string(),
+                }));
+            }
+        }
+        Err(error) => return Err(error.into()),
+    };
+
+    // Check if user already exists with username
+    match sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
+        r#"SELECT * FROM public.users WHERE username = $1"#,
+    )
+    .bind(body.username.clone())
+    .fetch_optional(&state.db)
+    .await
+    {
+        Ok(user) => {
+            if user.is_some() {
+                return Err(Error::UnprocessableEntity(ResponseError {
+                    message: "Another account with this username already exists".to_string(),
+                    name: "username_exists".to_string(),
+                }));
+            }
+        }
+        Err(error) => return Err(error.into()),
+    };
+
+    let salt = SaltString::generate(&mut OsRng);
+
+    // Argon2 with default params (Argon2id v19)
+    let argon2 = Argon2::default();
+
+    let password_hash = match argon2.hash_password(body.password.as_bytes(), &salt) {
+        Ok(hash) => hash.to_string(),
+        Err(_) => return Err(Error::InternalServerError),
+    };
+
+    let user = sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
+        r#"
+        INSERT INTO public.users (verified_mail, username, email, password, ip)
+        VALUES (false, $1, $2, $3, $4)
+        RETURNING *;
+        "#,
+    )
+    .bind(body.username.clone())
+    .bind(body.email.clone())
+    .bind(password_hash)
+    .bind(addr.ip().to_string())
+    .fetch_one(&state.db)
+    .await?;
+
+    let token = jwt::user::User::generate(&user.id, &state.config.jwt_secret)?;
+
+    Ok(Response::new_success(
+        StatusCode::OK,
+        Some(SignupResponse {
+            token,
+        }),
+    ))
 }

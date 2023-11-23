@@ -3,6 +3,7 @@ use time::OffsetDateTime;
 use crate::error::Result;
 
 pub mod user;
+pub mod email;
 
 pub fn normalize_timestamp(time: OffsetDateTime) -> Result<usize> {
     return Ok(time

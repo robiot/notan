@@ -5,5 +5,8 @@ CREATE TABLE IF NOT EXISTS public.users (
     email text,
     password text,
     ip text,
-    created_at timestamptz default now()
+    created_at timestamptz default now(),
+
+    constraint email_unique UNIQUE (email),
+    constraint username_unique UNIQUE (username)
 );
