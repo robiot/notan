@@ -5,7 +5,7 @@ use crate::{
     jwt,
     routes::{Response, ResponseError},
     schemas,
-    state::AppState,
+    state::AppState, utils::validation,
 };
 
 use {
@@ -38,26 +38,9 @@ pub async fn handler(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     Json(body): Json<SignupBody>,
 ) -> Result<Response<SignupResponse>> {
-    if body.password.len() < 8 {
-        return Err(Error::UnprocessableEntity(ResponseError {
-            message: "Password must be at least 8 characters long".to_string(),
-            name: "password_invalid".to_string(),
-        }));
-    }
-
-    if body.username.len() < 4 {
-        return Err(Error::UnprocessableEntity(ResponseError {
-            message: "Username is too short".to_string(),
-            name: "username_short".to_string(),
-        }));
-    }
-
-    if body.username.len() > 12 {
-        return Err(Error::UnprocessableEntity(ResponseError {
-            message: "Username is too long".to_string(),
-            name: "username_long".to_string(),
-        }));
-    }
+    validation::validate_password(body.password.clone())?;
+    validation::validate_username(body.username.clone())?;
+    validation::validate_email(body.email.clone())?;
 
     // Check if user already exists with email
     match sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
