@@ -1,9 +1,9 @@
-use crate::error::Result;
+use crate::{error::Result, state::AppState};
 
 use super::Response;
 
 use {
-    crate::state::AppState, axum::extract::State, hyper::StatusCode, serde::Serialize,
+    axum::extract::State, hyper::StatusCode, serde::Serialize,
     std::sync::Arc,
 };
 

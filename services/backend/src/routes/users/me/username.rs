@@ -1,10 +1,11 @@
 use axum::Json;
 use hyper::StatusCode;
 
-use crate::{auth::check_auth, error::Result, routes::Response, utils::validation};
+use crate::{
+    auth::check_auth, error::Result, routes::Response, state::AppState, utils::validation,
+};
 
 use {
-    crate::state::AppState,
     axum::extract::State,
     hyper::HeaderMap,
     serde::{Deserialize, Serialize},

@@ -60,6 +60,7 @@ pub enum Error {
     #[error("User does not exist")]
     UserDoesNotExist,
 
+    // Generic errors
     #[error("Unauthorized")]
     Unauthorized,
 

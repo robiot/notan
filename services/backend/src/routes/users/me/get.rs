@@ -1,11 +1,8 @@
 use hyper::StatusCode;
 
-use crate::{auth::check_auth, error::Result, routes::Response, schemas};
+use crate::{auth::check_auth, error::Result, routes::Response, schemas, state::AppState};
 
-use {
-    crate::state::AppState, axum::extract::State, hyper::HeaderMap, serde::Serialize,
-    std::sync::Arc,
-};
+use {axum::extract::State, hyper::HeaderMap, serde::Serialize, std::sync::Arc};
 
 #[derive(Serialize)]
 pub struct UserGetResponse {
