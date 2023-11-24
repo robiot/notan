@@ -9,5 +9,7 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
     Router::new()
         .route("/@me", get(me::get::handler))
         .route("/@me/username", put(me::username::handler))
+        .route("/@me/email", put(me::email::handler))
+        .route("/@me/password", put(me::password::handler))
         .with_state(app_state)
 }
