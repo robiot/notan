@@ -7,6 +7,7 @@ pub mod health;
 pub mod root;
 pub mod auth;
 pub mod users;
+pub mod notes;
 
 #[derive(Serialize)]
 #[serde(rename_all = "UPPERCASE")]
