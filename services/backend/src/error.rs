@@ -61,6 +61,9 @@ pub enum Error {
     UserDoesNotExist,
 
     // Generic errors
+    #[error("Not found")]
+    NotFound,
+
     #[error("Unauthorized")]
     Unauthorized,
 
@@ -78,7 +81,16 @@ impl IntoResponse for Error {
     fn into_response(self) -> Response {
         log::error!("responding with error ({:?})", self);
         match self {
-            Error::MultiPartMissingName=> routes::Response::new_failure(
+            Error::Database(sqlx::Error::RowNotFound) | Error::NotFound => {
+                routes::Response::new_failure(
+                    StatusCode::NOT_FOUND,
+                    vec![ResponseError {
+                        name: "not_found".to_string(),
+                        message: "Not found".to_string(),
+                    }],
+                )
+            }
+            Error::MultiPartMissingName => routes::Response::new_failure(
                 StatusCode::BAD_GATEWAY,
                 vec![ResponseError {
                     name: "missing_name".to_string(),
@@ -106,10 +118,9 @@ impl IntoResponse for Error {
                     message: "Unauthorized".to_string(),
                 }],
             ),
-            Error::UnprocessableEntity(identifier) => routes::Response::new_failure(
-                StatusCode::UNPROCESSABLE_ENTITY,
-                vec![identifier],
-            ),
+            Error::UnprocessableEntity(identifier) => {
+                routes::Response::new_failure(StatusCode::UNPROCESSABLE_ENTITY, vec![identifier])
+            }
             _ => routes::Response::new_failure(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 vec![ResponseError {

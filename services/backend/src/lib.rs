@@ -106,6 +106,7 @@ url: http://{}:{}
                     header::AUTHORIZATION,
                 ]),
         )
+        .fallback(routes::not_found::handler)
         .with_state(app_state);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
