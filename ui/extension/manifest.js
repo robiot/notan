@@ -11,11 +11,11 @@ const manifest = {
   description: "Note taking for the web",
   permissions: ['storage', 'sidePanel'],
   background: {
-    service_worker: 'src/pages/background/index.js',
+    service_worker: 'src/core/background/index.js',
     type: 'module',
   },
   action: {
-    default_popup: 'src/pages/popup/index.html',
+    default_popup: 'src/core/popup/index.html',
     default_icon: 'icon-34.png',
   },
   icons: {

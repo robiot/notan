@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  width: 380px;
+  height: 260px;
+  margin: 0;
+}
+
+html, body {
+  font-family: "Noto Sans", sans-serif;
+}

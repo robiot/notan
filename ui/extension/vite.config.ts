@@ -9,7 +9,7 @@ import watchRebuild from './utils/plugins/watch-rebuild';
 
 const rootDir = resolve(__dirname);
 const srcDir = resolve(rootDir, 'src');
-const pagesDir = resolve(srcDir, 'pages');
+const coreDir = resolve(srcDir, 'core');
 const assetsDir = resolve(srcDir, 'assets');
 const outDir = resolve(rootDir, 'dist');
 const publicDir = resolve(rootDir, 'public');
@@ -27,7 +27,7 @@ export default defineConfig({
       '@root': rootDir,
       '@src': srcDir,
       '@assets': assetsDir,
-      '@pages': pagesDir,
+      '@core': coreDir,
     },
   },
   plugins: [
@@ -50,12 +50,12 @@ export default defineConfig({
     emptyOutDir: !isDev,
     rollupOptions: {
       input: {
-        content: resolve(pagesDir, 'content', 'index.ts'),
-        background: resolve(pagesDir, 'background', 'index.ts'),
-        popup: resolve(pagesDir, 'popup', 'index.html'),
+        // content: resolve(coreDir, 'content', 'index.ts'),
+        background: resolve(coreDir, 'background', 'index.ts'),
+        popup: resolve(coreDir, 'popup', 'index.html'),
       },
       output: {
-        entryFileNames: 'src/pages/[name]/index.js',
+        entryFileNames: 'src/core/[name]/index.js',
         chunkFileNames: isDev ? 'assets/js/[name].js' : 'assets/js/[name].[hash].js',
         assetFileNames: assetInfo => {
           const { name } = path.parse(assetInfo.name);
