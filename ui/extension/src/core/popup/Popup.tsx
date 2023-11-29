@@ -1,19 +1,15 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import { HomePage } from "./pages/home/HomePage";
 
 export const Popup = () => {
+  const location = useLocation();
+
   return (
-    <BrowserRouter>
-      <Routes
-      // location={}
-      >
-        <Route path="/">
-          {/* element={<div />} <Slot /> */}
-          <Route index element={<HomePage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Routes location={location.pathname}>
+      <Route path="/">
+        <Route index element={<HomePage />} />
+      </Route>
+    </Routes>
   );
 };

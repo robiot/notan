@@ -4,6 +4,7 @@ import "./styles/index.css";
 import { Popup } from "@root/src/core/popup/Popup";
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { MemoryRouter } from "react-router-dom";
 import refreshOnUpdate from "virtual:reload-on-update-in-view";
 
 refreshOnUpdate("core/popup");
@@ -19,7 +20,9 @@ function init() {
 
   root.render(
     <React.StrictMode>
-      <Popup />
+      <MemoryRouter>
+        <Popup />
+      </MemoryRouter>
     </React.StrictMode>,
   );
 }
