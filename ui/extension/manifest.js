@@ -1,4 +1,4 @@
-import packageJson from './package.json' assert { type: 'json' };
+import packageJson from "./package.json" assert { type: "json" };
 
 /**
  * After changing, please reload the extension at `chrome://extensions`
@@ -9,17 +9,17 @@ const manifest = {
   name: "Notan",
   version: packageJson.version,
   description: "Note taking for the web",
-  permissions: ['storage', 'sidePanel'],
+  permissions: ["storage", "sidePanel"],
   background: {
-    service_worker: 'src/core/background/index.js',
-    type: 'module',
+    service_worker: "src/core/background/index.js",
+    type: "module",
   },
   action: {
-    default_popup: 'src/core/popup/index.html',
-    default_icon: 'icon-34.png',
+    default_popup: "src/core/popup/index.html",
+    default_icon: "icon-34.png",
   },
   icons: {
-    128: 'icon-128.png',
+    128: "icon-128.png",
   },
   content_scripts: [
     // {
@@ -31,8 +31,8 @@ const manifest = {
   ],
   web_accessible_resources: [
     {
-      resources: ['assets/js/*.js', 'assets/css/*.css', 'icon-128.png', 'icon-34.png'],
-      matches: ['*://*/*'],
+      resources: ["assets/js/*.js", "assets/css/*.css", "icon-128.png", "icon-34.png"],
+      matches: ["*://*/*"],
     },
   ],
 };

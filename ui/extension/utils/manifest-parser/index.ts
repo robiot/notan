@@ -1,13 +1,13 @@
 type Manifest = chrome.runtime.ManifestV3;
 
 class ManifestParser {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
 
   static convertManifestToString(manifest: Manifest): string {
     if (process.env.__FIREFOX__) {
       manifest = this.convertToFirefoxCompatibleManifest(manifest);
     }
+
     return JSON.stringify(manifest, null, 2);
   }
 
@@ -18,7 +18,7 @@ class ManifestParser {
 
     manifestCopy.background = {
       scripts: [manifest.background?.service_worker],
-      type: 'module',
+      type: "module",
     };
     manifestCopy.options_ui = {
       page: manifest.options_page,
@@ -28,6 +28,7 @@ class ManifestParser {
       extension_pages: "script-src 'self'; object-src 'self'",
     };
     delete manifestCopy.options_page;
+
     return manifestCopy as Manifest;
   }
 }

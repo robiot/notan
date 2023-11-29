@@ -1,9 +1,10 @@
-import { clearTimeout } from 'timers';
+import { clearTimeout } from "node:timers";
 
-export function debounce<A extends unknown[]>(callback: (...args: A) => void, delay: number) {
+export function debounce<A extends unknown[]>(callback: (...arguments_: A) => void, delay: number) {
   let timer: NodeJS.Timeout;
-  return function (...args: A) {
+
+  return function (...arguments_: A) {
     clearTimeout(timer);
-    timer = setTimeout(() => callback(...args), delay);
+    timer = setTimeout(() => callback(...arguments_), delay);
   };
 }

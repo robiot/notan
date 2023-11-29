@@ -1,6 +1,7 @@
-import initReloadClient from '../initReloadClient';
+import initReloadClient from "../initReloadClient";
 
 export default function addHmrIntoScript(watchPath: string) {
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   const reload = () => {
     chrome.runtime.reload();
   };

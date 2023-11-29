@@ -1,0 +1,23 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
+  "extends": ["plugin:robiot/recommended"],
+  "ignorePatterns": ["!**/*", "*.cjs"],
+  "plugins": ["robiot"],
+  "env": {
+    "node": true,
+    "browser": true,
+    "webextensions": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "globals": {
+    "JSX": "readonly",
+    "NodeJS": true
+  }
+}

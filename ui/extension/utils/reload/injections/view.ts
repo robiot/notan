@@ -1,4 +1,4 @@
-import initReloadClient from '../initReloadClient';
+import initReloadClient from "../initReloadClient";
 
 export default function addHmrIntoView(watchPath: string) {
   let pendingReload = false;
@@ -9,8 +9,10 @@ export default function addHmrIntoView(watchPath: string) {
       // disable reload when tab is hidden
       if (document.hidden) {
         pendingReload = true;
+
         return;
       }
+
       reload();
     },
   });
@@ -25,5 +27,5 @@ export default function addHmrIntoView(watchPath: string) {
   function reloadWhenTabIsVisible(): void {
     !document.hidden && pendingReload && reload();
   }
-  document.addEventListener('visibilitychange', reloadWhenTabIsVisible);
+  document.addEventListener("visibilitychange", reloadWhenTabIsVisible);
 }

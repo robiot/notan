@@ -1,10 +1,19 @@
 import React from "react";
-import logo from "@assets/img/logo.svg";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import { HomePage } from "./pages/home/HomePage";
 
 export const Popup = () => {
   return (
-    <div className="text-xl">
-      你好我是可以
-    </div>
+    <BrowserRouter>
+      <Routes
+      // location={}
+      >
+        <Route path="/">
+          {/* element={<div />} <Slot /> */}
+          <Route index element={<HomePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };

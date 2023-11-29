@@ -1,6 +1,6 @@
 declare global {
   namespace NodeJS {
-    interface ProcessEnv {
+    interface ProcessEnvironment {
       __DEV__: string;
       __FIREFOX__: string;
     }
