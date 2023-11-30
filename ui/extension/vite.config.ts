@@ -1,33 +1,36 @@
+/* eslint-disable unicorn/prevent-abbreviations */
 /// <reference types="vitest" />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path, { resolve } from 'path';
-import makeManifest from './utils/plugins/make-manifest';
-import customDynamicImport from './utils/plugins/custom-dynamic-import';
-import addHmr from './utils/plugins/add-hmr';
-import watchRebuild from './utils/plugins/watch-rebuild';
+import react from "@vitejs/plugin-react";
+import path, { resolve } from "node:path";
+import { defineConfig } from "vite";
+
+import addHmr from "./utils/plugins/add-hmr";
+import customDynamicImport from "./utils/plugins/custom-dynamic-import";
+import makeManifest from "./utils/plugins/make-manifest";
+import watchRebuild from "./utils/plugins/watch-rebuild";
 
 const rootDir = resolve(__dirname);
-const srcDir = resolve(rootDir, 'src');
-const coreDir = resolve(srcDir, 'core');
-const assetsDir = resolve(srcDir, 'assets');
-const outDir = resolve(rootDir, 'dist');
-const publicDir = resolve(rootDir, 'public');
+const srcDir = resolve(rootDir, "src");
+const coreDir = resolve(srcDir, "core");
+// const assetsDir = resolve(srcDir, "assets");
+const outDir = resolve(rootDir, "dist");
+const publicDir = resolve(rootDir, "public");
 
-const isDev = process.env.__DEV__ === 'true';
-const isProduction = !isDev;
+const isDevelopment = process.env.__DEV__ === "true";
+const isProduction = !isDevelopment;
 
 // ENABLE HMR IN BACKGROUND SCRIPT
 const enableHmrInBackgroundScript = true;
-const cacheInvalidationKeyRef = { current: generateKey() };
+const cacheInvalidationKeyReference = { current: generateKey() };
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@root': rootDir,
-      '@src': srcDir,
-      '@assets': assetsDir,
-      '@core': coreDir,
+      // "@root": rootDir,
+      // "@src": srcDir,
+      // "@assets": assetsDir,
+      // "@core": coreDir,
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   plugins: [
@@ -37,7 +40,7 @@ export default defineConfig({
     react(),
     customDynamicImport(),
     addHmr({ background: enableHmrInBackgroundScript, view: true }),
-    isDev && watchRebuild({ afterWriteBundle: regenerateCacheInvalidationKey }),
+    isDevelopment && watchRebuild({ afterWriteBundle: regenerateCacheInvalidationKey }),
   ],
   publicDir,
   build: {
@@ -47,19 +50,20 @@ export default defineConfig({
     minify: isProduction,
     modulePreload: false,
     reportCompressedSize: isProduction,
-    emptyOutDir: !isDev,
+    emptyOutDir: !isDevelopment,
     rollupOptions: {
       input: {
         // content: resolve(coreDir, 'content', 'index.ts'),
-        background: resolve(coreDir, 'background', 'index.ts'),
-        popup: resolve(coreDir, 'popup', 'index.html'),
+        background: resolve(coreDir, "background", "index.ts"),
+        popup: resolve(coreDir, "popup", "index.html"),
       },
       output: {
-        entryFileNames: 'src/core/[name]/index.js',
-        chunkFileNames: isDev ? 'assets/js/[name].js' : 'assets/js/[name].[hash].js',
-        assetFileNames: assetInfo => {
+        entryFileNames: "src/core/[name]/index.js",
+        chunkFileNames: isDevelopment ? "assets/js/[name].js" : "assets/js/[name].[hash].js",
+        assetFileNames: (assetInfo) => {
           const { name } = path.parse(assetInfo.name);
-          const assetFileName = name === 'contentStyle' ? `${name}${getCacheInvalidationKey()}` : name;
+          const assetFileName = name === "contentStyle" ? `${name}${getCacheInvalidationKey()}` : name;
+
           return `assets/[ext]/${assetFileName}.chunk.[ext]`;
         },
       },
@@ -68,13 +72,14 @@ export default defineConfig({
 });
 
 function getCacheInvalidationKey() {
-  return cacheInvalidationKeyRef.current;
+  return cacheInvalidationKeyReference.current;
 }
 function regenerateCacheInvalidationKey() {
-  cacheInvalidationKeyRef.current = generateKey();
-  return cacheInvalidationKeyRef;
+  cacheInvalidationKeyReference.current = generateKey();
+
+  return cacheInvalidationKeyReference;
 }
 
 function generateKey(): string {
-  return `${Date.now().toFixed()}`;
+  return `${Date.now().toFixed(0)}`;
 }
