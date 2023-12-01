@@ -22,7 +22,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (!pathname.startsWith("/auth") && !auth.isAuthorized) {
-      navigate("/login");
+      navigate("/auth/login");
       setIsLoadingAuthCheck(false);
     } else {
       setIsLoadingAuthCheck(false);
@@ -43,7 +43,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
 
           auth.logout();
 
-          navigate("/login");
+          navigate("/auth/login");
         }
       });
 

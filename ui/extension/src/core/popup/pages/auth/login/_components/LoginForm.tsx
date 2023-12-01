@@ -26,8 +26,9 @@ export const LoginForm = () => {
   const { register, handleSubmit, formState } = useForm<FormSchemaType>({
     resolver: zodResolver(FormSchema),
   });
+
   const login = useMutation({
-    mutationKey: ["partner_login"],
+    mutationKey: ["login"],
     mutationFn: async (data: FormSchemaType) => {
       const response = await api
         .post<ApiResponse<{ token: string }>>("/auth/login", {
@@ -59,6 +60,7 @@ export const LoginForm = () => {
         login.mutate(values);
       })}>
       <Input placeholder="Email" error={formState.errors.email?.message} {...register("email")} />
+
       <Input
         placeholder="Password"
         type="password"
@@ -66,7 +68,7 @@ export const LoginForm = () => {
         {...register("password")}
       />
 
-      <Button className="mt-2" type="submit" loading={login.isPending}>
+      <Button className="mt-2" type="submit" loading={login.isPending} disabled={!formState.isValid}>
         Sign in
       </Button>
     </form>
