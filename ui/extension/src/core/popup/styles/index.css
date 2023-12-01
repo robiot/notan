@@ -14,17 +14,17 @@ html, body {
 
 @layer base {
   :root {
-    --background: #1D1E21;
-    --foreground: #E2E2E2;
+    --background: 225 6% 12%;
+    --foreground: 5 0% 89%;
 
-    --card: #26292E;
-    --card-foreground: #26292E;
+    --card: 217 10% 16%;
+    --card-foreground: 0 0% 89%;
  
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
  
-    --primary: #0B4CC0;
-    --primary-foreground: #E2E2E2;
+    --primary: 218 89% 40%;
+    --primary-foreground: 0 0% 89%;
  
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
