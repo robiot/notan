@@ -95,6 +95,7 @@ url: http://{}:{}
         .nest("/auth", routes::auth::router(app_state.clone()))
         .nest("/users", routes::users::router(app_state.clone()))
         .nest("/notes", routes::notes::router(app_state.clone()))
+        .fallback(routes::not_found::handler)
         .layer(
             CorsLayer::new()
                 .allow_methods([Method::GET, Method::POST, Method::DELETE])
@@ -106,7 +107,6 @@ url: http://{}:{}
                     header::AUTHORIZATION,
                 ]),
         )
-        .fallback(routes::not_found::handler)
         .with_state(app_state);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], port));

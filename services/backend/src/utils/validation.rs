@@ -64,6 +64,14 @@ pub fn validate_email(email: String) -> Result<()> {
             name: "email_invalid".to_string(),
         }));
     }
+    // regex check that it is an email address, needs to have an @ and a . and at least 2 character tld
+    // if not match this regex, return error /^\S+@\S+\.\S+$/
+    if !regex::Regex::new(r"^\S+@\S+\.\S+$").unwrap().is_match(&email) {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Email is invalid".to_string(),
+            name: "email_invalid".to_string(),
+        }));
+    }
     // return success
     Ok(())
 }
