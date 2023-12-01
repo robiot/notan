@@ -48,16 +48,6 @@ export const LoginForm = () => {
 
       auth.login({ token: response.data.data.token });
 
-      const { dismiss } = toast({
-        title: "Hold tight",
-        description: "You are being signed in",
-      });
-
-      (async () => {
-        await new Promise((r) => setTimeout(r, 1000));
-        dismiss();
-      })();
-
       navigate("/");
     },
   });

@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../hooks/persist/useAuth";
 import { api, ApiResponse, hasError } from "../../lib/api";
+import { Spinner } from "../ui/spinner";
 import { toast } from "../ui/use-toast";
 
 // import { Spinner } from "@/components/ui/spinner";
@@ -65,8 +66,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
         // transition={{ delay: 1 }}
         initial={"visible"}
         animate={isLoading ? "visible" : "hidden"}>
-        {/* <Spinner size="lg" /> */}
-        Loading...
+        <Spinner size="md" />
       </motion.div>
 
       {!isLoading && children}

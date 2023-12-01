@@ -6,13 +6,14 @@ import { cn } from "../../lib/utils";
 const spinnerVariants = cva("w-8 h-8 animate-spin", {
   variants: {
     variant: {
-      default: "text-gray-200 fill-black",
+      default: "text-foreground/10 fill-foreground/20",
       blue: "text-gray-200 fill-blue-600",
       white: "text-blue-200 fill-white",
     },
     size: {
       default: "w-8 h-8",
       sm: "w-4 h-4",
+      md: "w-8 h-8",
       lg: "w-14 h-14",
     },
   },
