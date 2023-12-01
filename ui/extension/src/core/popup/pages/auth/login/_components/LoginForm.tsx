@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -22,6 +23,7 @@ type FormSchemaType = z.infer<typeof FormSchema>;
 export const LoginForm = () => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit, formState } = useForm<FormSchemaType>({
     resolver: zodResolver(FormSchema),
@@ -65,6 +67,9 @@ export const LoginForm = () => {
         placeholder="Password"
         type="password"
         error={formState.errors.password?.message}
+        className="pr-11"
+        showPassword={showPassword}
+        setShowPassword={setShowPassword}
         {...register("password")}
       />
 
