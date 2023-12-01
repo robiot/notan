@@ -30,6 +30,7 @@ export default defineConfig({
       // "@src": srcDir,
       // "@assets": assetsDir,
       // "@core": coreDir,
+      "@popup": path.resolve(__dirname, "./src/core/popup"),
       "@": path.resolve(__dirname, "./src"),
     },
   },
@@ -64,7 +65,7 @@ export default defineConfig({
           const { name } = path.parse(assetInfo.name);
           const assetFileName = name === "contentStyle" ? `${name}${getCacheInvalidationKey()}` : name;
 
-          return `assets/[ext]/${assetFileName}.chunk.[ext]`;
+          return `assets/[ext]/${assetFileName}.[hash].chunk.[ext]`;
         },
       },
     },

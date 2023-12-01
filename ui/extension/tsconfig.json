@@ -18,6 +18,7 @@
     "typeRoots": ["src/types/global.d.ts", "node_modules/@types"],
     "paths": {
       "@/*": ["./src/*"],
+      "@popup/*": ["./src/core/popup/*"],
       "virtual:reload-on-update-in-background-script": ["src/types/global.d.ts"],
       "virtual:reload-on-update-in-view": ["src/types/global.d.ts"]
     }

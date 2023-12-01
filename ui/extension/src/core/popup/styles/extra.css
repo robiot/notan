@@ -1,0 +1,29 @@
+:root {
+  color-scheme: dark;
+}
+
+body {
+  width: 380px;
+  height: 600px;
+  margin: 0;
+
+  @apply bg-background text-foreground;
+}
+
+#app,
+body {
+  @apply flex flex-col flex-1;
+}
+
+html,
+body {
+  font-family: "Noto Sans", sans-serif;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 2147483647s;
+  -webkit-text-fill-color: hsl(var(--secondary-foreground)) !important;
+}

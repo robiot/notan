@@ -1,5 +1,6 @@
 import "@/assets/style/font.css";
 import "./styles/index.css";
+import "./styles/extra.css";
 
 import React from "react";
 import { createRoot } from "react-dom/client";

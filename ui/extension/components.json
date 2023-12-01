@@ -10,7 +10,7 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "src/ui/components",
-    "utils": "@/ui/lib/utils"
+    "components": "src/core/popup/components",
+    "utils": "@popup/lib/utils"
   }
 }
