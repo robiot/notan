@@ -84,9 +84,20 @@ export const LoginForm = () => {
       onSubmit={handleSubmit((values) => {
         signUp.mutate(values);
       })}>
-      <Input placeholder="Email" error={formState.errors.email?.message} {...register("email")} />
-      <Input placeholder="Username" error={formState.errors.username?.message} {...register("username")} />
       <Input
+        placeholderStyle="alwaysVisible"
+        placeholder="Email"
+        error={formState.errors.email?.message}
+        {...register("email")}
+      />
+      <Input
+        placeholderStyle="alwaysVisible"
+        placeholder="Username"
+        error={formState.errors.username?.message}
+        {...register("username")}
+      />
+      <Input
+        placeholderStyle="alwaysVisible"
         placeholder="Password"
         type="password"
         error={formState.errors.password?.message}

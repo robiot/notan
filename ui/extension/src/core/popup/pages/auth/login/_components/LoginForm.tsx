@@ -61,9 +61,15 @@ export const LoginForm = () => {
       onSubmit={handleSubmit((values) => {
         login.mutate(values);
       })}>
-      <Input placeholder="Email" error={formState.errors.email?.message} {...register("email")} />
+      <Input
+        placeholderStyle="alwaysVisible"
+        placeholder="Email"
+        error={formState.errors.email?.message}
+        {...register("email")}
+      />
 
       <Input
+        placeholderStyle="alwaysVisible"
         placeholder="Password"
         type="password"
         error={formState.errors.password?.message}
