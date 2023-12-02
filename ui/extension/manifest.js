@@ -9,7 +9,7 @@ const manifest = {
   name: "Notan",
   version: packageJson.version,
   description: "Note taking for the web",
-  permissions: ["storage", "sidePanel"],
+  permissions: ["tabs", "activeTab"],
   background: {
     service_worker: "src/core/background/index.js",
     type: "module",
@@ -21,6 +21,7 @@ const manifest = {
   icons: {
     128: "icon-128.png",
   },
+  host_permissions: ["*://*/*"],
   content_scripts: [
     // {
     //   matches: ['http://*/*', 'https://*/*', '<all_urls>'],

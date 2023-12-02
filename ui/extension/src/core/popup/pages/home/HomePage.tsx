@@ -1,14 +1,18 @@
 import { Container } from "@popup/components/app/Container";
 import { Topbar } from "@popup/components/app/Topbar";
 import { Button } from "@popup/components/ui/button";
-import { useAuth } from "@popup/hooks/persist/useAuth";
 import { Plus, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Input } from "../../components/ui/input";
+import { useNotesForCurrentPage } from "../../hooks/notes/useNotesForCurrentPage";
+import { useAuth } from "../../hooks/persist/useAuth";
+import { NotesOnCurrentPage } from "./_components/NotesOnCurrentPage";
 
 export const HomePage = () => {
   const auth = useAuth();
+
+  const notes = useNotesForCurrentPage();
 
   return (
     <>
@@ -20,18 +24,21 @@ export const HomePage = () => {
         </Button>
         <Input inputSize="small" placeholder="Search notes by domain/content" className="w-full" />
         <Button variant="ghost" size="icon" asChild>
-          <Link to="/profile">
+          <Link to="/notes/create">
             <Plus />
           </Link>
         </Button>
       </Topbar>
       <Container>
         <div className="flex flex-col gap-2">
-          <span className="text-sm">Notes on your current page</span>
-          <div className="bg-card rounded p-4 text-base">Notes - Figma</div>
+          <div className="flex justify-between text-sm py-1">
+            <span>Notes on your current page</span>
+            {notes.data?.length !== undefined && <span>{notes.data?.length}</span>}
+          </div>
+          <NotesOnCurrentPage />
         </div>
 
-        <Button onClick={() => auth.logout()} className="mt-5">
+        <Button variant="ghost" className="mt-4" onClick={() => auth.logout()}>
           Log out
         </Button>
       </Container>
