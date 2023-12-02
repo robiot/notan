@@ -1,5 +1,3 @@
-import { clearTimeout } from "node:timers";
-
 export function debounce<A extends unknown[]>(callback: (...arguments_: A) => void, delay: number) {
   let timer: NodeJS.Timeout;
 

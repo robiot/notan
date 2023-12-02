@@ -31,11 +31,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProperties>(
             {...properties}
             placeholder=" "
           />
-          <label
-            htmlFor={id}
-            className="pointer-events-none absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-1/2 z-10 origin-[0] start-2.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-6">
-            {properties.placeholder}
-          </label>
+
+          {properties.placeholder && (
+            <label
+              htmlFor={id}
+              className="pointer-events-none absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-1/2 z-10 origin-[0] start-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-6">
+              {properties.placeholder}
+            </label>
+          )}
+
           {type === "password" && (
             <button
               className="absolute right-0 top-0 h-full flex items-center pr-3"
