@@ -11,7 +11,7 @@ export const NotePreview: FC<{ note: Note }> = ({ note }) => {
       variant="ghost"
       className={cn("flex justify-start items-start font-normal gap-3 text-start p-2 bg-card h-fit")}>
       <div className="">
-        <img src={faviconFromUrl(note.url)} alt="" className="min-w-[1.5rem] w-6 h-6 rounded-full" />
+        <img src={faviconFromUrl(note.url)} alt="" className="min-w-[1.5rem] w-6 h-6 rounded" />
       </div>
       <div className="flex flex-col gap-1">
         <span className="">{note.title}</span>

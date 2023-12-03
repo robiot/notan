@@ -1,10 +1,22 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { Container } from "@popup/components/app/Container";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Topbar } from "@popup/components/app/Topbar";
 import { Button } from "@popup/components/ui/button";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
+import { NoteFormSchema, NoteFormSchemaType, NoteView } from "../_components/NoteView";
+
 export const CreateNotePage = () => {
+  const form = useForm<NoteFormSchemaType>({
+    resolver: zodResolver(NoteFormSchema),
+    defaultValues: {
+      title: "Notes - Figma",
+      url: "https://www.figma.com/file/...",
+      note: "",
+    },
+  });
+
   return (
     <>
       <Topbar>
@@ -12,26 +24,13 @@ export const CreateNotePage = () => {
           <Button variant="ghost" size="lg" asChild>
             <Link to="/">BACK</Link>
           </Button>
-          <Button variant="ghost" size="lg">
+          <Button variant="ghost" size="lg" onClick={form.handleSubmit((d) => console.log(d))}>
             CREATE
           </Button>
         </div>
       </Topbar>
-      <Container>
-        <div className="flex flex-col gap-2 items-center py-5">
-          <input
-            className="text-2xl font-bold focus:!outline-none bg-transparent text-center"
-            contentEditable
-            defaultValue="Notes - Figma"
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-              }
-            }}></input>
 
-          <div></div>
-        </div>
-      </Container>
+      <NoteView form={form} />
     </>
   );
 };

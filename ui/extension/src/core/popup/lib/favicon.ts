@@ -1,5 +1,16 @@
 export const faviconFromUrl = (url: string, size?: number) => {
-  const urlObject = new URL(url);
+  // make it work even tho url might be missing protocol
+  if (!url.startsWith("http")) {
+    url = `https://${url}`;
+  }
+
+  let urlObject: URL;
+
+  try {
+    urlObject = new URL(url);
+  } catch {
+    return;
+  }
 
   if (!urlObject.hostname) return;
 
