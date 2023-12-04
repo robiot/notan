@@ -31,12 +31,23 @@ api.interceptors.request.use((config) => {
 export const hasError = (response: AxiosResponse<unknown, any>, error: string) => {
   const real_response = response as AxiosResponse<ApiResponse<any>, any>;
 
-  if (!response || !Array.isArray(real_response.data.errors)) {
+  if (!response) {
+    toast({
+      title: "Could not reach server",
+      description: "Please check your internet connection and, try again later",
+      variant: "destructive",
+    });
+
+    return false;
+  }
+
+  if (!Array.isArray(real_response.data.errors)) {
     console.log("Invalid api response");
 
     toast({
       title: "Unexpected error",
       description: "Please report this and, try again later",
+      variant: "destructive",
     });
 
     return false;
