@@ -102,3 +102,56 @@ pub fn validate_password(password: String) -> Result<()> {
     // return success
     Ok(())
 }
+
+// validate title
+pub fn validate_title(title: String) -> Result<()> {
+    // check if title is empty
+    if title.is_empty() {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Title is empty".to_string(),
+            name: "title_empty".to_string(),
+        }));
+    }
+    // check if title is too long
+    if title.len() > 30 {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Title is too long".to_string(),
+            name: "title_long".to_string(),
+        }));
+    }
+
+    Ok(())
+}
+
+// validate note
+pub fn validate_note_body(note: String) -> Result<()> {
+    // check if note is too long
+    if note.len() > 200 {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Note is too long".to_string(),
+            name: "note_long".to_string(),
+        }));
+    }
+
+    Ok(())
+}
+
+// validate url
+pub fn validate_url(url: String) -> Result<()> {
+    // check if url is empty
+    if url.is_empty() {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Url is empty".to_string(),
+            name: "url_empty".to_string(),
+        }));
+    }
+    // check if url is too long
+    if url.len() > 200 {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Url is too long".to_string(),
+            name: "url_long".to_string(),
+        }));
+    }
+
+    Ok(())
+}

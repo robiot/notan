@@ -1,4 +1,7 @@
-use crate::{auth::check_auth, error::Result, routes::Response, schemas, state::AppState, utils::database::tags::connect_tags_to_note};
+use crate::{
+    auth::check_auth, error::{Result, Error}, routes::{Response, ResponseError}, schemas, state::AppState,
+    utils::{database::tags::connect_tags_to_note, validation::{validate_title, validate_note_body, validate_url}},
+};
 
 use super::NoteDataBody;
 
@@ -9,7 +12,28 @@ pub async fn handler(
     headers: HeaderMap,
     Json(body): Json<NoteDataBody>,
 ) -> Result<Response<bool>> {
+    validate_title(body.title.clone())?;
+    validate_note_body(body.note.clone())?;
+    validate_url(body.url.clone())?;
+
     let id = check_auth(headers.clone(), state.clone()).await?;
+
+    // A user can max have 100 notes
+    let count: i64 = sqlx::query_scalar(
+        r#"
+        SELECT COUNT(*) FROM public.notes WHERE user_id = $1;
+        "#,
+    )
+    .bind(id.clone())
+    .fetch_one(&state.db)
+    .await?;
+
+    if count >= 100 {
+        return Err(Error::BadRequest(ResponseError {
+            message: "Limit of 100 notes has been reached".to_string(),
+            name: "max_notes".to_string(),
+        }));
+    }
 
     let note = sqlx::query_as::<sqlx::Postgres, schemas::note::Note>(
         r#"

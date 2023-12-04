@@ -57,7 +57,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
     return (
       <Comp className={cn(buttonVariants({ variant, size, className }))} ref={reference} type="button" {...properties}>
         {(icon !== undefined || loading) && (
-          <div className="w-5 text-xl">{loading ? <Spinner size="sm" variant="white" /> : icon}</div>
+          <div className="w-5 text-xl mr-2">{loading ? <Spinner size="sm" variant="white" /> : icon}</div>
         )}
         {properties.children}
       </Comp>

@@ -75,6 +75,9 @@ pub enum Error {
 
     #[error("error in the request body")]
     UnprocessableEntity(ResponseError),
+
+    #[error("error with the request")]
+    BadRequest(ResponseError),
 }
 
 impl IntoResponse for Error {
@@ -120,7 +123,10 @@ impl IntoResponse for Error {
             ),
             Error::UnprocessableEntity(identifier) => {
                 routes::Response::new_failure(StatusCode::UNPROCESSABLE_ENTITY, vec![identifier])
-            }
+            },
+            Error::BadRequest(identifier) => {
+                routes::Response::new_failure(StatusCode::BAD_REQUEST, vec![identifier])
+            },
             _ => routes::Response::new_failure(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 vec![ResponseError {

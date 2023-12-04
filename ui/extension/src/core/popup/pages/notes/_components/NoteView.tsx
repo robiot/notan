@@ -30,6 +30,7 @@ export const NoteView: FC<{
               event.preventDefault();
             }
           }}
+          maxLength={30}
           {...register("title")}
         />
 
@@ -40,6 +41,7 @@ export const NoteView: FC<{
             className="text-sm focus:outline-none focus:border-b bg-transparent"
             placeholder="URL"
             defaultValue="https://www.figma.com/file/..."
+            maxLength={200}
             {...register("url")}
           />
         </div>

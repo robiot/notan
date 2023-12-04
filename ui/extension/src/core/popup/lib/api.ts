@@ -41,9 +41,11 @@ export const hasError = (response: AxiosResponse<unknown, any>, error: string) =
     return false;
   }
 
-  if (!Array.isArray(real_response.data.errors)) {
-    console.log("Invalid api response");
-
+  // if has unknown_error, show toast
+  if (
+    !Array.isArray(real_response.data.errors) ||
+    real_response.data.errors.some((response_error) => response_error.name === "unknown_error")
+  ) {
     toast({
       title: "Unexpected error",
       description: "Please report this and, try again later",
