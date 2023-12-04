@@ -26,6 +26,7 @@ pub struct NotesGetResponseItem {
     pub note: String,
     pub tags: Vec<TagItem>,
     pub remind_at: Option<sqlx::types::chrono::DateTime<Utc>>,
+    pub created_at: sqlx::types::chrono::DateTime<Utc>,
 }
 
 #[derive(Serialize, Deserialize)]

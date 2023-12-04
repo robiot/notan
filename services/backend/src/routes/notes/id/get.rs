@@ -42,6 +42,7 @@ pub async fn handler(
             note: note.note,
             tags,
             remind_at: note.remind_at,
+            created_at: note.created_at,
         }),
     ))
 }
