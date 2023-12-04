@@ -4,24 +4,22 @@ import { Topbar } from "@popup/components/app/Topbar";
 import { Button } from "@popup/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
 import { toast } from "@/core/popup/components/ui/use-toast";
+import { useCurrentTabInfo } from "@/core/popup/hooks/generic/useCurrentTabInfo";
 import { api, ApiResponse, hasError } from "@/core/popup/lib/api";
 
 import { NoteFormSchema, NoteFormSchemaType, NoteView } from "../_components/NoteView";
 
-export const CreateNotePage = () => {
+export const CreateNoteContent: FC<{ values: NoteFormSchemaType }> = ({ values }) => {
   const navigate = useNavigate();
 
   const form = useForm<NoteFormSchemaType>({
     resolver: zodResolver(NoteFormSchema),
-    defaultValues: {
-      title: "Notes - Figma",
-      url: "https://www.figma.com/file/...",
-      note: "",
-    },
+    defaultValues: values,
   });
 
   const createNote = useMutation({
@@ -80,5 +78,21 @@ export const CreateNotePage = () => {
 
       <NoteView form={form} />
     </>
+  );
+};
+
+export const CreateNotePage = () => {
+  const tab = useCurrentTabInfo();
+
+  if (tab.isLoading) return null;
+
+  return (
+    <CreateNoteContent
+      values={{
+        title: tab.data?.title ?? "",
+        url: tab.data?.url ?? "",
+        note: "",
+      }}
+    />
   );
 };
