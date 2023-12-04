@@ -19,6 +19,7 @@ export const useNotes = () => {
     queryKey: ["notes"],
     queryFn: async () => {
       const response = await api.get<ApiResponse<Note[]>>("/notes").catch((_error: AxiosError) => {
+        // TODO: make use of checkError thingy
         toast({
           title: "Error",
           variant: "destructive",
