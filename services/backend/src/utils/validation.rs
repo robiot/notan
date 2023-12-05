@@ -113,7 +113,7 @@ pub fn validate_title(title: String) -> Result<()> {
         }));
     }
     // check if title is too long
-    if title.len() > 30 {
+    if title.len() > 100 {
         return Err(Error::UnprocessableEntity(ResponseError {
             message: "Title is too long".to_string(),
             name: "title_long".to_string(),
