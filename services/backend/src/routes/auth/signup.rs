@@ -3,9 +3,10 @@ use std::net::SocketAddr;
 use crate::{
     error::{Error, Result},
     jwt,
-    routes::{Response, ResponseError},
+    routes::Response,
     schemas,
-    state::AppState, utils::validation,
+    state::AppState,
+    utils::{self, validation},
 };
 
 use {
@@ -42,43 +43,8 @@ pub async fn handler(
     validation::validate_username(body.username.clone())?;
     validation::validate_email(body.email.clone())?;
 
-    // Check if user already exists with email
-    match sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
-        r#"SELECT * FROM public.users WHERE email = $1"#,
-    )
-    .bind(body.email.clone())
-    .fetch_optional(&state.db)
-    .await
-    {
-        Ok(user) => {
-            if user.is_some() {
-                return Err(Error::UnprocessableEntity(ResponseError {
-                    message: "Another account with this mail already exists".to_string(),
-                    name: "email_exists".to_string(),
-                }));
-            }
-        }
-        Err(error) => return Err(error.into()),
-    };
-
-    // Check if user already exists with username
-    match sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
-        r#"SELECT * FROM public.users WHERE username = $1"#,
-    )
-    .bind(body.username.clone())
-    .fetch_optional(&state.db)
-    .await
-    {
-        Ok(user) => {
-            if user.is_some() {
-                return Err(Error::UnprocessableEntity(ResponseError {
-                    message: "Another account with this username already exists".to_string(),
-                    name: "username_exists".to_string(),
-                }));
-            }
-        }
-        Err(error) => return Err(error.into()),
-    };
+    utils::database::user::check_username_taken(body.username.clone(), &state.db).await?;
+    utils::database::user::check_email_taken(body.email.clone(), &state.db).await?;
 
     let salt = SaltString::generate(&mut OsRng);
 
@@ -108,8 +74,6 @@ pub async fn handler(
 
     Ok(Response::new_success(
         StatusCode::OK,
-        Some(SignupResponse {
-            token,
-        }),
+        Some(SignupResponse { token }),
     ))
 }
