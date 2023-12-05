@@ -1,13 +1,11 @@
-import { cn } from "@popup/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { motion } from "framer-motion";
 import { FC, ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../hooks/persist/useAuth";
 import { api, ApiResponse, hasError } from "../../lib/api";
-import { Spinner } from "../ui/spinner";
+import { LoadScreen } from "../app/LoadScreen";
 import { toast } from "../ui/use-toast";
 
 // import { Spinner } from "@/components/ui/spinner";
@@ -57,17 +55,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <>
-      <motion.div
-        className={cn("z-50 fixed h-full w-full bg-background flex items-center justify-center pointer-events-none")}
-        variants={{
-          hidden: { opacity: 0 },
-          visible: { opacity: 100 },
-        }}
-        // transition={{ delay: 1 }}
-        initial={"visible"}
-        animate={isLoading ? "visible" : "hidden"}>
-        <Spinner size="md" />
-      </motion.div>
+      <LoadScreen loading={isLoading} />
 
       {!isLoading && children}
     </>

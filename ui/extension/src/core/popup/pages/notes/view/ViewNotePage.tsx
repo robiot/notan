@@ -48,11 +48,6 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
 
       if (!response) return;
 
-      // toast({
-      //   title: "Note updated",
-      //   description: "The note was updated successfully",
-      // });
-
       navigate("/");
     },
   });
@@ -108,6 +103,7 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
             variant="ghost"
             size="lg"
             loading={updateNote.isPending}
+            disabled={!isDirty}
             onClick={form.handleSubmit((data) => {
               updateNote.mutate(data);
             })}>
@@ -153,16 +149,18 @@ export const ViewNotePage = () => {
     },
   });
 
-  if (note.isLoading || !note.data) return null;
+  if (note.isFetching || !note.data) return null;
 
   return (
-    <ViewNoteContent
-      id={id}
-      values={{
-        title: note.data.title,
-        url: note.data.url,
-        note: note.data.note,
-      }}
-    />
+    <>
+      <ViewNoteContent
+        id={id}
+        values={{
+          title: note.data.title,
+          url: note.data.url,
+          note: note.data.note,
+        }}
+      />
+    </>
   );
 };

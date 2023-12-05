@@ -3,21 +3,18 @@ import { AxiosError } from "axios";
 
 import { api, ApiResponse, hasError } from "../../lib/api";
 
-export type Note = {
+type User = {
   id: string;
-  note: string;
-  tags: string[];
-  title: string;
-  url: string;
-  remind_at: string;
-  created_at: string;
+  email: string;
+  username: string;
+  verified_mail: boolean;
 };
 
-export const useNotes = () => {
+export const useUser = () => {
   return useQuery({
-    queryKey: ["notes"],
+    queryKey: ["user"],
     queryFn: async () => {
-      const response = await api.get<ApiResponse<Note[]>>("/notes").catch((error: AxiosError) => {
+      const response = await api.get<ApiResponse<User>>("/users/@me").catch((error: AxiosError) => {
         hasError(error.response);
       });
 

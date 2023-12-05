@@ -10,6 +10,7 @@ export const NotePreview: FC<{ note: Note }> = ({ note }) => {
   return (
     <Button
       variant="ghost"
+      title={note.url}
       className={cn("flex justify-start items-start font-normal gap-3 text-start p-2 bg-card h-fit")}
       asChild>
       <Link to={`/notes/view/${note.id}`}>
@@ -17,7 +18,7 @@ export const NotePreview: FC<{ note: Note }> = ({ note }) => {
           <img src={faviconFromUrl(note.url)} alt="" className="min-w-[1.5rem] w-6 h-6 rounded" />
         </div>
         <div className="flex flex-col gap-1">
-          <span>{note.title}</span>
+          <span className="truncate flex-1 w-72">{note.title}</span>
           <span className="text-sm text-card-foreground/70 truncate flex-1 w-72">{note.note}</span>
         </div>
       </Link>

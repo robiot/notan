@@ -6,6 +6,10 @@ import { SignupPage } from "./pages/auth/signup/Signup";
 import { HomePage } from "./pages/home/HomePage";
 import { CreateNotePage } from "./pages/notes/create/CreateNotePage";
 import { ViewNotePage } from "./pages/notes/view/ViewNotePage";
+import { ProfileEmailPage } from "./pages/profile/email/ProfileEmailPage";
+import { ProfileOverviewPage } from "./pages/profile/overview/ProfileOverviewPage";
+import { ProfilePasswordPage } from "./pages/profile/password/ProfilePasswordPage";
+import { ProfileUsernamePage } from "./pages/profile/username/ProfileUsernamePage";
 
 export const Popup = () => {
   const location = useLocation();
@@ -26,6 +30,13 @@ export const Popup = () => {
         <Route path="/auth">
           <Route path="/auth/login" element={<LoginPage />} />
           <Route path="/auth/sign-up" element={<SignupPage />} />
+        </Route>
+
+        <Route path="/profile">
+          <Route index element={<ProfileOverviewPage />} />
+          <Route path="/profile/username" element={<ProfileUsernamePage />} />
+          <Route path="/profile/email" element={<ProfileEmailPage />} />
+          <Route path="/profile/password" element={<ProfilePasswordPage />} />
         </Route>
       </Route>
     </Routes>
