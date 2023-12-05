@@ -30,7 +30,7 @@ export const NoteView: FC<{
               event.preventDefault();
             }
           }}
-          maxLength={30}
+          maxLength={100}
           {...register("title")}
         />
 
