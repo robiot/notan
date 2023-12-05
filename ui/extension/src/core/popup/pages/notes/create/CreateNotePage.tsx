@@ -14,7 +14,7 @@ import { api, ApiResponse, hasError } from "@/core/popup/lib/api";
 
 import { NoteFormSchema, NoteFormSchemaType, NoteView } from "../_components/NoteView";
 
-export const CreateNoteContent: FC<{ values: NoteFormSchemaType }> = ({ values }) => {
+const CreateNoteContent: FC<{ values: NoteFormSchemaType }> = ({ values }) => {
   const navigate = useNavigate();
 
   const form = useForm<NoteFormSchemaType>({
@@ -49,10 +49,11 @@ export const CreateNoteContent: FC<{ values: NoteFormSchemaType }> = ({ values }
 
       if (!response) return;
 
-      toast({
-        title: "Note created",
-        description: "The note was created successfully",
-      });
+      // toast({
+      //   title: "Note created",
+      //   description: "The note was created successfully",
+      // });
+
       navigate("/");
     },
   });

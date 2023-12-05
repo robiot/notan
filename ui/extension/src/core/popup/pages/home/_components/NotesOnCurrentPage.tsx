@@ -7,9 +7,11 @@ export const NotesOnCurrentPage = () => {
 
   return (
     <>
-      {notes.data?.map((note) => (
-        <NotePreview note={note} key={note.id} />
-      ))}
+      {notes.data
+        ?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .map((note) => (
+          <NotePreview key={note.id} note={note} />
+        ))}
     </>
   );
 };

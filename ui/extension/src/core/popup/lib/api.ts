@@ -28,7 +28,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export const hasError = (response: AxiosResponse<unknown, any>, error: string) => {
+export const hasError = (response: AxiosResponse<unknown, any>, error?: string) => {
   const real_response = response as AxiosResponse<ApiResponse<any>, any>;
 
   if (!response) {

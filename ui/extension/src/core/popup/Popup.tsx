@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/auth/login/Login";
 import { SignupPage } from "./pages/auth/signup/Signup";
 import { HomePage } from "./pages/home/HomePage";
 import { CreateNotePage } from "./pages/notes/create/CreateNotePage";
+import { ViewNotePage } from "./pages/notes/view/ViewNotePage";
 
 export const Popup = () => {
   const location = useLocation();
@@ -18,6 +19,7 @@ export const Popup = () => {
         <Route index element={<HomePage />} />
         <Route path="/notes">
           <Route path="/notes/create" element={<CreateNotePage />} />
+          <Route path="/notes/view/:id" element={<ViewNotePage />} />
         </Route>
         {/* </Route> */}
 

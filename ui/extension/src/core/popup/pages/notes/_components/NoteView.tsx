@@ -24,7 +24,6 @@ export const NoteView: FC<{
         <input
           className="text-2xl font-bold focus:!outline-none bg-transparent text-center"
           placeholder="Title"
-          defaultValue="Notes - Figma"
           onKeyDown={(event) => {
             if (event.key === "Enter") {
               event.preventDefault();
@@ -40,7 +39,6 @@ export const NoteView: FC<{
           <input
             className="text-sm focus:outline-none focus:border-b bg-transparent"
             placeholder="URL"
-            defaultValue="https://www.figma.com/file/..."
             maxLength={200}
             {...register("url")}
           />

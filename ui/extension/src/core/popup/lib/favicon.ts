@@ -1,4 +1,7 @@
-export const faviconFromUrl = (url: string, size?: number) => {
+export const faviconFromUrl = (url?: string, size?: number) => {
+  // if url is undefined, return undefined
+  if (!url) return;
+
   // make it work even tho url might be missing protocol
   if (!url.startsWith("http")) {
     url = `https://${url}`;
