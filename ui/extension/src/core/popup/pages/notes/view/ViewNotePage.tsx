@@ -3,22 +3,18 @@ import { Topbar } from "@popup/components/app/Topbar";
 import { Button } from "@popup/components/ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { MoreHorizontal } from "lucide-react";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/core/popup/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/core/popup/components/ui/dialog";
+import { DropdownMenu, DropdownMenuTrigger } from "@/core/popup/components/ui/dropdown-menu";
 import { api, ApiResponse, hasError } from "@/core/popup/lib/api";
 
 import { NoteFormSchema, NoteFormSchemaType, NoteView } from "../_components/NoteView";
+import { MoreDropdown } from "./_components/MoreDropdown";
+import { UnsavedChangesModal } from "./_components/UnsavedChangesModal";
 
 const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id }) => {
   const navigate = useNavigate();
@@ -70,45 +66,42 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
                 BACK
               </Button>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>You are exiting with unsaved changes</DialogTitle>
-                <DialogDescription>Do you wish to save?</DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="flex flex-row w-full items-center justify-center gap-4">
+
+            <UnsavedChangesModal
+              onSave={form.handleSubmit((data) => {
+                updateNote.mutate(data);
+              })}
+              loading={updateNote.isPending}
+            />
+          </Dialog>
+
+          <div className="flex gap-1">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="lg"
-                  className="w-32"
-                  onClick={() => {
-                    navigate("/");
-                  }}>
-                  DISCARD
-                </Button>
-                <Button
-                  variant="default"
-                  size="lg"
-                  className="w-32"
+                  size="icon"
                   loading={updateNote.isPending}
                   onClick={form.handleSubmit((data) => {
                     updateNote.mutate(data);
                   })}>
-                  SAVE
+                  <MoreHorizontal />
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </DropdownMenuTrigger>
+              <MoreDropdown />
+            </DropdownMenu>
 
-          <Button
-            variant="ghost"
-            size="lg"
-            loading={updateNote.isPending}
-            disabled={!isDirty}
-            onClick={form.handleSubmit((data) => {
-              updateNote.mutate(data);
-            })}>
-            SAVE
-          </Button>
+            <Button
+              variant="ghost"
+              size="lg"
+              loading={updateNote.isPending}
+              disabled={!isDirty}
+              onClick={form.handleSubmit((data) => {
+                updateNote.mutate(data);
+              })}>
+              SAVE
+            </Button>
+          </div>
         </div>
       </Topbar>
 

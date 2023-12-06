@@ -5,6 +5,7 @@ import { Button } from "@popup/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { FC } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -49,14 +50,13 @@ const CreateNoteContent: FC<{ values: NoteFormSchemaType }> = ({ values }) => {
 
       if (!response) return;
 
-      // toast({
-      //   title: "Note created",
-      //   description: "The note was created successfully",
-      // });
-
       navigate("/");
     },
   });
+
+  useEffect(() => {
+    form.setFocus("note");
+  }, []);
 
   return (
     <>
