@@ -1,3 +1,4 @@
+import { Link } from "lucide-react";
 import { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
@@ -6,6 +7,8 @@ import { Container } from "@/core/popup/components/app/Container";
 import { Separator } from "@/core/popup/components/ui/separator";
 import { faviconFromUrl } from "@/core/popup/lib/favicon";
 import { zodRequiredString } from "@/core/popup/lib/zodPresents";
+
+import { URLInput } from "./UrlInput";
 
 export const NoteFormSchema = z.object({
   title: zodRequiredString,
@@ -33,15 +36,14 @@ export const NoteView: FC<{
           {...register("title")}
         />
 
-        <div className="flex gap-2">
-          <img src={faviconFromUrl(watch("url"))} alt="" className="w-5 h-5 rounded" />
+        <div className="flex gap-2 items-center w-fit">
+          {faviconFromUrl(watch("url")) !== undefined ? (
+            <img src={faviconFromUrl(watch("url"))} alt="" className="w-5 h-5 rounded" />
+          ) : (
+            <Link className="text-sm h-4 w-4" />
+          )}
 
-          <input
-            className="text-sm focus:outline-none focus:border-b bg-transparent"
-            placeholder="URL"
-            maxLength={200}
-            {...register("url")}
-          />
+          <URLInput placeholder="URL" maxLength={200} currentValue={watch("url")} {...register("url")} />
         </div>
       </div>
 

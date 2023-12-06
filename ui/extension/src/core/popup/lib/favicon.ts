@@ -17,5 +17,8 @@ export const faviconFromUrl = (url?: string, size?: number) => {
 
   if (!urlObject.hostname) return;
 
+  // check if returns 404, then return undefined
+  // if (await fetch(urlObject.href).then((res) => res.status) === 404) return;
+
   return `https://www.google.com/s2/favicons?domain=${urlObject.hostname}&sz=${size ?? 128}`;
 };
