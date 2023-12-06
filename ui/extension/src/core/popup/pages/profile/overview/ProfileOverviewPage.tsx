@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
@@ -7,6 +8,8 @@ import { Topbar } from "@/core/popup/components/app/Topbar";
 import { Button } from "@/core/popup/components/ui/button";
 import { useAuth } from "@/core/popup/hooks/persist/useAuth";
 import { useUser } from "@/core/popup/hooks/user/useUser";
+
+import * as packagejson from "../../../../../../package.json";
 
 const FieldButton: FC<{ title: string; value?: string; path: string }> = ({ title, value, path }) => {
   return (
@@ -38,14 +41,23 @@ export const ProfileOverviewPage = () => {
         </div>
       </Topbar>
       <Container>
-        <div className="flex flex-col gap-2">
-          <FieldButton title="Username" value={user.data.username} path="/profile/username" />
-          <FieldButton title="Email" value={user.data.email} path="/profile/email" />
-          <FieldButton title="Password" path="/profile/password" />
+        <div className="flex-1 flex flex-col justify-between">
+          <div className="flex flex-col gap-2">
+            <FieldButton title="Username" value={user.data.username} path="/profile/username" />
+            <FieldButton title="Email" value={user.data.email} path="/profile/email" />
+            <FieldButton title="Password" path="/profile/password" />
 
-          <Button variant="ghost" className="mt-4" onClick={() => auth.logout()}>
-            Log out
-          </Button>
+            <Button variant="ghost" className="mt-4 gap-3" onClick={() => auth.logout()}>
+              <LogOut />
+              Log out
+            </Button>
+          </div>
+          <div className="flex flex-col gap-1 items-center">
+            <Button variant="ghost" className="mt-4 w-full" onClick={() => auth.logout()}>
+              Reports bugs / Feedback
+            </Button>
+            <span className="py-2">v{packagejson.version}</span>
+          </div>
         </div>
       </Container>
     </>

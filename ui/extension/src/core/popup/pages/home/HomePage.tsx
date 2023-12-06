@@ -1,4 +1,3 @@
-import { Container } from "@popup/components/app/Container";
 import { Topbar } from "@popup/components/app/Topbar";
 import { Button } from "@popup/components/ui/button";
 import { Plus, User } from "lucide-react";
@@ -37,31 +36,31 @@ export const HomePage = () => {
           </Link>
         </Button>
       </Topbar>
-      <Container>
-        <div className="flex flex-col gap-2 flex-1">
-          {search && search.length >= 3 ? (
-            <NotesForSearch search={search} />
-          ) : (
-            <>
-              {notes.data?.length == undefined || notes.data?.length == 0 ? (
-                <div className="flex-1 flex items-center mt-2 gap-4 flex-col">
-                  <span className="text-center text-base">You don't have any notes for this page 😒.</span>
-                  <Link to={"/notes/create"} className="text-center text-sm text-blue-500">
-                    Create one
-                  </Link>
-                </div>
-              ) : (
-                <div className="flex justify-between text-sm py-1">
-                  <span>Notes on your current page</span>
-                  {notes.data?.length !== undefined && <span>{notes.data?.length}</span>}
-                </div>
-              )}
+      {/* <Container> */}
+      <div className="flex flex-col overflow-auto gap-2 p-2 h-full max-h-full">
+        {search && search.length >= 3 ? (
+          <NotesForSearch search={search} />
+        ) : (
+          <>
+            {notes.data?.length == undefined || notes.data?.length == 0 ? (
+              <div className="flex-1 flex items-center mt-2 gap-4 flex-col">
+                <span className="text-center text-base">You don't have any notes for this page 😒.</span>
+                <Link to={"/notes/create"} className="text-center text-sm text-blue-500">
+                  Create one
+                </Link>
+              </div>
+            ) : (
+              <div className="flex justify-between text-sm py-1">
+                <span>Notes on your current page</span>
+                {notes.data?.length !== undefined && <span>{notes.data?.length}</span>}
+              </div>
+            )}
 
-              <NotesOnCurrentPage />
-            </>
-          )}
-        </div>
-      </Container>
+            <NotesOnCurrentPage />
+          </>
+        )}
+      </div>
+      {/* </Container> */}
     </>
   );
 };
