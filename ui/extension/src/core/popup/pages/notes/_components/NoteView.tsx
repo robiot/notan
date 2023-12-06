@@ -8,7 +8,7 @@ import { Separator } from "@/core/popup/components/ui/separator";
 import { faviconFromUrl } from "@/core/popup/lib/favicon";
 import { zodRequiredString } from "@/core/popup/lib/zodPresents";
 
-import { URLInput } from "./UrlInput";
+import { URLInput } from "./URLInput";
 
 export const NoteFormSchema = z.object({
   title: zodRequiredString,
