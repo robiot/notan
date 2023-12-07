@@ -17,6 +17,7 @@ jobs:
       - name: Set Tag without "backend-"
         id: set_tag
         run: echo "::set-output name=tag::$(echo ${{ github.ref }} | sed 's/^refs\/tags\/backend-//')"
+        run: echo "tag=$(echo ${{ github.ref }} | sed 's/^refs\/tags\/backend-//')" >> $GITHUB_STATE
 
       # --- Prepare Docker ---
       - name: Docker meta
