@@ -19,7 +19,7 @@ services:
       - redisdata:/bitnami/redis/data
 
   backend:
-    image: "ghcr.io/robiot/notan-backend:edge"
+    image: "ghcr.io/robiot/notan-backend:latest"
     networks:
       - webnet
     depends_on:
