@@ -18,6 +18,9 @@ jobs:
         id: set_tag
         run: echo "TAG=$(echo ${{ github.ref }} | sed 's/^refs\/tags\/backend-//')" >> $GITHUB_STATE
 
+      - name: Echo tag
+        run: echo ${{ steps.set_tag.outputs.TAG }}
+
       # --- Prepare Docker ---
       - name: Docker meta
         id: meta
