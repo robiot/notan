@@ -22,9 +22,6 @@ jobs:
           images: |
             ghcr.io/robiot/notan-backend
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
             type=edge
             type=sha
 

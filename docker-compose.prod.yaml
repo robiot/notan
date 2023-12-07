@@ -1,42 +1,44 @@
-version: '3.9'
+version: "3.3"
 services:
   postgres:
-      image: postgres
-      environment:
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      volumes:
-         - postgresdata:/var/lib/postgresql/data
+    image: postgres
+    networks:
+      - webnet
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
 
   redis:
-      image: "redis:6.2.13-alpine3.18"
-      environment:
-          - ALLOW_EMPTY_PASSWORD=yes
-      volumes:
-          - ./data/redis:/bitnami/redis/data
-      ports:
-          - "6379:6379"
+    image: "redis:6.2.13-alpine3.18"
+    networks:
+      - webnet
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redisdata:/bitnami/redis/data
 
   backend:
-      image: "ghcr.io/robiot/notan-backend:edge"
-      networks:
-        - webnet
-      depends_on:
-        - postgres
-        - redis
-      tty: true
-      environment:
-        - PORT=8000
-        - LOG_LEVEL=trace,backend=trace
+    image: "ghcr.io/robiot/notan-backend:edge"
+    networks:
+      - webnet
+    depends_on:
+      - postgres
+      - redis
+    tty: true
+    environment:
+      - PORT=8000
+      - LOG_LEVEL=trace,backend=trace
 
-        - DATABASE_URL=${DATABASE_URL}
-        - REDIS_URL=redis://redis:6379
-        - JWT_SECRET=${JWT_SECRET}
-      command: cargo watch -x run
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
 
 networks:
   webnet:
     external:
       name: webnet-a
-    
+
 volumes:
   postgresdata:
+  redisdata:
