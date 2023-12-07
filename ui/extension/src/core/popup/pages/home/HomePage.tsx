@@ -20,6 +20,7 @@ export const HomePage = () => {
 
   const [search] = useDebounce(form.watch("search"), 300);
 
+  // todo add loader here
   return (
     <>
       <Topbar>

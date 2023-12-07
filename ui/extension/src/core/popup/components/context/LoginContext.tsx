@@ -48,6 +48,8 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
       if (!response) return;
 
       auth.login({ token: response.data.data.token });
+
+      return response.data;
     },
   });
 
@@ -56,8 +58,14 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <>
       <LoadScreen loading={isLoading} />
-
-      {!isLoading && children}
+      {renewSession.isError ? (
+        <div className="flex-1 flex-col flex items-center justify-center text-center">
+          <span className="text-lg">Could not reach the server 😓.</span>
+          <span className="text-base text-foreground/80">Check your internet connection and try again.</span>
+        </div>
+      ) : (
+        <>{!isLoading && children}</>
+      )}
     </>
   );
 };

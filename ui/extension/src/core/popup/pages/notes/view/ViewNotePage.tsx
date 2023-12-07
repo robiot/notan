@@ -8,6 +8,7 @@ import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { LoadScreen } from "@/core/popup/components/app/LoadScreen";
 import { Dialog, DialogTrigger } from "@/core/popup/components/ui/dialog";
 import { DropdownMenu, DropdownMenuTrigger } from "@/core/popup/components/ui/dropdown-menu";
 import { api, ApiResponse, hasError } from "@/core/popup/lib/api";
@@ -142,7 +143,7 @@ export const ViewNotePage = () => {
     },
   });
 
-  if (note.isFetching || !note.data) return null;
+  if (note.isFetching || !note.data) return <LoadScreen loading />;
 
   return (
     <>

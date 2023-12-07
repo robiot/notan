@@ -3,8 +3,9 @@
 }
 
 body {
-  width: 380px;
-  height: 600px;
+  width: 380px !important;
+  height: 600px !important;
+  max-width: 380px;
   max-height: 600px;
   margin: 0;
 

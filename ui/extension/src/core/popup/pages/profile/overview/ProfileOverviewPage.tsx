@@ -4,6 +4,7 @@ import { FC } from "react";
 import { Link } from "react-router-dom";
 
 import { Container } from "@/core/popup/components/app/Container";
+import { LoadScreen } from "@/core/popup/components/app/LoadScreen";
 import { Topbar } from "@/core/popup/components/app/Topbar";
 import { Button } from "@/core/popup/components/ui/button";
 import { useAuth } from "@/core/popup/hooks/persist/useAuth";
@@ -29,7 +30,7 @@ export const ProfileOverviewPage = () => {
   const auth = useAuth();
   const user = useUser();
 
-  if (user.isLoading) return <span>Loading</span>;
+  if (user.isLoading) return <LoadScreen loading />;
 
   return (
     <>
