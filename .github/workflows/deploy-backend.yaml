@@ -16,7 +16,7 @@ jobs:
 
       - name: Set Tag without "backend-"
         id: set_tag
-        run: echo "tag=$(echo ${{ github.ref }} | sed 's/^refs\/tags\/backend-//')" >> $GITHUB_STATE
+        run: echo "TAG=$(echo ${{ github.ref }} | sed 's/^refs\/tags\/backend-//')" >> $GITHUB_STATE
 
       # --- Prepare Docker ---
       - name: Docker meta
@@ -26,7 +26,7 @@ jobs:
           images: |
             ghcr.io/robiot/notan-backend
           tags: |
-            type=semver,pattern={{version}},value=${{ steps.set_tag.outputs.tag }}
+            type=semver,pattern={{version}},value=${{ steps.set_tag.outputs.TAG }}
             type=edge
 
       - name: Login to GitHub Container Registry
