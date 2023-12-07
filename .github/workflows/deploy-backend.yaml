@@ -26,7 +26,7 @@ jobs:
           images: |
             ghcr.io/robiot/notan-backend
           tags: |
-            type=semver,pattern={{version}},value=${{ steps.set_tag.outputs.tag }}
+            type=semver,value=v1.0.2
             type=edge
 
       - name: Login to GitHub Container Registry
