@@ -1,0 +1,56 @@
+
+:root {
+    color-scheme: dark;
+}
+
+.privacyp {
+    @apply mb-6;
+}
+
+.privacyp h1 {
+    @apply text-3xl font-bold mb-2 mt-4;
+}
+
+.privacyp h2 {
+    @apply text-2xl font-bold mb-2 mt-4;
+}
+
+.privacyp h3 {
+    @apply text-xl font-bold mb-2 mt-4;
+}
+
+.privacyp h4 {
+    @apply text-lg font-bold mb-2 mt-4;
+}
+
+.privacyp h5 {
+    @apply text-base font-bold mb-2 mt-4;
+}
+
+.privacyp p {
+    @apply text-base my-2;
+}
+
+.privacyp ul {
+    @apply list-disc;
+}
+
+.privacyp li {
+    @apply mb-2;
+}
+
+.privacyp a {
+    @apply text-blue-500 hover:text-blue-600;
+}
+
+.privacyp a:hover {
+    @apply underline;
+}
+
+.privacyp blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic;
+}
+
+.privacyp pre {
+    @apply bg-gray-100 p-4 rounded;
+}
