@@ -1,13 +1,11 @@
 /* eslint-disable prefer-destructuring */
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 import { useCurrentTabInfo } from "../generic/useCurrentTabInfo";
-import { useNotes } from "./useNotes";
+import { Note } from "./useNotes";
 
-export const useNotesForCurrentPage = () => {
-  const notes = useNotes();
-
+export const useNotesForCurrentPage = (notes: UseQueryResult<Note[], Error>) => {
   const tabInfo = useCurrentTabInfo();
 
   return useQuery({

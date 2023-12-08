@@ -1,14 +1,13 @@
 /* eslint-disable prefer-destructuring */
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 import { getCurrentTab } from "../../lib/tabs";
-import { useNotes } from "./useNotes";
+import { Note } from "./useNotes";
 import { useNotesForCurrentPage } from "./useNotesForCurrentPage";
 
-export const useOtherNotesForCurrentDomain = () => {
-  const notes = useNotes();
-  const notesForCurrentPage = useNotesForCurrentPage();
+export const useOtherNotesForCurrentDomain = (notes: UseQueryResult<Note[], Error>) => {
+  const notesForCurrentPage = useNotesForCurrentPage(notes);
 
   return useQuery({
     queryKey: ["useOtherNotesForCurrentDomain", notes.data, notesForCurrentPage.data],

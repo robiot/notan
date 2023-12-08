@@ -10,10 +10,10 @@ const manifest = {
   version: packageJson.version,
   description: "Note taking for the web",
   permissions: ["tabs", "activeTab"],
-  background: {
-    service_worker: "src/core/background/index.js",
-    type: "module",
-  },
+  // background: {
+  //   service_worker: "src/core/background/index.js",
+  //   type: "module",
+  // },
   action: {
     default_popup: "src/core/popup/index.html",
     default_icon: "icon-34.png",
@@ -21,7 +21,7 @@ const manifest = {
   icons: {
     128: "icon-128.png",
   },
-  host_permissions: ["*://*/*"],
+  // host_permissions: ["*://*/*"],
   content_scripts: [
     // {
     //   matches: ['http://*/*', 'https://*/*', '<all_urls>'],

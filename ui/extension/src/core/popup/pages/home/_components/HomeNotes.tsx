@@ -6,6 +6,7 @@ import { useCurrentTabInfo } from "@/core/popup/hooks/generic/useCurrentTabInfo"
 import { useNotes } from "@/core/popup/hooks/notes/useNotes";
 import { useOtherNotesForCurrentDomain } from "@/core/popup/hooks/notes/useNotesForCurrentDomain";
 import { useNotesForCurrentPage } from "@/core/popup/hooks/notes/useNotesForCurrentPage";
+import { useNotesForSearch } from "@/core/popup/hooks/notes/useNotesForSearch";
 
 import { NotesForSearch } from "./NotesForSearch";
 import { NotesOnCurrentDomain } from "./NotesOnCurrentDomain";
@@ -13,11 +14,19 @@ import { NotesOnCurrentPage } from "./NotesOnCurrentPage";
 
 export const HomeNotes: FC<{ search: string }> = ({ search }) => {
   const notes = useNotes();
-  const notesCurrentPage = useNotesForCurrentPage();
-  const notesDomain = useOtherNotesForCurrentDomain();
   const currentTab = useCurrentTabInfo();
 
-  if (notes.isFetching || notesCurrentPage.isFetching || notesDomain.isFetching || currentTab.isFetching) {
+  const notesCurrentPage = useNotesForCurrentPage(notes);
+  const notesDomain = useOtherNotesForCurrentDomain(notes);
+  const notesSearch = useNotesForSearch(notes, search);
+
+  if (
+    notes.isFetching ||
+    notesCurrentPage.isFetching ||
+    notesDomain.isFetching ||
+    currentTab.isFetching ||
+    notesSearch.isFetching
+  ) {
     return (
       <div className="flex mt-5 justify-center items-center">
         <Spinner size="sm" />
@@ -25,7 +34,7 @@ export const HomeNotes: FC<{ search: string }> = ({ search }) => {
     );
   }
 
-  if (search && search.length >= 3) return <NotesForSearch search={search} />;
+  if (search) return <NotesForSearch notes={notesSearch.data} />;
 
   return (
     <>
