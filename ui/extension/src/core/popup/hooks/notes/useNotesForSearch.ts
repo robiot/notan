@@ -6,7 +6,7 @@ export const useNotesForSearch = (search: string) => {
   const notes = useNotes();
 
   return useQuery({
-    queryKey: ["notesForSearch", search],
+    queryKey: ["notesForSearch", notes.data, search],
     enabled: notes.data !== undefined,
     queryFn: async () => {
       if (!notes.data) return [];

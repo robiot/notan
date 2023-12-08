@@ -57,6 +57,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <>
+      {isLoading && <div className="flex-1 flex-col flex items-center justify-center text-center">Loading</div>}
       <LoadScreen loading={isLoading} />
       {renewSession.isError ? (
         <div className="flex-1 flex-col flex items-center justify-center text-center">
@@ -64,7 +65,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
           <span className="text-base text-foreground/80">Check your internet connection and try again.</span>
         </div>
       ) : (
-        <>{!isLoading && children}</>
+        <>{children}</>
       )}
     </>
   );

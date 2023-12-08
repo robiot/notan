@@ -21,6 +21,9 @@ export const useNotes = () => {
         hasError(error.response);
       });
 
+      // wait 500ms
+      // await new Promise((resolve) => setTimeout(resolve, 600));
+
       if (!response) return;
 
       return response.data.data;

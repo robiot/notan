@@ -2,19 +2,21 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getCurrentTab } from "../../lib/tabs";
+import { useCurrentTabInfo } from "../generic/useCurrentTabInfo";
 import { useNotes } from "./useNotes";
 
 export const useNotesForCurrentPage = () => {
   const notes = useNotes();
 
-  return useQuery({
-    queryKey: ["notesForCurrentPage", notes.data],
-    enabled: notes.data !== undefined,
-    queryFn: async () => {
-      if (!notes.data) return [];
+  const tabInfo = useCurrentTabInfo();
 
-      const url = await getCurrentTab();
+  return useQuery({
+    queryKey: ["notesForCurrentPage", notes.data, tabInfo.data?.url],
+    enabled: notes.data !== undefined && tabInfo.data?.url !== undefined,
+    queryFn: async () => {
+      if (!notes.data || !tabInfo?.data.url) return [];
+
+      const url = tabInfo.data?.url;
 
       if (!url) return [];
 
