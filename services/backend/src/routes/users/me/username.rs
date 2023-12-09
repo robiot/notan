@@ -23,14 +23,16 @@ pub async fn handler(
     headers: HeaderMap,
     Json(body): Json<UserUsernameBody>,
 ) -> Result<Response<bool>> {
-    validation::validate_username(body.username.clone())?;
+    let username = body.username.clone().to_lowercase();
+
+    validation::validate_username(username.clone())?;
 
     let id = check_auth(headers.clone(), state.clone()).await?;
 
-    utils::database::user::check_username_taken(body.username.clone(), &state.db).await?;
+    utils::database::user::check_username_taken(username.clone(), &state.db).await?;
 
     sqlx::query(r#"UPDATE public.users SET username = $1 WHERE id = $2"#)
-        .bind(body.username.clone())
+        .bind(username.clone())
         .bind(id.clone())
         .execute(&state.db)
         .await?;
