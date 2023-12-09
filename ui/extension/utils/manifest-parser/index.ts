@@ -31,6 +31,12 @@ class ManifestParser {
       delete manifestCopy.options_page;
     }
 
+    manifestCopy.browser_specific_settings = {
+      gecko: {
+        id: "addon@notan.ax",
+      },
+    };
+
     manifestCopy.content_security_policy = {
       extension_pages: "script-src 'self'; object-src 'self'",
     };
