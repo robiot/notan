@@ -40,13 +40,14 @@ pub async fn handler(
     Json(body): Json<SignupBody>,
 ) -> Result<Response<SignupResponse>> {
     let username = body.username.clone().to_lowercase();
+    let email = body.email.clone().to_lowercase();
 
     validation::validate_password(body.password.clone())?;
     validation::validate_username(username.clone())?;
-    validation::validate_email(body.email.clone())?;
+    validation::validate_email(email.clone())?;
 
     utils::database::user::check_username_taken(username.clone(), &state.db).await?;
-    utils::database::user::check_email_taken(body.email.clone(), &state.db).await?;
+    utils::database::user::check_email_taken(email.clone(), &state.db).await?;
 
     let salt = SaltString::generate(&mut OsRng);
 
@@ -77,7 +78,7 @@ pub async fn handler(
         "#,
     )
     .bind(username.clone())
-    .bind(body.email.clone())
+    .bind(email.clone())
     .bind(password_hash)
     .bind(ip.clone())
     .fetch_one(&state.db)

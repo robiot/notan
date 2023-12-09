@@ -98,7 +98,7 @@ url: http://{}:{}
         .fallback(routes::not_found::handler)
         .layer(
             CorsLayer::new()
-                .allow_methods([Method::GET, Method::POST, Method::DELETE])
+                .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::PUT])
                 .allow_origin(AllowOrigin::any())
                 .allow_headers([
                     header::CONTENT_TYPE,

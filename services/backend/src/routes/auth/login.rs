@@ -30,17 +30,19 @@ pub async fn handler(
     _headers: HeaderMap,
     Json(body): Json<LoginBody>,
 ) -> Result<Response<LoginResponse>> {
+    let email = body.email.clone().to_lowercase();
+
     let user = match sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
         r#"SELECT * FROM public.users WHERE email = $1"#,
     )
-    .bind(body.email.clone())
+    .bind(email.clone())
     .fetch_one(&state.db)
     .await
     {
         Ok(user) => user,
         Err(error) => {
             if let sqlx::Error::RowNotFound = error {
-                log::trace!("User not found: {}", body.email);
+                log::trace!("User not found: {}", email);
                 return Err(Error::Unauthorized);
             } else {
                 return Err(error.into());
@@ -58,7 +60,7 @@ pub async fn handler(
         .verify_password(body.password.as_bytes(), &db_hash)
         .is_err()
     {
-        log::trace!("Invalid password for user: {}", body.email);
+        log::trace!("Invalid password for user: {}", email);
         return Err(Error::Unauthorized);
     }
 
