@@ -35,7 +35,7 @@ pub struct SignupResponse {
 
 pub async fn handler(
     State(state): State<Arc<AppState>>,
-    _headers: HeaderMap,
+    headers: HeaderMap,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     Json(body): Json<SignupBody>,
 ) -> Result<Response<SignupResponse>> {
@@ -58,6 +58,17 @@ pub async fn handler(
         Err(_) => return Err(Error::InternalServerError),
     };
 
+    let ip_from_cf = headers
+        .get("CF-Connecting-IP");
+
+    let ip = match ip_from_cf {
+        Some(ip) => match ip.to_str() {
+            Ok(ip) => ip.to_string(),
+            Err(_) => addr.ip().to_string(),
+        },
+        None => addr.ip().to_string(),
+    };
+
     let user = sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
         r#"
         INSERT INTO public.users (verified_mail, username, email, password, ip)
@@ -68,7 +79,7 @@ pub async fn handler(
     .bind(username.clone())
     .bind(body.email.clone())
     .bind(password_hash)
-    .bind(addr.ip().to_string())
+    .bind(ip.clone())
     .fetch_one(&state.db)
     .await?;
 
