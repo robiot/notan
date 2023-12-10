@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export const DownloadButton = () => {
-  const [_browser, setBrowser] = useState<string | null>(null);
+  const [_browser, setBrowser] = useState<string | null>("your browser");
   const [link, setLink] = useState<string | null>(null);
 
   useEffect(() => {
@@ -15,31 +15,45 @@ export const DownloadButton = () => {
 
     if (!browser?.name) return;
 
+    const chromeUrl =
+      "https://chromewebstore.google.com/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb";
+
+    const firefoxUrl =
+      "https://addons.mozilla.org/en-US/firefox/addon/notan/?utm_source=notan.ax";
+
     switch (browser && browser.name) {
       case "chrome":
-        setBrowser("Chrome");
-        setLink("https://og.ax");
+        if ((navigator as any)?.brave) {
+          setBrowser("Brave");
+        } else {
+          setBrowser("Chrome");
+        }
+
+        setLink(chromeUrl);
         break;
       case "firefox":
         setBrowser("Firefox");
-        setLink("https://og.ax");
+        setLink(firefoxUrl);
         break;
-
       case "edge":
         setBrowser("Edge");
-        setLink("https://og.ax");
+        setLink(chromeUrl);
         break;
-
+      case "opera":
+        setBrowser("Opera");
+        setLink(chromeUrl);
+        break;
       default:
         setBrowser("your browser");
+        setLink(chromeUrl);
     }
   }, []);
 
   return (
-    <Button className="ml-auto" asChild>
-      <Link href={link ?? ""}>
+    <Button className="w-fit font-bold h-12" asChild>
+      <Link href={link ?? ""} target="_blank">
         <Download className="w-4 mr-2" />
-        Add to your browser
+        Add to {_browser}
       </Link>
     </Button>
   );

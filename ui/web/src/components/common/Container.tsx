@@ -3,25 +3,24 @@ import { FC, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export const Container: FC<{
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
   noPadding?: boolean;
   size?: "xlarge" | "large" | "small";
 }> = ({ children, className, noPadding, size = "large" }) => {
   return (
-    <div className={cn("h-full flex w-full", !noPadding && "px-6")}>
-      <div
-        className={cn(
-          "w-full mx-auto",
-          size == "xlarge" && "max-w-6xl",
-          size == "large" && "max-w-4xl",
-          size == "small" && "max-w-md",
+    <div
+      className={cn(
+        "h-full w-full mx-auto",
+        !noPadding && "px-5 sm:px-0",
+        size == "xlarge" && "max-w-6xl",
+        size == "large" && "max-w-5xl",
+        size == "small" && "max-w-[38rem]",
 
-          className
-        )}
-      >
-        {children}
-      </div>
+        className
+      )}
+    >
+      {children}
     </div>
   );
 };

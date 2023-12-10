@@ -7,7 +7,10 @@ import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-const noto_sans = Noto_Sans({ subsets: ["latin"] });
+const noto_sans = Noto_Sans({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Notan",
