@@ -19,6 +19,9 @@ export default function Home() {
       <div className="mb-52"></div>
       {/* TODO: footer */}
       {/* TODO: about page */}
+      {/* TODO: animations */}
+      {/* TODO: easter egg apel */}
+      {/* TODO: easter egg apel */}
     </>
   );
 }
