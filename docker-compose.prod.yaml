@@ -31,10 +31,30 @@ services:
     environment:
       - PORT=8000
       - LOG_LEVEL=trace,backend=trace
-
       - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=${JWT_SECRET}
+
+  notangrafana:
+    image: grafana/grafana:9.3.6
+    networks:
+      - webnet
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafanadata:/var/lib/grafana
+
+  backup:
+    image: jareware/docker-volume-backup
+    networks:
+      - webnet
+    environment:
+      AWS_S3_BUCKET_NAME: notan-backup
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      - grafanadata:/backup/grafana-data:ro
+      - postgresdata:/backup/postgres-data:ro
 
 networks:
   webnet:
@@ -44,3 +64,4 @@ networks:
 volumes:
   postgresdata:
   redisdata:
+  grafanadata:

@@ -35,7 +35,6 @@ services:
       environment:
         - PORT=8000
         - LOG_LEVEL=trace,backend=trace
-
         - DATABASE_URL=postgres://postgres:root@postgres:5432/postgres
         - REDIS_URL=redis://redis:6379
         - JWT_SECRET=${JWT_SECRET}
