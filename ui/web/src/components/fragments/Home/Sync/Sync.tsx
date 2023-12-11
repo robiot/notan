@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Container } from "@/components/common/Container";
+import { SectionHeading } from "@/components/common/Content";
 
 export const HomeSyncSection = () => {
   return (
@@ -17,7 +18,7 @@ export const HomeSyncSection = () => {
             />
           </div>
           <div className="flex flex-col flex-1 gap-5 justify-end">
-            <h2 className="font-bold text-4xl">Synced Across Devices</h2>
+            <SectionHeading>Synced Across Devices</SectionHeading>
             <p>
               Your notes seamlessly travel with you across computer devices,
               ensuring you have access to your notes wherever you go. Stay in

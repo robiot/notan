@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Container } from "@/components/common/Container";
+import { SectionHeading } from "@/components/common/Content";
 
 export const HomeElevateWorkflowSection = () => {
   return (
@@ -8,7 +9,7 @@ export const HomeElevateWorkflowSection = () => {
       <Container className="py-24">
         <div className="flex gap-5 gap-y-14 flex-col-reverse sm:flex-row">
           <div className="flex flex-col flex-1 gap-5">
-            <h2 className="font-bold text-4xl">Elevate Your Workflow</h2>
+            <SectionHeading>Elevate Your Workflow</SectionHeading>
             <p>
               Effortlessly enhance your productivity with Notan. Seamlessly
               transition between tasks while keeping notes for your current tab.

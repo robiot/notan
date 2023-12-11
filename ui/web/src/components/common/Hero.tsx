@@ -1,12 +1,18 @@
 import { FC, ReactNode } from "react";
 
-import { Navbar } from "../assembled/navbar/Navbar";
+import { cn } from "@/lib/utils";
 
-export const Hero: FC<{ children: ReactNode }> = ({ children }) => {
+export const Hero: FC<{ children: ReactNode; className?: string }> = ({
+  children,
+  className,
+}) => {
   return (
-    <div className="flex flex-col items-center h-[45rem] w-full bg-blue-gradient text-background">
-      <Navbar />
-
+    <div
+      className={cn(
+        "flex flex-col items-center w-full text-background",
+        className
+      )}
+    >
       {children}
     </div>
   );

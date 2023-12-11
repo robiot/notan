@@ -68,6 +68,8 @@ module.exports = {
       },
       backgroundImage: {
         "blue-gradient": "linear-gradient(255deg, #0B4CC0 3.81%, #000 68.26%)",
+        "purple-blue-gradient":
+          "linear-gradient(255deg, #0B4CC0 3.81%, #470F8D 68.26%)",
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

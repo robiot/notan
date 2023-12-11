@@ -1,12 +1,15 @@
 import Image from "next/image";
 
 import { DownloadButton } from "@/components/assembled/navbar/DownloadButton";
+import { Navbar } from "@/components/assembled/navbar/Navbar";
 import { Container } from "@/components/common/Container";
 import { Hero, HeroHeading, HeroSubHeading } from "@/components/common/Hero";
 
 export const HomeTopSection = () => {
   return (
-    <Hero>
+    <Hero className="h-[45rem] bg-blue-gradient">
+      <Navbar />
+
       <Container
         noPadding
         className="relative border-x border-l-border/60 border-r-white/10"

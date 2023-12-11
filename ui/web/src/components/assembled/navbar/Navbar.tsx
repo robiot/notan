@@ -17,7 +17,7 @@ export const Navbar = () => {
           className="h-5 w-auto text-primary fill-primary"
         />
 
-        <div className="text-background flex gap-8">
+        <div className="text-background flex gap-8 font-normal">
           <Link href="/">Home</Link>
           <Link href="/about">About</Link>
         </div>
