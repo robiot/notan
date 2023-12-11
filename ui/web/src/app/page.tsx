@@ -16,8 +16,6 @@ export default function Home() {
       <HomeSyncSection />
       <HomeUsecasesSection />
       <HomeJoinSection />
-      {/* TODO: animations */}
-      {/* TODO: easter egg apel */}
     </>
   );
 }
