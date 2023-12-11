@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
+import { Footer } from "@/components/assembled/footer/Footer";
 import { cn } from "@/lib/utils";
 
 const noto_sans = Noto_Sans({
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={cn(noto_sans.className, "bg-background text-foreground")}
       >
         {children}
+        <Footer />
       </body>
     </html>
   );

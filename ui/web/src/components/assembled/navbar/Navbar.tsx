@@ -28,7 +28,7 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <div
+    <nav
       className={cn(
         "fixed top-0 z-50 left-0 h-20 w-full transition-colors duration-300",
         isNotTop
@@ -57,6 +57,6 @@ export const Navbar = () => {
           ))}
         </div>
       </Container>
-    </div>
+    </nav>
   );
 };
