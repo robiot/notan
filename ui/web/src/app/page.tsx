@@ -16,11 +16,7 @@ export default function Home() {
       <HomeSyncSection />
       <HomeUsecasesSection />
       <HomeJoinSection />
-      <div className="mb-52"></div>
-      {/* TODO: footer */}
-      {/* TODO: about page */}
       {/* TODO: animations */}
-      {/* TODO: easter egg apel */}
       {/* TODO: easter egg apel */}
     </>
   );
