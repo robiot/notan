@@ -15,8 +15,7 @@ export const DownloadButton = () => {
 
     if (!browser?.name) return;
 
-    const chromeUrl =
-      "https://chromewebstore.google.com/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb";
+    const chromeUrl = null;
 
     const firefoxUrl =
       "https://addons.mozilla.org/en-US/firefox/addon/notan/?utm_source=notan.ax";
@@ -51,7 +50,18 @@ export const DownloadButton = () => {
 
   return (
     <Button className="w-fit font-bold h-12" asChild>
-      <Link href={link ?? ""} target="_blank">
+      <Link
+        href={link ?? ""}
+        target="_blank"
+        onClick={(event) => {
+          if (link == null) {
+            alert(
+              "We are waiting for Chrome Web Store to approve our extension. Please check back later."
+            );
+            event.preventDefault();
+          }
+        }}
+      >
         <Download className="w-4 mr-2" />
         Add to {_browser}
       </Link>
