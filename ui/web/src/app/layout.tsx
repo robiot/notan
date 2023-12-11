@@ -6,6 +6,7 @@ import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
 import { Footer } from "@/components/assembled/footer/Footer";
+import { MetaDescription, MetaTitle } from "@/lib/content/meta";
 import { cn } from "@/lib/utils";
 
 const noto_sans = Noto_Sans({
@@ -13,9 +14,29 @@ const noto_sans = Noto_Sans({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
+const url = "https://notan.ax";
+
 export const metadata: Metadata = {
-  title: "Notan",
-  description: "The browser extension for seamless, page-specific note-taking.",
+  title: MetaTitle,
+  description: MetaDescription,
+
+  metadataBase: new URL(url),
+  openGraph: {
+    url: url,
+    images: [
+      {
+        url: "/og/og-image.png",
+        width: 1406,
+        height: 803,
+        alt: "Notan",
+        type: "image/png",
+      },
+    ],
+    siteName: "Notan",
+  },
+  alternates: {
+    canonical: url,
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
