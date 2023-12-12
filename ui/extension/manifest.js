@@ -9,7 +9,7 @@ const manifest = {
   name: "Notan",
   version: packageJson.version,
   description: "Note taking for the web",
-  permissions: ["tabs", "activeTab"],
+  permissions: ["tabs"],
   // background: {
   //   service_worker: "src/core/background/index.js",
   //   type: "module",
