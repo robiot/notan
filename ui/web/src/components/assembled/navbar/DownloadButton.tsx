@@ -15,7 +15,8 @@ export const DownloadButton = () => {
 
     if (!browser?.name) return;
 
-    const chromeUrl = null;
+    const chromeUrl =
+      "https://chromewebstore.google.com/detail/notan/hbjpkligkpghgjacpmfoccjjijkmngkg";
 
     const firefoxUrl =
       "https://addons.mozilla.org/en-US/firefox/addon/notan/?utm_source=notan.ax";
