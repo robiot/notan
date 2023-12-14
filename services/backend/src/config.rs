@@ -13,6 +13,8 @@ pub struct Config {
     pub redis_url: String,
 
     pub jwt_secret: String,
+
+    pub stripe_secret_key: String,
 }
 
 pub fn get_config() -> Result<Config> {

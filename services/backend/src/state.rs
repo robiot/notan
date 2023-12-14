@@ -7,4 +7,5 @@ pub struct AppState {
     pub config: Config,
     pub db: PgPool,
     pub redis: redis::Client,
+    pub stripe: stripe::Client,
 }

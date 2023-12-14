@@ -38,6 +38,7 @@ services:
         - DATABASE_URL=postgres://postgres:root@postgres:5432/postgres
         - REDIS_URL=redis://redis:6379
         - JWT_SECRET=${JWT_SECRET}
+        - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       command: cargo watch -x run
 
 volumes:

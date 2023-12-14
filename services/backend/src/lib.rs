@@ -64,10 +64,13 @@ pub async fn start(
     let redis_client =
         redis::Client::open(config.clone().redis_url).expect("Could not create redis client");
 
+    let stripe_client = stripe::Client::new(config.clone().stripe_secret_key);
+
     let app_state = Arc::new(state::AppState {
         config,
         db,
         redis: redis_client,
+        stripe: stripe_client,
     });
 
     let port = app_state.config.port;
