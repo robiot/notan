@@ -28,9 +28,9 @@ pub async fn handler(
     .fetch_one(&state.db)
     .await?;
 
-    if count >= 35 {
+    if count >= 25 {
         return Err(Error::BadRequest(ResponseError {
-            message: "Limit of 35 notes has been reached".to_string(),
+            message: "Limit of 25 notes has been reached".to_string(),
             name: "max_notes".to_string(),
         }));
     }
