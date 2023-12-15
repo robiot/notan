@@ -48,6 +48,12 @@ pub enum Error {
     #[error(transparent)]
     RedisConnectError(#[from] redis::RedisError),
 
+    #[error(transparent)]
+    StripeError(#[from] stripe::StripeError),
+
+    #[error(transparent)]
+    ParseIdError(#[from] stripe::ParseIdError),
+
     #[error("Multipart is missing files")]
     MultiPartMissingFiles,
 

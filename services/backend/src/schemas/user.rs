@@ -9,6 +9,6 @@ pub struct User {
     pub email: String,
     pub password: String,
     pub ip: String,
-    pub stripe_customer_id: String,
+    pub stripe_customer_id: Option<String>,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }

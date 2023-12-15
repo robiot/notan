@@ -4,5 +4,5 @@ pub mod buy;
 
 #[derive(Deserialize)]
 pub struct ProductsIdParams {
-    pub id: String,
+    pub product_id: String,
 }
