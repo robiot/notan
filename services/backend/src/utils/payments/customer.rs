@@ -1,16 +1,17 @@
 use std::str::FromStr;
 
-use crate::{auth::get_user_id_from_headers, error::Result, schemas, state::AppState};
+use crate::{error::Result, schemas, state::AppState};
 
-use {hyper::HeaderMap, std::sync::Arc};
+use std::sync::Arc;
 
 /**
  * Returns the Stripe customer object for the signed in user
  * creates a stripe customer if one does not exist
  */
-pub async fn get_stripe_customer(headers: HeaderMap, state: Arc<AppState>) -> Result<stripe::Customer> {
-    let user_id = get_user_id_from_headers(headers, state.clone())?;
-
+pub async fn get_stripe_customer_by_user_id(
+    user_id: String,
+    state: Arc<AppState>,
+) -> Result<stripe::Customer> {
     // check if user with id has a stripe_customer_id
     let user = sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
         r#"SELECT * FROM public.users WHERE id = $1"#,
