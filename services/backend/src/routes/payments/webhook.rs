@@ -12,5 +12,9 @@ pub async fn handler(
     // Json(body): Json<SubscriptionSubscribeBody>,
 ) -> Result<Response<IntentResponse>> {
     todo!("Do this");
+    // event
+    // intent paid -> save to db
+    // subscription created,paid -> save to db
+    // subscription canceled -> delete from db
     // Ok(Response::new_success(StatusCode::OK, None))
 }

@@ -2,6 +2,8 @@ pub mod methods;
 pub mod products;
 pub mod subscriptions;
 pub mod webhook;
+pub mod buy;
+pub mod prices;
 
 use crate::state::AppState;
 
@@ -25,14 +27,23 @@ pub struct IntentResponse {
 pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
     // /notes
     Router::new()
+        // Buy
         .route(
-            "/products/:product_id/intent",
-            post(products::id::intent::handler),
+            "/payments/buy/:price_id/intent",
+            post(buy::price_id::intent::handler),
         )
         .route(
-            "/subscriptions/:product_id/subscribe",
-            post(subscriptions::id::subscribe::handler),
+            "/payments/buy/:price_id/subscribe",
+            post(buy::price_id::subscribe::handler),
         )
+
+        // Subscriptions
+        .route(
+            "/subscriptions/:id/subscribe",
+            post(subscriptions::id::cancel::handler),
+        )
+        
+        // Webhook
         .route("/webhook", post(webhook::handler))
         // for later
         // .layer(middleware::from_fn_with_state(app_state.clone(), crate::middleware::auth::auth_middleware))

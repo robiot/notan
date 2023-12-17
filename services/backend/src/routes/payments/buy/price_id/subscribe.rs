@@ -3,7 +3,7 @@ use crate::{
     error::{Error, Result},
     routes::{payments::IntentResponse, Response},
     state::AppState,
-    utils::payments::{customer, products},
+    utils::payments::customer,
 };
 
 use {
@@ -12,53 +12,48 @@ use {
     hyper::HeaderMap,
     hyper::StatusCode,
     serde::{Deserialize, Serialize},
+    std::str::FromStr,
     std::sync::Arc,
 };
 
-use super::SubscriptionsIdParams;
+use super::BuyIdParams;
 
 #[derive(Serialize, Deserialize)]
 pub struct SubscriptionSubscribeBody {
-    // if card_token is not provided, you have to use elements
-    pub card_token: Option<String>,
+    // card has to be created before
+    pub card_token: String,
 }
 
 pub async fn handler(
     State(state): State<Arc<AppState>>,
-    Path(params): Path<SubscriptionsIdParams>,
+    Path(params): Path<BuyIdParams>,
     headers: HeaderMap,
     Json(body): Json<SubscriptionSubscribeBody>,
 ) -> Result<Response<IntentResponse>> {
     let id = check_auth(headers.clone(), state.clone()).await?;
     let customer = customer::get_stripe_customer_by_user_id(id.clone(), state.clone()).await?;
-    let price =
-        products::get_product_price_object(params.product_id.clone(), state.clone()).await?;
+
+    let price = stripe::Price::retrieve(
+        &state.stripe,
+        &stripe::PriceId::from_str(&params.price_id.clone())?,
+        &[],
+    )
+    .await?;
 
     // Subscription
     let mut subscription_data = stripe::CreateSubscription::new(customer.id);
     subscription_data.currency = Some(stripe::Currency::EUR);
     subscription_data.payment_behavior =
         Some(stripe::SubscriptionPaymentBehavior::DefaultIncomplete);
-    subscription_data.expand = &[
-        "items",
-        "items.data.price.product",
-        "schedule",
-        "latest_invoice.payment_intent",
-    ];
+    subscription_data.expand = &["latest_invoice.payment_intent"];
+
     subscription_data.items = Some(vec![stripe::CreateSubscriptionItems {
         price: Some(price.id.to_string()),
         ..Default::default()
     }]);
 
-    // disable unused assignment warning
-    #[allow(unused_assignments)]
-    let mut card_token_str = String::new();
-    if let Some(card_token) = body.card_token {
-        // so it does not get dropped
-        card_token_str = card_token.clone();
-
-        subscription_data.default_payment_method = Some(&card_token_str);
-    }
+    let card_token_str = body.card_token.clone();
+    subscription_data.default_payment_method = Some(&card_token_str);
 
     let subscription = stripe::Subscription::create(&state.stripe, subscription_data).await?;
 
