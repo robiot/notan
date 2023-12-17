@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-pub mod intent;
+pub mod get_purchases;
 
 #[derive(Deserialize)]
 pub struct ProductsIdParams {

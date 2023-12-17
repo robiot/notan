@@ -25,15 +25,15 @@ pub struct IntentResponse {
 }
 
 pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
-    // /notes
+    // /payments
     Router::new()
         // Buy
         .route(
-            "/payments/buy/:price_id/intent",
+            "/buy/:price_id/intent",
             post(buy::price_id::intent::handler),
         )
         .route(
-            "/payments/buy/:price_id/subscribe",
+            "/buy/:price_id/subscribe",
             post(buy::price_id::subscribe::handler),
         )
 
@@ -42,6 +42,9 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
             "/subscriptions/:id/subscribe",
             post(subscriptions::id::cancel::handler),
         )
+
+        // Prices
+        .route("/prices/get", post(prices::get::handler))
         
         // Webhook
         .route("/webhook", post(webhook::handler))

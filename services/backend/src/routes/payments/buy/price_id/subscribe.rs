@@ -68,7 +68,10 @@ pub async fn handler(
             stripe::Expandable::Object(payment_intent) => payment_intent.client_secret,
             _ => None,
         })
-        .ok_or(Error::InternalServerError)?;
+        .ok_or(Error::StripeFieldNotFoundError(
+            "Price Subscription invoice.payment_intent, or payment_intent.client_secret"
+                .to_string(),
+        ))?;
 
     Ok(Response::new_success(
         StatusCode::OK,
