@@ -8,7 +8,7 @@ pub mod prices;
 use crate::state::AppState;
 
 use {
-    axum::routing::post,
+    axum::routing::{get, post},
     axum::Router,
     serde::{Deserialize, Serialize},
     std::sync::Arc,
@@ -43,8 +43,14 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
             post(subscriptions::id::cancel::handler),
         )
 
+        // Products
+        .route(
+            "/products/:product_id/get_purchases",
+            get(products::id::get_purchases::handler),
+        )
+
         // Prices
-        .route("/prices", post(prices::get::handler))
+        .route("/prices", get(prices::get::handler))
         
         // Webhook
         .route("/webhook", post(webhook::handler))

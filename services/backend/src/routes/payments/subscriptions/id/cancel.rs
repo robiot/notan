@@ -1,21 +1,18 @@
-
-
 use crate::{
     auth::check_auth,
     error::Result,
     routes::{payments::IntentResponse, Response},
     state::AppState,
-    utils::payments::customer,
 };
 
 use {
     axum::extract::{Path, State},
     axum::Json,
     hyper::HeaderMap,
+    hyper::StatusCode,
     serde::{Deserialize, Serialize},
-    std::sync::Arc,
     std::str::FromStr,
-    hyper::StatusCode
+    std::sync::Arc,
 };
 
 use super::SubscriptionsIdParams;
@@ -32,8 +29,16 @@ pub async fn handler(
     headers: HeaderMap,
     Json(_body): Json<SubscriptionSubscribeBody>,
 ) -> Result<Response<IntentResponse>> {
-    let id = check_auth(headers.clone(), state.clone()).await?;
-    let _customer = customer::get_stripe_customer_by_user_id(id.clone(), state.clone()).await?;
+    let _id = check_auth(headers.clone(), state.clone()).await?;
+
+    // todo: check that params.id is owned by user
+    // let _subscription = sqlx::query_as::<sqlx::Postgres, schemas::::StripeSubscription>(
+    //     r#"SELECT * FROM public.stripe_subscriptions WHERE stripe_subscription_id = $1 AND user_id = $2"#,
+    // )
+    // .bind(params.id.clone())
+    // .bind(id.clone())
+    // .fetch_one(&state.db)
+    // .await?;
 
     stripe::Subscription::cancel(
         &state.stripe,

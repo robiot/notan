@@ -1,39 +1,52 @@
-use crate::{
-    auth::check_auth,
-    error::Result,
-    routes::{payments::IntentResponse, Response},
-    state::AppState,
-    utils::payments::customer,
-};
+use crate::{auth::check_auth, error::Result, routes::Response, state::AppState};
 
 use {
     axum::extract::{Path, State},
-    axum::Json,
     hyper::HeaderMap,
     serde::{Deserialize, Serialize},
     std::sync::Arc,
+    hyper::StatusCode
 };
 
 use super::ProductsIdParams;
 
 #[derive(Serialize, Deserialize)]
-pub struct SubscriptionSubscribeBody {
-    // card has to be created before
-    pub card_token: String,
+pub struct ProductGetPurchasesResponse {
+    pub owns: i32,
+    pub max: i32,
 }
 
+// 我爱汉堡包！
 pub async fn handler(
     State(state): State<Arc<AppState>>,
-    Path(_params): Path<ProductsIdParams>,
+    Path(params): Path<ProductsIdParams>,
     headers: HeaderMap,
-    Json(_body): Json<SubscriptionSubscribeBody>,
-) -> Result<Response<IntentResponse>> {
+) -> Result<Response<ProductGetPurchasesResponse>> {
     let id = check_auth(headers.clone(), state.clone()).await?;
-    let _customer = customer::get_stripe_customer_by_user_id(id.clone(), state.clone()).await?;
 
-    todo!("Do this");
-    // Ok(Response::new_success(
-    //     StatusCode::OK,
-    //     Some(IntentResponse { client_secret }),
-    // ))
+    // get how many times user has the product with id params.id
+    let owns_count: i64 = sqlx::query_scalar(
+        r#"
+        SELECT COUNT(*) FROM public.product_purchases WHERE user_id = $1 AND stripe_product_id = $2;
+        "#,
+    )
+    .bind(id.clone())
+    .bind(params.product_id.clone())
+    .fetch_one(&state.db)
+    .await?;
+
+    let product = sqlx::query_as::<sqlx::Postgres, crate::schemas::stripe_product::StripeProduct>(
+        r#"SELECT * FROM public.stripe_products WHERE stripe_product_id = $1"#,
+    )
+    .bind(params.product_id.clone())
+    .fetch_one(&state.db)
+    .await?;
+
+    Ok(Response::new_success(
+        StatusCode::OK,
+        Some(ProductGetPurchasesResponse {
+            owns: owns_count as i32,
+            max: product.max_own.unwrap_or(0),
+        }),
+    ))
 }
