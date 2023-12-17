@@ -1,10 +1,11 @@
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 use crate::{
     error::{Error, Result},
     state::AppState,
 };
 
+// this really needs rework in the future to check if the products are up to date and if not, update them
 pub async fn ensure_stripe_products(state: Arc<AppState>) -> Result<()> {
     // todo: check if products are up to date
     let prices = sqlx::query_as::<
@@ -51,14 +52,57 @@ pub async fn ensure_stripe_products(state: Arc<AppState>) -> Result<()> {
             // Insert price
             sqlx::query(
                 r#"
-                    INSERT INTO public.stripe_product_prices (stripe_price_id, stripe_product_id)
-                    VALUES ($1, $2)
+                    INSERT INTO public.stripe_product_prices (stripe_price_id, stripe_product_id, lookup_key)
+                    VALUES ($1, $2, $3)
                     "#,
             )
             .bind(price.id.to_string())
             .bind(stripe_product.id.to_string())
+            .bind(price.lookup_key.clone())
             .execute(&state.db)
             .await?;
+
+            let currency_options = if let Some(currency_options) = price.currency_options.clone() {
+                currency_options
+            } else {
+                let currency = price.currency.ok_or(Error::StripeFieldNotFoundError(
+                    "Price currency".to_string(),
+                ))?;
+
+                let mut new_hashmap: HashMap<stripe::Currency, stripe::CurrencyOption> =
+                    HashMap::new();
+
+                new_hashmap.insert(
+                    currency,
+                    stripe::CurrencyOption {
+                        unit_amount: price.unit_amount,
+                        ..Default::default()
+                    },
+                );
+
+                new_hashmap
+            };
+
+            // iterate over currency options and insert them into db
+            for (currency, currency_option) in currency_options.iter() {
+                let unit_amount = currency_option
+                    .unit_amount
+                    .ok_or(Error::StripeFieldNotFoundError(
+                        "currency_option.unit_amount".to_string(),
+                    ))?;
+
+                sqlx::query(
+                    r#"
+                    INSERT INTO public.stripe_price_currencies (stripe_price_id, currency, price)
+                    VALUES ($1, $2, $3)
+                    "#,
+                )
+                .bind(price.id.to_string())
+                .bind(currency.to_string())
+                .bind(unit_amount)
+                .execute(&state.db)
+                .await?;
+            }
 
             // Insert product
             if inserted_products.contains(&stripe_product.id.to_string()) {

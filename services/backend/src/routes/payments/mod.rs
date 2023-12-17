@@ -44,7 +44,7 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
         )
 
         // Prices
-        .route("/prices/get", post(prices::get::handler))
+        .route("/prices", post(prices::get::handler))
         
         // Webhook
         .route("/webhook", post(webhook::handler))
