@@ -57,21 +57,6 @@ pub async fn handler(
     payment_intent_data.customer = Some(customer.id);
     payment_intent_data.receipt_email = Some(&user.email);
 
-    // let product_id = price
-    //     .product
-    //     .clone()
-    //     .and_then(|product| match product {
-    //         stripe::Expandable::Object(product) => Some(product.id),
-    //         _ => None,
-    //     })
-    //     .ok_or(Error::InternalServerError)?;
-
-    // let mut metadata = HashMap::new();
-    // metadata.insert("product_id".to_string(), product_id.to_string());
-    // metadata.insert("price_id".to_string(), price.clone().id.to_string());
-
-    // payment_intent_data.metadata = Some(metadata);
-
     // payment_intent.confirm = Some(true);
 
     // if card_token is provided, use it
