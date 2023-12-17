@@ -1,3 +1,5 @@
+use crate::utils::payments::sync;
+
 use {
     axum::routing::get,
     axum::Router,
@@ -72,6 +74,9 @@ pub async fn start(
         redis: redis_client,
         stripe: stripe_client,
     });
+
+    // Sync stripe products
+    sync::ensure_stripe_products(app_state.clone()).await?;
 
     let port = app_state.config.port;
 
