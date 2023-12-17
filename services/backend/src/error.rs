@@ -54,17 +54,8 @@ pub enum Error {
     #[error(transparent)]
     ParseIdError(#[from] stripe::ParseIdError),
 
-    #[error("Multipart is missing files")]
-    MultiPartMissingFiles,
-
-    #[error("Multipart is missing a filename")]
-    MultiPartMissingName,
-
-    #[error("Could not reach an external endpoint")]
-    CouldNotReachExternalEndpoint,
-
-    #[error("User does not exist")]
-    UserDoesNotExist,
+    #[error("Required field {0} not found")]
+    StripeFieldNotFoundError(String),
 
     // Generic errors
     #[error("Not found")]
@@ -99,27 +90,6 @@ impl IntoResponse for Error {
                     }],
                 )
             }
-            Error::MultiPartMissingName => routes::Response::new_failure(
-                StatusCode::BAD_GATEWAY,
-                vec![ResponseError {
-                    name: "missing_name".to_string(),
-                    message: "Missing name for file".to_string(),
-                }],
-            ),
-            Error::MultiPartMissingFiles => routes::Response::new_failure(
-                StatusCode::BAD_GATEWAY,
-                vec![ResponseError {
-                    name: "missing_files".to_string(),
-                    message: "Missing files".to_string(),
-                }],
-            ),
-            Error::UserDoesNotExist => routes::Response::new_failure(
-                StatusCode::NOT_FOUND,
-                vec![ResponseError {
-                    name: "user_not_found".to_string(),
-                    message: "User was not found".to_string(),
-                }],
-            ),
             Error::Unauthorized => routes::Response::new_failure(
                 StatusCode::UNAUTHORIZED,
                 vec![ResponseError {
