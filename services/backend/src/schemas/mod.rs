@@ -1,3 +1,4 @@
+pub mod active_subscriptions;
 pub mod note;
 pub mod note_tag;
 pub mod stripe_price_currency;

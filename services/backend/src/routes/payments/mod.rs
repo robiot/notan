@@ -42,8 +42,12 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
         // Subscriptions
         //
         .route(
-            "/subscriptions/:id/subscribe",
+            "/subscriptions/:id/cancel",
             post(subscriptions::id::cancel::handler),
+        )
+        .route(
+            "/subscriptions",
+            get(subscriptions::get::handler),
         )
         //
         // Products
