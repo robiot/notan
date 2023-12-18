@@ -31,14 +31,7 @@ pub async fn handler(
 ) -> Result<Response<IntentResponse>> {
     let _id = check_auth(headers.clone(), state.clone()).await?;
 
-    // todo: check that params.id is owned by user
-    // let _subscription = sqlx::query_as::<sqlx::Postgres, schemas::::StripeSubscription>(
-    //     r#"SELECT * FROM public.stripe_subscriptions WHERE stripe_subscription_id = $1 AND user_id = $2"#,
-    // )
-    // .bind(params.id.clone())
-    // .bind(id.clone())
-    // .fetch_one(&state.db)
-    // .await?;
+    // todo: (security) check that params.id is owned by user
 
     stripe::Subscription::cancel(
         &state.stripe,
