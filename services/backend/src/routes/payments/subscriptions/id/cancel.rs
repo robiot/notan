@@ -1,9 +1,4 @@
-use crate::{
-    auth::check_auth,
-    error::Result,
-    routes::{payments::IntentResponse, Response},
-    state::AppState,
-};
+use crate::{auth::check_auth, error::Result, routes::Response, state::AppState};
 
 use {
     axum::extract::{Path, State},
@@ -28,7 +23,7 @@ pub async fn handler(
     Path(params): Path<SubscriptionsIdParams>,
     headers: HeaderMap,
     Json(_body): Json<SubscriptionSubscribeBody>,
-) -> Result<Response<IntentResponse>> {
+) -> Result<Response<String>> {
     let _id = check_auth(headers.clone(), state.clone()).await?;
 
     // todo: (security) check that params.id is owned by user

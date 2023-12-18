@@ -10,19 +10,8 @@ use crate::state::AppState;
 use {
     axum::routing::{delete, get, post},
     axum::Router,
-    serde::{Deserialize, Serialize},
     std::sync::Arc,
 };
-
-#[derive(Serialize, Deserialize)]
-pub struct CardActionBody {
-    pub card_token: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct IntentResponse {
-    pub client_secret: String,
-}
 
 pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
     // /payments

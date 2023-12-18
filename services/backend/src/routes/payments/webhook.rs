@@ -1,8 +1,4 @@
-use crate::{
-    error::Result,
-    routes::{payments::IntentResponse, Response},
-    state::AppState,
-};
+use crate::{error::Result, routes::Response, state::AppState};
 
 use {axum::extract::State, hyper::HeaderMap, std::sync::Arc};
 
@@ -10,7 +6,7 @@ pub async fn handler(
     State(_state): State<Arc<AppState>>,
     _headers: HeaderMap,
     // Json(body): Json<SubscriptionSubscribeBody>,
-) -> Result<Response<IntentResponse>> {
+) -> Result<Response<String>> {
     todo!("Do this");
     // event
     // intent paid -> save to db
