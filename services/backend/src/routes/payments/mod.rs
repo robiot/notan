@@ -34,10 +34,7 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
             "/subscriptions/:id/cancel",
             post(subscriptions::id::cancel::handler),
         )
-        .route(
-            "/subscriptions",
-            get(subscriptions::get::handler),
-        )
+        .route("/subscriptions", get(subscriptions::get::handler))
         //
         // Products
         //
@@ -64,7 +61,7 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
         //
         // Webhook
         //
-        .route("/webhook", post(webhook::handler))
+        .route("/webhook", post(webhook::post::handler))
         // for later
         // .layer(middleware::from_fn_with_state(app_state.clone(), crate::middleware::auth::auth_middleware))
         .with_state(app_state)

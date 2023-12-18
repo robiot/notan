@@ -1,6 +1,10 @@
 use crate::{
-    auth::check_auth, error::Result, routes::Response, schemas, state::AppState,
-    utils::payments::customer,
+    auth::check_auth,
+    error::Result,
+    routes::Response,
+    schemas,
+    state::AppState,
+    utils::payments::{customer, prices::ensure_product_limit_by_price},
 };
 
 use {
@@ -22,11 +26,12 @@ pub async fn handler(
 ) -> Result<Response<String>> {
     let id = check_auth(headers.clone(), state.clone()).await?;
     let customer = customer::get_stripe_customer_by_user_id(id.clone(), state.clone()).await?;
+    ensure_product_limit_by_price(id.clone(), params.price_id.clone(), state.clone()).await?;
 
     let user = sqlx::query_as::<sqlx::Postgres, crate::schemas::user::User>(
         r#"SELECT * FROM public.users WHERE id = $1"#,
     )
-    .bind(id)
+    .bind(id.clone())
     .fetch_one(&state.db)
     .await?;
 

@@ -52,6 +52,9 @@ pub enum Error {
     StripeError(#[from] stripe::StripeError),
 
     #[error(transparent)]
+    WebhookError(#[from] stripe::WebhookError),
+
+    #[error(transparent)]
     ParseIdError(#[from] stripe::ParseIdError),
 
     #[error("Required field {0} not found")]

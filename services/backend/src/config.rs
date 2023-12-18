@@ -15,6 +15,7 @@ pub struct Config {
     pub jwt_secret: String,
 
     pub stripe_secret_key: String,
+    pub stripe_webhook_secret: String,
 }
 
 pub fn get_config() -> Result<Config> {
