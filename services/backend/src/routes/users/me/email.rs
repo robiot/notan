@@ -37,5 +37,25 @@ pub async fn handler(
         .execute(&state.db)
         .await?;
 
+    // update stripe customer
+
+    let customer = utils::payments::customer::get_stripe_customer_if_exists_by_user_id(
+        id.clone(),
+        state.clone(),
+    )
+    .await?;
+
+    if let Some(customer) = customer {
+        stripe::Customer::update(
+            &state.stripe,
+            &customer.id,
+            stripe::UpdateCustomer {
+                email: Some(&email.clone()),
+                ..Default::default()
+            },
+        )
+        .await?;
+    }
+
     Ok(Response::new_success(StatusCode::OK, None))
 }

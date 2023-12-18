@@ -55,3 +55,31 @@ pub async fn get_stripe_customer_by_user_id(
 
     Ok(customer)
 }
+
+pub async fn get_stripe_customer_if_exists_by_user_id(
+    user_id: String,
+    state: Arc<AppState>,
+) -> Result<Option<stripe::Customer>> {
+    // check if user with id has a stripe_customer_id
+    let user = sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
+        r#"SELECT * FROM public.users WHERE id = $1"#,
+    )
+    .bind(user_id.clone())
+    .fetch_one(&state.db)
+    .await?;
+
+    let customer = if let Some(stripe_customer_id) = user.stripe_customer_id {
+        Some(
+            stripe::Customer::retrieve(
+                &state.stripe,
+                &stripe::CustomerId::from_str(stripe_customer_id.as_str())?,
+                &[],
+            )
+            .await?,
+        )
+    } else {
+        None
+    };
+
+    Ok(customer)
+}
