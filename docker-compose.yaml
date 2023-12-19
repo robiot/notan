@@ -20,12 +20,13 @@ services:
       ports:
           - "6379:6379"
 
+  # doesnt work to connect to webhook, fix
   stripe-cli:
     image: stripe/stripe-cli
     network_mode: host
     profiles: ["services", "all"]
     container_name: stripe-cli
-    command: "listen --api-key ${STRIPE_SECRET_KEY} --device-name docker --forward-to localhost:8000/payments/webhook"
+    command: "listen --api-key ${STRIPE_SECRET_KEY} --device-name docker --forward-to 0.0.0.0:8000/payments/webhook"
 
   backend:
       build: services/backend

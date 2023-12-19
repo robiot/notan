@@ -57,5 +57,7 @@ pub async fn handler(
 
     stripe::PaymentIntent::create(&state.stripe, payment_intent_data).await?;
 
+    // responding with error (StripeError(Stripe(RequestError { http_status: 402, error_type: Card, message: Some("Your card was declined."), code: Some(CardDeclined), decline_code: Some("generic_decline"), charge
+    // Safe to assume that the payment intent was created successfully and charged here
     Ok(Response::new_success(StatusCode::OK, None))
 }
