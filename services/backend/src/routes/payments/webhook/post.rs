@@ -1,4 +1,3 @@
-use hyper::StatusCode;
 
 use crate::{
     error::{Error, Result},
@@ -8,7 +7,9 @@ use crate::{
 
 use {
     axum::extract::State,
+    // sqlx::types::chrono::{TimeZone, DateTime, Utc},
     hyper::HeaderMap,
+    hyper::StatusCode,
     std::sync::Arc,
     stripe::{EventObject, EventType},
 };
@@ -26,6 +27,7 @@ pub async fn handler(
             name: "no_sig".to_string(),
         }));
     };
+
     let body = match std::str::from_utf8(&body) {
         Ok(body) => body,
         Err(error) => {
@@ -36,11 +38,9 @@ pub async fn handler(
         }
     };
 
-    // println!("Received webhook: {:?}", body);
-
     let event = match stripe::Webhook::construct_event(
         body,
-        signature.to_str().unwrap(),
+        signature.to_str().unwrap_or(""),
         &state.config.stripe_webhook_secret,
     ) {
         Ok(event) => event,
@@ -55,37 +55,25 @@ pub async fn handler(
     };
 
     match event.type_ {
-        EventType::PaymentIntentSucceeded => {
-            // todo: finish this
-            if let EventObject::PaymentIntent(intent) = event.data.object {
-                // insert product purchase into db
-                // println!("Received payment intent success: {:?}", intent);
-
-                let _user = sqlx::query_as::<sqlx::Postgres, crate::schemas::user::User>(
-                    r#"SELECT * FROM public.users WHERE id = $1"#,
-                )
-                .bind(intent.metadata.get("user_id").unwrap())
-                .fetch_one(&state.db)
-                .await?;
-
-                // println!("Received payment intent done: {:?}", intent.);
+        EventType::InvoicePaid => {
+            if let EventObject::Invoice(invoice) = event.data.object {
+                super::_actions::invoice_paid::webhook_handler(invoice, &state).await?;
             }
         }
-        // EventType::AccountUpdated => {
-        //     if let EventObject::Account(account) = event.data.object {
-        //         println!(
-        //             "Received account updated webhook for account: {:?}",
-        //             account.id
-        //         );
-        //     }
-        // }
+        EventType::InvoicePaymentFailed => {
+            if let EventObject::Invoice(invoice) = event.data.object {
+                super::_actions::invoice_payment_failed::webhook_handler(invoice, &state).await?;
+            }
+        }
+        EventType::CustomerSubscriptionDeleted => {
+            if let EventObject::Subscription(subscription) = event.data.object {
+                super::_actions::subscription_deleted::webhook_handler(subscription, &state).await?;
+            }
+        }
+        // subscription paid -> save to db
+        // subscription canceled -> delete from db
         _ => log::trace!("Unknown event encountered in webhook: {:?}", event.type_),
     }
 
-    // todo!("Do this");
-    // event
-    // intent paid -> save to db
-    // subscription created,paid -> save to db
-    // subscription canceled -> delete from db
     Ok(Response::new_success(StatusCode::OK, None))
 }

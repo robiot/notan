@@ -51,3 +51,14 @@ pub async fn check_email_taken(email: String, pool: &Pool<Postgres>) -> Result<(
 
     Ok(())
 }
+
+// pub async fn get_user_by_id(id: String, pool: &Pool<Postgres>) -> Result<schemas::user::User> {
+//     let user = sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
+//         r#"SELECT * FROM public.users WHERE id = $1"#,
+//     )
+//     .bind(id.clone())
+//     .fetch_one(pool)
+//     .await?;
+
+//     Ok(user)
+// }
