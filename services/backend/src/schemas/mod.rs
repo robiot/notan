@@ -6,3 +6,4 @@ pub mod stripe_product;
 pub mod stripe_product_price;
 pub mod tag;
 pub mod user;
+pub mod product_purchases;

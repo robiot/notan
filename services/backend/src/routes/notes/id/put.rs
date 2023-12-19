@@ -2,11 +2,15 @@ use axum::Json;
 
 use crate::{
     auth::check_auth,
-    error::Result,
-    routes::{notes::NoteDataBody, Response},
+    error::{Result, Error},
+    routes::{notes::NoteDataBody, Response, ResponseError},
     schemas,
     state::AppState,
-    utils::database::tags::connect_tags_to_note,
+    utils::{
+        database::tags::connect_tags_to_note,
+        limits,
+        validation::{validate_note_body, validate_title, validate_url, validate_url_usage},
+    },
 };
 
 use {
@@ -24,6 +28,31 @@ pub async fn handler(
     Json(body): Json<NoteDataBody>,
 ) -> Result<Response<String>> {
     let id = check_auth(headers.clone(), state.clone()).await?;
+    let limits = limits::get_limits(id.clone(), state.clone()).await?;
+
+    validate_title(body.title.clone())?;
+    validate_note_body(body.note.clone(), limits.clone())?;
+    validate_url(body.url.clone())?;
+
+    validate_url_usage(body.url.clone(), limits.clone(), id.clone(), &state).await?;
+
+
+    // check if user is above limit
+    let count: i64 = sqlx::query_scalar(
+        r#"
+        SELECT COUNT(*) FROM public.notes WHERE user_id = $1;
+        "#,
+    )
+    .bind(id.clone())
+    .fetch_one(&state.db)
+    .await?;
+
+    if count > limits.max_note_storage as i64 {
+        return Err(Error::BadRequest(ResponseError {
+            message: "You are above your current limit".to_string(),
+            name: "above_limit".to_string(),
+        }));
+    }
 
     // update
     let note = sqlx::query_as::<sqlx::Postgres, schemas::note::Note>(
