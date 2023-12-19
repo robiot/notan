@@ -35,6 +35,14 @@ pub async fn handler(
     .fetch_one(&state.db)
     .await?;
 
+    let product_price =
+        sqlx::query_as::<sqlx::Postgres, crate::schemas::stripe_product_price::StripeProductPrice>(
+            r#"SELECT * FROM public.stripe_product_prices WHERE stripe_price_id = $1"#,
+        )
+        .bind(params.price_id.clone())
+        .fetch_one(&state.db)
+        .await?;
+
     let stripe_price_data =
         sqlx::query_as::<sqlx::Postgres, schemas::stripe_price_currency::StripePriceCurrency>(
             r#"SELECT * FROM public.stripe_price_currencies WHERE stripe_price_id = $1 AND currency = 'eur';"#,
@@ -55,9 +63,23 @@ pub async fn handler(
         body.payment_method_id.as_str(),
     )?);
 
+    // Todo add error handling here
+    // responding with error (StripeError(Stripe(RequestError { http_status: 402, error_type: Card, message: Some("Your card was declined."), code: Some(CardDeclined), decline_code: Some("generic_decline"), charge
     stripe::PaymentIntent::create(&state.stripe, payment_intent_data).await?;
 
-    // responding with error (StripeError(Stripe(RequestError { http_status: 402, error_type: Card, message: Some("Your card was declined."), code: Some(CardDeclined), decline_code: Some("generic_decline"), charge
     // Safe to assume that the payment intent was created successfully and charged here
+
+    // insert into product_purchases
+    sqlx::query(
+        r#"
+        INSERT INTO public.product_purchases (user_id, stripe_product_id)
+        VALUES ($1, $2)
+        "#,
+    )
+    .bind(id.clone())
+    .bind(product_price.stripe_product_id.clone())
+    .execute(&state.db)
+    .await?;
+
     Ok(Response::new_success(StatusCode::OK, None))
 }

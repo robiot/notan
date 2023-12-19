@@ -41,5 +41,7 @@ pub async fn handler(
 
     stripe::Subscription::create(&state.stripe, subscription_data).await?;
 
+    // Inserted into database by webhook
+
     Ok(Response::new_success(StatusCode::OK, None))
 }
