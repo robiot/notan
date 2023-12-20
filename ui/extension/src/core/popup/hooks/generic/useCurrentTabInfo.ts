@@ -5,7 +5,7 @@ export const useCurrentTabInfo = () => {
     queryKey: ["currentTabInfo"],
     queryFn: async (): Promise<{ url: string; title: string }> => {
       return await new Promise((resolve) => {
-        chrome.tabs.query({ active: true }, (tabs) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           const [tab] = tabs;
 
           resolve({
