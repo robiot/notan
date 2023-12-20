@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::{error::Result, schemas, state::AppState};
 
-const FREE_MAX_STORAGE: i32 = 30;
+const FREE_MAX_STORAGE: i32 = 25;
 const FREE_MAX_NOTE_LENGTH: i32 = 300;
 
 #[derive(Debug, Clone)]
