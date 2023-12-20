@@ -1,5 +1,4 @@
 import "./globals.css";
-import "@/styles/index.css";
 
 import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
