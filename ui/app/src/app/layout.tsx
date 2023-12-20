@@ -1,8 +1,12 @@
-import "./globals.css";
+"use client";
+
+import "@notan/components/styles/globals.css";
 
 import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
+import { LoginContext } from "@/components/context/LoginContext";
+import { RootProviders } from "@/components/context/RootProviders";
 import { cn } from "@/lib/utils";
 
 const noto_sans = Noto_Sans({
@@ -12,11 +16,16 @@ const noto_sans = Noto_Sans({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn("min-h-screen flex flex-col")}>
       <body
-        className={cn(noto_sans.className, "bg-background text-foreground")}
+        className={cn(
+          noto_sans.className,
+          "bg-background text-foreground flex flex-1 h-full"
+        )}
       >
-        {children}
+        <RootProviders>
+          <LoginContext>{children}</LoginContext>
+        </RootProviders>
       </body>
     </html>
   );
