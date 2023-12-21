@@ -35,7 +35,7 @@ export const SubscriptionsSection = () => {
         gradient="blue"
       />
       <SubscriptionCard
-        price={getSubscriptionByLookupKey("plus_monthly")}
+        price={getSubscriptionByLookupKey("premium_monthly")}
         title="Premium"
         perks={[
           {
