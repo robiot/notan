@@ -76,6 +76,7 @@ pub async fn start(
     });
 
     // Sync stripe products
+    // todo: make this not kill the server if it fails
     sync::ensure_stripe_products(app_state.clone()).await?;
 
     let port = app_state.config.port;
