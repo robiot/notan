@@ -66,7 +66,7 @@ export default function AccountPage() {
           </Button>
         </div>
         <div className="flex flex-col gap-1 items-center">
-          <Button variant="ghost" className="w-full">
+          <Button variant="ghost" className="w-full mb-5">
             <Link href={"https://forms.gle/3ucgQ8bwBa86iUPp8"} target="_blank">
               Reports bugs / Feedback
             </Link>

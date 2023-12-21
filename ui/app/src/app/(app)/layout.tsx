@@ -13,7 +13,7 @@ const AppLayout: FC<{ children: ReactNode }> = ({ children }) => {
       <div className="flex flex-1">
         <SideNavigationBar />
 
-        <div className="flex flex-1 py-5">{children}</div>
+        <div className="flex flex-1">{children}</div>
       </div>
     </div>
   );

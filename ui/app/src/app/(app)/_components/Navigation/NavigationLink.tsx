@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 export const NavigationLink: FC<{
   href: string;
   children: ReactNode;
-}> = ({ href, children }) => {
+  icon?: ReactNode;
+}> = ({ href, children, icon }) => {
   const pathname = usePathname();
 
   const isActive = href == "/" ? href == pathname : pathname.startsWith(href);
@@ -15,12 +16,13 @@ export const NavigationLink: FC<{
   return (
     <Link
       className={cn(
-        "rounded w-full flex items-center p-3 gap-3 hover:bg-accent",
+        "rounded w-full flex items-center p-3 gap-3 hover:bg-accent justify-between",
         isActive && "bg-accent"
       )}
       href={href}
     >
       <div>{children}</div>
+      {icon}
     </Link>
   );
 };
