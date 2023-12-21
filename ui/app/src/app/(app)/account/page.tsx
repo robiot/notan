@@ -37,7 +37,7 @@ export default function AccountPage() {
   const auth = useAuth();
   const user = useUser();
 
-  if (user.isLoading) return <Spinner size="md" className="self-center" />;
+  if (user.isLoading) return <Spinner size="md" className="self-center mt-5" />;
 
   return (
     <>
