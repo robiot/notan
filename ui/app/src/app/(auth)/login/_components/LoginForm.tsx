@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@notan/components/ui/button";
 import { Input } from "@notan/components/ui/input";
 import { toast } from "@notan/components/ui/use-toast";
+import { ApiResponse, hasError } from "@notan/utils/api";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useAuth } from "@/hooks/useAuth";
-import { api, ApiResponse, hasError } from "@/lib/api";
+import { api } from "@/lib/api";
 import { zodRequiredString } from "@/lib/zodPresents";
 
 const FormSchema = z.object({

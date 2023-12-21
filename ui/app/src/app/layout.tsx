@@ -1,7 +1,6 @@
-"use client";
-
 import "@notan/components/styles/globals.css";
 
+import { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
@@ -13,6 +12,12 @@ const noto_sans = Noto_Sans({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
+
+// metadata
+
+export const metadata: Metadata = {
+  title: "Notan",
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

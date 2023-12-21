@@ -1,5 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 export default function Home() {
-  return <>这是太酷了，明天</>;
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/account");
+  }, [router]);
+
+  return <></>;
 }

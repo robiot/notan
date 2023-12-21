@@ -15,7 +15,7 @@ export const NavigationLink: FC<{
   return (
     <Link
       className={cn(
-        "rounded w-full flex items-center p-3 gap-3 hover:accent",
+        "rounded w-full flex items-center p-3 gap-3 hover:bg-accent",
         isActive && "bg-accent"
       )}
       href={href}

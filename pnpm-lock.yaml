@@ -60,6 +60,19 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.3.5)
 
+  packages/utils:
+    dependencies:
+      '@notan/components':
+        specifier: workspace:^1.0.0
+        version: link:../components
+      axios:
+        specifier: ^1.6.2
+        version: 1.6.2
+    devDependencies:
+      '@types/node':
+        specifier: ^20
+        version: 20.8.10
+
   ui/app:
     dependencies:
       '@hookform/resolvers':
@@ -68,6 +81,9 @@ importers:
       '@notan/components':
         specifier: workspace:^1.0.0
         version: link:../../packages/components
+      '@notan/utils':
+        specifier: workspace:^1.0.0
+        version: link:../../packages/utils
       '@radix-ui/react-dialog':
         specifier: ^1.0.5
         version: 1.0.5(@types/react-dom@18.2.14)(@types/react@18.2.37)(react-dom@18.2.0)(react@18.2.0)

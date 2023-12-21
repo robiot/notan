@@ -5,7 +5,7 @@ export const TopNavigation = () => {
   //   const currentUser = data?.currentUser;
 
   return (
-    <nav className="bg-card w-full flex h-20 items-center justify-between px-4  border-border border-b">
+    <nav className="bg-card w-full flex h-20 items-center justify-between px-4 border-border border-b">
       <Image
         src={"/notan.svg"}
         alt="logo"

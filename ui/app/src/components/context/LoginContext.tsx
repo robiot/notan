@@ -1,12 +1,15 @@
+"use client";
+
 import { toast } from "@notan/components/ui/use-toast";
+import { ApiResponse, hasError } from "@notan/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, ReactNode, useEffect, useState } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
+import { api } from "@/lib/api";
 
-import { api, ApiResponse, hasError } from "../../lib/api";
 import { LoadScreen } from "../common/LoadScreen";
 
 // import { Spinner } from "@/components/ui/spinner";
@@ -29,7 +32,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
   }, [auth, router, path]);
 
   const renewSession = useQuery({
-    enabled: !!auth.token,
+    enabled: auth.token !== undefined,
     queryKey: ["renew_session"],
     queryFn: async () => {
       const response = await api
@@ -69,7 +72,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
           </span>
         </div>
       ) : (
-        <>{children}</>
+        <>{!isLoading && children}</>
       )}
     </>
   );
