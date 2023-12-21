@@ -11,7 +11,9 @@ use {
 use super::ProductsIdParams;
 
 #[derive(Serialize, Deserialize)]
-pub struct ProductGetPurchasesResponse {
+pub struct ProductGetResponse {
+    pub product_id: String,
+    pub name: String,
     pub owns: i32,
     pub max: i32,
 }
@@ -21,7 +23,7 @@ pub async fn handler(
     State(state): State<Arc<AppState>>,
     Path(params): Path<ProductsIdParams>,
     headers: HeaderMap,
-) -> Result<Response<ProductGetPurchasesResponse>> {
+) -> Result<Response<ProductGetResponse>> {
     let id = check_auth(headers.clone(), state.clone()).await?;
 
     // get how many times user has the product with id params.id
@@ -44,7 +46,9 @@ pub async fn handler(
 
     Ok(Response::new_success(
         StatusCode::OK,
-        Some(ProductGetPurchasesResponse {
+        Some(ProductGetResponse {
+            product_id: product.stripe_product_id,
+            name: product.name,
             owns: owns_count as i32,
             max: product.max_own.unwrap_or(0),
         }),

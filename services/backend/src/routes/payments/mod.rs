@@ -39,8 +39,8 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
         // Products
         //
         .route(
-            "/products/:product_id/get_purchases",
-            get(products::id::get_purchases::handler),
+            "/products/:product_id",
+            get(products::id::get::handler),
         )
         //
         // Prices
