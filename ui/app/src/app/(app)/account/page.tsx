@@ -2,13 +2,14 @@
 
 import { Button } from "@notan/components/ui/button";
 import { Spinner } from "@notan/components/ui/spinner";
-import { ChevronRight, LogOut } from "lucide-react";
+import { ChevronRight, Download, LogOut } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
 
 import { PageTitle } from "@/components/common/PageTitle";
 import { useAuth } from "@/hooks/useAuth";
 import { useUser } from "@/hooks/users/useUser";
+import { cn } from "@/lib/utils";
 
 const FieldButton: FC<{ title: string; value?: string; path: string }> = ({
   title,
@@ -42,6 +43,22 @@ export default function AccountPage() {
   return (
     <>
       <PageTitle>My Account</PageTitle>
+      <div
+        className={cn(
+          "flex items-center gap-7 p-7 rounded-2xl mb-6",
+          "bg-purple-blue-gradient"
+        )}
+      >
+        <div>
+          <Download />
+        </div>
+        <div className="flex flex-col">
+          Get the extension to start using Notan in your browser.
+          <Link href="https://notan.ax" className="font-bold" target="_blank">
+            https://notan.ax
+          </Link>
+        </div>
+      </div>
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex flex-col gap-2">
           <FieldButton

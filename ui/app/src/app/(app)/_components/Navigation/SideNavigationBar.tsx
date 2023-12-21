@@ -17,7 +17,7 @@ import { NavigationLink } from "./NavigationLink";
 
 export const SideNavigationBar: FC = () => {
   return (
-    <div className="bg-card h-full w-64 p-4 border-border border-r">
+    <div className="bg-card h-full w-64 p-4 border-border border-r hidden md:block">
       <div className="flex flex-col gap-2">
         <NavigationLink href="/account">My Account</NavigationLink>
         <NavigationLink href="/upgrade" icon={<Pocket className="w-5" />}>
