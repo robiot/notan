@@ -18,24 +18,21 @@ export const useAuth = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const login = (token: string) => {
-    // const current = new Date();
-    // const expires = new Date();
+    const current = new Date();
+    const expires = new Date();
 
-    // expires.setFullYear(current.getFullYear() + 5);
+    expires.setFullYear(current.getFullYear() + 10);
 
     // cookie should not be sent to any request
     setCookie("token", token, {
       path: "/",
-      domain: new URL(process.env.NEXT_PUBLIC_API_URL!).hostname,
-      // never expires
-      expires: new Date(Date.now() + 2_592_000),
+      expires,
     });
   };
 
   const logout = () => {
     removeCookie("token", {
       path: "/",
-      domain: new URL(process.env.NEXT_PUBLIC_API_URL!).hostname,
     });
   };
 
