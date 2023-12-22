@@ -23,9 +23,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (path !== "/login" && path !== "/signup" && !auth.token) {
-      console.log(path);
       router.push("/login");
-      setIsLoadingAuthCheck(false);
     } else {
       setIsLoadingAuthCheck(false);
     }
@@ -59,7 +57,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
     },
   });
 
-  const isLoading = renewSession.isLoading || isLoadingAuthCheck;
+  const isLoading = isLoadingAuthCheck || renewSession.isLoading;
 
   return (
     <>
