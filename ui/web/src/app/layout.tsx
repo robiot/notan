@@ -7,6 +7,7 @@ import { ReactNode } from "react";
 
 import { Footer } from "@/components/assembled/footer/Footer";
 import { ApelEasterEgg } from "@/components/common/Apel";
+import { Providers } from "@/components/common/Providers";
 import { MetaDescription, MetaTitle } from "@/lib/content/meta";
 import { cn } from "@/lib/utils";
 
@@ -46,9 +47,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={cn(noto_sans.className, "bg-background text-foreground")}
       >
-        <ApelEasterEgg />
-        {children}
-        <Footer />
+        <Providers>
+          <ApelEasterEgg />
+          {children}
+
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
