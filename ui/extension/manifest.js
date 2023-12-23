@@ -8,12 +8,8 @@ const manifest = {
   manifest_version: 3,
   name: "Notan",
   version: packageJson.version,
-  description: "Note taking for the web",
-  permissions: ["tabs"],
-  // background: {
-  //   service_worker: "src/core/background/index.js",
-  //   type: "module",
-  // },
+  description: "The browser extension for seamless, page-specific note-taking.",
+  permissions: ["tabs", "cookies"],
   action: {
     default_popup: "src/core/popup/index.html",
     default_icon: "icon-34.png",
@@ -21,15 +17,7 @@ const manifest = {
   icons: {
     128: "icon-128.png",
   },
-  // host_permissions: ["*://*/*"],
-  content_scripts: [
-    // {
-    //   matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-    //   js: ['src/pages/content/index.js'],
-    //   // KEY for cache invalidation
-    //   css: ['assets/css/contentStyle<KEY>.chunk.css'],
-    // },
-  ],
+  content_scripts: [],
   web_accessible_resources: [
     {
       resources: ["assets/js/*.js", "assets/css/*.css", "icon-128.png", "icon-34.png"],

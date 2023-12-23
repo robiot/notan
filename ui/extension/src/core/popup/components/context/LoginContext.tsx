@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { FC, ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useAuth } from "../../hooks/persist/useAuth";
+import { useAuth } from "../../hooks/auth/useAuth";
 import { api, ApiResponse, hasError } from "../../lib/api";
 import { LoadScreen } from "../app/LoadScreen";
 import { toast } from "../ui/use-toast";
@@ -19,16 +19,18 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoadingAuthCheck, setIsLoadingAuthCheck] = useState(true);
 
   useEffect(() => {
-    if (!pathname.startsWith("/auth") && !auth.isAuthorized) {
+    if (auth.token.isLoading) return;
+
+    if (!pathname.startsWith("/auth") && !auth.token.data?.token) {
       navigate("/auth/login");
       setIsLoadingAuthCheck(false);
     } else {
       setIsLoadingAuthCheck(false);
     }
-  }, [auth, navigate, pathname]);
+  }, [auth.token.data, auth.token.isLoading, navigate, pathname]);
 
   const renewSession = useQuery({
-    enabled: auth.isAuthorized,
+    enabled: auth.token.data?.token !== undefined,
     queryKey: ["renew_session"],
     queryFn: async () => {
       const response = await api.post<ApiResponse<{ token: string }>>("/auth/renew").catch((error: AxiosError) => {
@@ -47,7 +49,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
 
       if (!response) return;
 
-      auth.login({ token: response.data.data.token });
+      auth.login(response.data.data.token);
 
       return response.data;
     },

@@ -15,7 +15,7 @@ const SignupPage = () => {
         <div className="flex flex-col items-center w-full">
           <Image src={"/notan.svg"} alt="logo" width={160} height={60} />
 
-          <span className="text-2xl font-bold mt-5">Sign up</span>
+          <span className="text-2xl font-bold mt-8">Sign up</span>
           <LoginForm />
         </div>
 

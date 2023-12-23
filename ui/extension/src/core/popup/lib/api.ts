@@ -1,5 +1,6 @@
-import { useAuth } from "@popup/hooks/persist/useAuth";
 import axios, { AxiosResponse } from "axios";
+
+import { getToken } from "@/core/popup/hooks/auth/useAuth";
 
 import { toast } from "../components/ui/use-toast";
 import { enviroment } from "./enviroment";
@@ -18,11 +19,11 @@ export const api = axios.create({
   timeout: 30_000,
 });
 
-api.interceptors.request.use((config) => {
-  const { token } = useAuth.getState();
+api.interceptors.request.use(async (config) => {
+  const token = await getToken();
 
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token.value}`;
   }
 
   return config;
