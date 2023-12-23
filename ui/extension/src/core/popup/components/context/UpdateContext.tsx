@@ -41,6 +41,7 @@ export const UpdateContext: FC<{ children?: ReactNode }> = ({ children }) => {
         description: "Please update the extension.",
         action: (
           <Button
+            variant="secondary"
             onClick={() => {
               updateCheck.mutate();
             }}
