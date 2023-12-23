@@ -10,6 +10,7 @@ pub mod users;
 pub mod notes;
 pub mod not_found;
 pub mod payments;
+pub mod updates;
 
 #[derive(Serialize)]
 #[serde(rename_all = "UPPERCASE")]
