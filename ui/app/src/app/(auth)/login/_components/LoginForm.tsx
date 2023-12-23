@@ -89,7 +89,7 @@ export const LoginForm = () => {
         loading={login.isPending}
         disabled={!formState.isValid}
       >
-        Sign in
+        Log in
       </Button>
     </form>
   );
