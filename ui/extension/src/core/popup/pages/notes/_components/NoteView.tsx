@@ -1,6 +1,7 @@
-import { Link } from "lucide-react";
+import { Link as LinkIcon } from "lucide-react";
 import { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { z } from "zod";
 
 import { Container } from "@/core/popup/components/app/Container";
@@ -37,11 +38,13 @@ export const NoteView: FC<{
         />
 
         <div className="flex gap-2 items-center w-fit">
-          {faviconFromUrl(watch("url")) !== undefined ? (
-            <img src={faviconFromUrl(watch("url"))} alt="" className="w-5 h-5 rounded" />
-          ) : (
-            <Link className="text-sm h-4 w-4" />
-          )}
+          <Link to={watch("url")} target="_blank">
+            {faviconFromUrl(watch("url")) !== undefined ? (
+              <img src={faviconFromUrl(watch("url"))} alt="" className="w-5 h-5 rounded" />
+            ) : (
+              <LinkIcon className="text-sm h-4 w-4" />
+            )}
+          </Link>
 
           <URLInput placeholder="URL" maxLength={200} currentValue={watch("url")} {...register("url")} />
         </div>

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
 import { Input } from "../../components/ui/input";
+import { createAppUrl } from "../../lib/urlUtils";
 import { HomeNotes } from "./_components/HomeNotes";
 
 export const HomePage = () => {
@@ -18,7 +19,7 @@ export const HomePage = () => {
     <>
       <Topbar>
         <Button variant="ghost" size="icon" asChild>
-          <Link to="/profile">
+          <Link to={createAppUrl("/account")} target="_blank">
             <User />
           </Link>
         </Button>
