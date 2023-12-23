@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { z } from "zod";
 
 import { Container } from "@/core/popup/components/app/Container";
+import { UpgradeButton } from "@/core/popup/components/app/UpgradeButton";
+import { useUser } from "@/core/popup/hooks/user/useUser";
 import { faviconFromUrl } from "@/core/popup/lib/favicon";
 import { zodRequiredString } from "@/core/popup/lib/zodPresents";
 
@@ -22,6 +24,8 @@ export type NoteFormSchemaType = z.infer<typeof NoteFormSchema>;
 export const NoteView: FC<{
   form: UseFormReturn<Partial<NoteFormSchemaType>, any, undefined>;
 }> = ({ form: { register, watch } }) => {
+  const user = useUser();
+
   return (
     <Container>
       <div className="flex flex-col gap-2 items-center py-5">
@@ -52,14 +56,23 @@ export const NoteView: FC<{
 
       <Separator />
 
-      <div className="py-5 flex w-full px-3 flex-1">
+      <div className="py-5 flex flex-col w-full px-3 h-full">
         <textarea
           spellCheck="false"
           placeholder="Type a note here"
-          className="text-sm bg-transparent w-full focus:outline-none resize-none"
-          maxLength={200}
+          className="flex h-full text-sm bg-transparent w-full focus:outline-none resize-none"
+          maxLength={user.data?.max_note_length ?? 300}
           {...register("note")}
         />
+        {watch("note").length >= (user.data?.max_note_length ?? 300) && (
+          <div className="flex-1 mt-3">
+            <div className="flex justify-between text-red-500">
+              <span>{watch("note").length}</span>
+              <span>Text limit reached</span>
+            </div>
+            <UpgradeButton />
+          </div>
+        )}
       </div>
     </Container>
   );
