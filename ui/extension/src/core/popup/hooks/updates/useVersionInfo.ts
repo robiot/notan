@@ -1,7 +1,8 @@
+import { ApiResponse, hasError } from "@notan/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { api, ApiResponse, hasError } from "../../lib/api";
+import { api } from "../../lib/api";
 
 export type VersionInfo = {
   required_version: string;

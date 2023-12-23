@@ -1,3 +1,4 @@
+import { Separator } from "@notan/components/ui/separator";
 import { Link as LinkIcon } from "lucide-react";
 import { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -5,7 +6,6 @@ import { Link } from "react-router-dom";
 import { z } from "zod";
 
 import { Container } from "@/core/popup/components/app/Container";
-import { Separator } from "@/core/popup/components/ui/separator";
 import { faviconFromUrl } from "@/core/popup/lib/favicon";
 import { zodRequiredString } from "@/core/popup/lib/zodPresents";
 

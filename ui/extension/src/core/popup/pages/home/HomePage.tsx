@@ -1,11 +1,12 @@
+import { Button } from "@notan/components/ui/button";
+import { Input } from "@notan/components/ui/input";
 import { Topbar } from "@popup/components/app/Topbar";
-import { Button } from "@popup/components/ui/button";
 import { Plus, User } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
-import { Input } from "../../components/ui/input";
 import { createAppUrl } from "../../lib/urlUtils";
 import { HomeNotes } from "./_components/HomeNotes";
 
@@ -13,6 +14,10 @@ export const HomePage = () => {
   const form = useForm<{ search: string }>();
 
   const [search] = useDebounce(form.watch("search"), 300);
+
+  useEffect(() => {
+    form.setFocus("search");
+  }, []);
 
   // todo add loader here
   return (
@@ -26,7 +31,7 @@ export const HomePage = () => {
         <Input
           inputSize="small"
           placeholder="Search notes by domain/content"
-          className="w-full"
+          className="w-full focus-visible:ring-0"
           {...form.register("search")}
         />
         <Button variant="ghost" size="icon" asChild>

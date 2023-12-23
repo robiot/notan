@@ -6,7 +6,6 @@ import { HomePage } from "./pages/home/HomePage";
 import { CreateNotePage } from "./pages/notes/create/CreateNotePage";
 import { ViewNotePage } from "./pages/notes/view/ViewNotePage";
 
-// todo: update check
 export const Popup = () => {
   const location = useLocation();
 

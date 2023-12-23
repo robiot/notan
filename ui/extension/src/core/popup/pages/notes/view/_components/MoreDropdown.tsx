@@ -1,6 +1,5 @@
+import { DropdownMenuContent } from "@notan/components/ui/dropdown-menu";
 import { FC } from "react";
-
-import { DropdownMenuContent } from "@/core/popup/components/ui/dropdown-menu";
 
 import { DeleteButton } from "./morebuttons/DeleteButton";
 

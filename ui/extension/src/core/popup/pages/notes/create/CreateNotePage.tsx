@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@notan/components/ui/button";
+import { toast } from "@notan/components/ui/use-toast";
+import { ApiResponse, hasError } from "@notan/utils/api";
 import { Topbar } from "@popup/components/app/Topbar";
-import { Button } from "@popup/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { FC } from "react";
@@ -9,9 +11,10 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
-import { toast } from "@/core/popup/components/ui/use-toast";
+import { UpgradeButton } from "@/core/popup/components/app/UpgradeButton";
 import { useCurrentTabInfo } from "@/core/popup/hooks/generic/useCurrentTabInfo";
-import { api, ApiResponse, hasError } from "@/core/popup/lib/api";
+import { api } from "@/core/popup/lib/api";
+import { getValidTabTitle, getValidTabUrl } from "@/core/popup/lib/contentValidation";
 
 import { NoteFormSchema, NoteFormSchemaType, NoteView } from "../_components/NoteView";
 
@@ -38,7 +41,14 @@ const CreateNoteContent: FC<{ values: NoteFormSchemaType }> = ({ values }) => {
           if (hasError(error.response, "max_notes")) {
             toast({
               title: "Max notes reached",
-              description: "You have reached the maximum number of notes",
+              description: "Upgrade for a small fee to create more notes",
+              action: <UpgradeButton />,
+            });
+          } else if (hasError(error.response, "max_notes_for_domain")) {
+            toast({
+              title: "Max notes for domain reached",
+              description: `Upgrade for a small fee to create more notes for '${new URL(data.url).hostname}'`,
+              action: <UpgradeButton />,
             });
           } else {
             toast({
@@ -90,8 +100,8 @@ export const CreateNotePage = () => {
   return (
     <CreateNoteContent
       values={{
-        title: tab.data?.title ?? "",
-        url: tab.data?.url ?? "",
+        title: getValidTabTitle(tab.data?.title),
+        url: getValidTabUrl(tab.data?.url),
         note: "",
       }}
     />

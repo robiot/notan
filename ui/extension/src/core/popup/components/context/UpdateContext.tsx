@@ -1,11 +1,11 @@
+import { Button } from "@notan/components/ui/button";
+import { toast } from "@notan/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { FC, ReactNode } from "react";
 import semver from "semver";
 
 import { useVersionInfo } from "../../hooks/updates/useVersionInfo";
-import { Button } from "../ui/button";
-import { toast } from "../ui/use-toast";
 
 export const UpdateContext: FC<{ children?: ReactNode }> = ({ children }) => {
   const versionInfo = useVersionInfo();

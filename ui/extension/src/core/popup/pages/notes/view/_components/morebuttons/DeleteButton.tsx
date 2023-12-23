@@ -1,10 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { Trash } from "lucide-react";
-import { useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
-import { Button } from "@/core/popup/components/ui/button";
+import { Button } from "@notan/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -14,9 +8,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/core/popup/components/ui/dialog";
-import { DropdownMenuItem } from "@/core/popup/components/ui/dropdown-menu";
-import { api, ApiResponse, hasError } from "@/core/popup/lib/api";
+} from "@notan/components/ui/dialog";
+import { DropdownMenuItem } from "@notan/components/ui/dropdown-menu";
+import { ApiResponse, hasError } from "@notan/utils/api";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { Trash } from "lucide-react";
+import { useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { api } from "@/core/popup/lib/api";
 
 export const DeleteButton = () => {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { Button } from "@popup/components/ui/button";
+import { Button } from "@notan/components/ui/button";
 import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 

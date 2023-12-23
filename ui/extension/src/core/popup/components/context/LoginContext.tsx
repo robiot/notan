@@ -1,12 +1,13 @@
+import { toast } from "@notan/components/ui/use-toast";
+import { ApiResponse, hasError } from "@notan/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { FC, ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../hooks/auth/useAuth";
-import { api, ApiResponse, hasError } from "../../lib/api";
+import { api } from "../../lib/api";
 import { LoadScreen } from "../app/LoadScreen";
-import { toast } from "../ui/use-toast";
 
 export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
   const auth = useAuth();

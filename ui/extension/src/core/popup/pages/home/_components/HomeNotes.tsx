@@ -1,7 +1,7 @@
+import { Spinner } from "@notan/components/ui/spinner";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
-import { Spinner } from "@/core/popup/components/ui/spinner";
 import { useCurrentTabInfo } from "@/core/popup/hooks/generic/useCurrentTabInfo";
 import { useNotes } from "@/core/popup/hooks/notes/useNotes";
 import { useOtherNotesForCurrentDomain } from "@/core/popup/hooks/notes/useNotesForCurrentDomain";

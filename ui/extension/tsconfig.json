@@ -18,6 +18,8 @@
     "typeRoots": ["src/types/global.d.ts", "node_modules/@types"],
     "paths": {
       "@/*": ["./src/*"],
+      // for utils monorepo package to work in popup
+      "@/lib/*": ["./src/core/popup/lib/*"],
       "@popup/*": ["./src/core/popup/*"],
       "virtual:reload-on-update-in-background-script": ["src/types/global.d.ts"],
       "virtual:reload-on-update-in-view": ["src/types/global.d.ts"]

@@ -60,6 +60,20 @@ export const hasError = (
     return false;
   }
 
+  if (
+    real_response.data.errors.some(
+      (response_error) => response_error.name === "rate_limited"
+    )
+  ) {
+    toast({
+      title: "Rate limited",
+      description: "You are sending too many requests. Please try again later.",
+      variant: "destructive",
+    });
+
+    return false;
+  }
+
   return real_response.data.errors.some(
     (response_error) => response_error.name === error
   );

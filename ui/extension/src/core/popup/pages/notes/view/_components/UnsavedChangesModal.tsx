@@ -1,14 +1,7 @@
+import { Button } from "@notan/components/ui/button";
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@notan/components/ui/dialog";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { Button } from "@/core/popup/components/ui/button";
-import {
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/core/popup/components/ui/dialog";
 
 export const UnsavedChangesModal: FC<{ loading?: boolean; onSave: () => void }> = ({ loading, onSave }) => {
   const navigate = useNavigate();

@@ -1,6 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@notan/components/ui/button";
+import { Dialog, DialogTrigger } from "@notan/components/ui/dialog";
+import { DropdownMenu, DropdownMenuTrigger } from "@notan/components/ui/dropdown-menu";
+import { toast } from "@notan/components/ui/use-toast";
+import { ApiResponse, hasError } from "@notan/utils/api";
 import { Topbar } from "@popup/components/app/Topbar";
-import { Button } from "@popup/components/ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { MoreHorizontal } from "lucide-react";
@@ -9,9 +13,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { LoadScreen } from "@/core/popup/components/app/LoadScreen";
-import { Dialog, DialogTrigger } from "@/core/popup/components/ui/dialog";
-import { DropdownMenu, DropdownMenuTrigger } from "@/core/popup/components/ui/dropdown-menu";
-import { api, ApiResponse, hasError } from "@/core/popup/lib/api";
+import { UpgradeButton } from "@/core/popup/components/app/UpgradeButton";
+import { api } from "@/core/popup/lib/api";
 
 import { NoteFormSchema, NoteFormSchemaType, NoteView } from "../_components/NoteView";
 import { MoreDropdown } from "./_components/MoreDropdown";
@@ -40,7 +43,21 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
           remind_at: undefined,
         })
         .catch((error: AxiosError) => {
-          hasError(error.response);
+          if (hasError(error.response, "max_notes")) {
+            toast({
+              title: "Above max notes",
+              description: "Upgrade for a small fee to edit your old notes",
+              action: <UpgradeButton />,
+            });
+          } else if (hasError(error.response, "max_notes_for_domain")) {
+            toast({
+              title: "Above max notes for domain",
+              description: `Upgrade for a small fee to edit notes for '${new URL(data.url).hostname}'`,
+              action: <UpgradeButton />,
+            });
+          } else {
+            hasError(error.response);
+          }
         });
 
       if (!response) return;

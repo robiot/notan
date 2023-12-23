@@ -1,13 +1,18 @@
+import { ApiResponse, hasError } from "@notan/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { api, ApiResponse, hasError } from "../../lib/api";
+import { api } from "../../lib/api";
 
 type User = {
   id: string;
   email: string;
   username: string;
   verified_mail: boolean;
+
+  max_note_length: number;
+  total_note_storage: number;
+  used_note_storage: number;
 };
 
 export const useUser = () => {

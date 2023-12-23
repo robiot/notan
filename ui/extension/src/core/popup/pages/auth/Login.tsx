@@ -1,10 +1,10 @@
-import { Separator } from "@popup/components/ui/separator";
+import { Button } from "@notan/components/ui/button";
+import { Separator } from "@notan/components/ui/separator";
 import { Link } from "react-router-dom";
 
 import Logo from "@/assets/img/notan.svg";
 import { Container } from "@/core/popup/components/app/Container";
 
-import { Button } from "../../components/ui/button";
 import { createAppUrl } from "../../lib/urlUtils";
 
 export const LoginPage = () => {

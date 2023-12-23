@@ -1,9 +1,9 @@
+import { Toaster } from "@notan/components/ui/toaster";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
 
 import { LoginContext } from "./components/context/LoginContext";
 import { UpdateContext } from "./components/context/UpdateContext";
-import { Toaster } from "./components/ui/toaster";
 import { enviroment } from "./lib/enviroment";
 
 // Create a client

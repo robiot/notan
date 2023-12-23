@@ -1,8 +1,8 @@
+import { Spinner } from "@notan/components/ui/spinner";
 import { motion } from "framer-motion";
 import { FC } from "react";
 
 import { cn } from "../../lib/utils";
-import { Spinner } from "../ui/spinner";
 
 export const LoadScreen: FC<{ loading?: boolean }> = ({ loading }) => {
   return (

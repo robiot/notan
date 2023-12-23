@@ -27,6 +27,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@popup": path.resolve(__dirname, "./src/core/popup"),
+      "@/lib": path.resolve(__dirname, "./src/core/popup/lib"),
       "@": path.resolve(__dirname, "./src"),
     },
   },
