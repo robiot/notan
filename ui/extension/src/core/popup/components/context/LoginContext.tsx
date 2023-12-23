@@ -8,8 +8,6 @@ import { api, ApiResponse, hasError } from "../../lib/api";
 import { LoadScreen } from "../app/LoadScreen";
 import { toast } from "../ui/use-toast";
 
-// import { Spinner } from "@/components/ui/spinner";
-
 export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
   const auth = useAuth();
   const navigate = useNavigate();
@@ -19,18 +17,19 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoadingAuthCheck, setIsLoadingAuthCheck] = useState(true);
 
   useEffect(() => {
-    if (auth.token.isLoading) return;
-
-    if (!pathname.startsWith("/auth") && !auth.token.data?.token) {
+    if (!pathname.startsWith("/auth") && !auth.token) {
       navigate("/auth/login");
-      setIsLoadingAuthCheck(false);
+      // setIsLoadingAuthCheck(false);
+    } else if (pathname.startsWith("/auth") && auth.token) {
+      navigate("/");
+      // setIsLoadingAuthCheck(false);
     } else {
       setIsLoadingAuthCheck(false);
     }
-  }, [auth.token.data, auth.token.isLoading, navigate, pathname]);
+  }, [auth.token, navigate, pathname]);
 
   const renewSession = useQuery({
-    enabled: auth.token.data?.token !== undefined,
+    enabled: auth?.token !== undefined,
     queryKey: ["renew_session"],
     queryFn: async () => {
       const response = await api.post<ApiResponse<{ token: string }>>("/auth/renew").catch((error: AxiosError) => {

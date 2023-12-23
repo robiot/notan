@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-import { getToken } from "@/core/popup/hooks/auth/useAuth";
+import { getTokenCookie } from "@/core/popup/hooks/auth/useAuth";
 
 import { toast } from "../components/ui/use-toast";
 import { enviroment } from "./enviroment";
@@ -20,7 +20,7 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  const token = await getToken();
+  const token = await getTokenCookie();
 
   if (token) {
     config.headers.Authorization = `Bearer ${token.value}`;
