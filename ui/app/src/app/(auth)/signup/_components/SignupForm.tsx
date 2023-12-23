@@ -11,6 +11,7 @@ import { z } from "zod";
 
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/lib/api";
+import { zodRequiredString } from "@/lib/zodPresents";
 
 const FormSchema = z.object({
   email: z
@@ -21,10 +22,7 @@ const FormSchema = z.object({
     .string()
     .min(3, "Username must be between 3 and 16 characters")
     .max(16, "Username must be between 3 and 16 characters"),
-  password: z
-    .string()
-    .min(8, "Password must be more than 8 characters")
-    .max(64, "Password must be less than 64 characters"),
+  password: zodRequiredString,
 });
 
 type FormSchemaType = z.infer<typeof FormSchema>;
@@ -59,6 +57,18 @@ export const LoginForm = () => {
             setError("username", {
               type: "manual",
               message: "The username contains invalid characters",
+            });
+          }
+          // Password
+          else if (hasError(error.response, "password_long")) {
+            setError("password", {
+              type: "manual",
+              message: "Password is too long",
+            });
+          } else if (hasError(error.response, "password_short")) {
+            setError("password", {
+              type: "manual",
+              message: "The password must be at least 8 characters long",
             });
           }
           // Email
@@ -116,7 +126,7 @@ export const LoginForm = () => {
         className="mt-2"
         type="submit"
         loading={signUp.isPending}
-        disabled={!formState.isValid}
+        disabled={!formState.isDirty}
       >
         Sign up
       </Button>
