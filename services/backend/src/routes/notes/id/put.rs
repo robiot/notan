@@ -7,7 +7,7 @@ use crate::{
     schemas,
     state::AppState,
     utils::{
-        database::tags::connect_tags_to_note,
+        database::{tags::connect_tags_to_note, notes::get_note_count},
         limits,
         validation::{validate_note_body, validate_title, validate_url, validate_url_usage},
     },
@@ -36,21 +36,13 @@ pub async fn handler(
 
     validate_url_usage(body.url.clone(), limits.clone(), id.clone(), &state).await?;
 
-
     // check if user is above limit
-    let count: i64 = sqlx::query_scalar(
-        r#"
-        SELECT COUNT(*) FROM public.notes WHERE user_id = $1;
-        "#,
-    )
-    .bind(id.clone())
-    .fetch_one(&state.db)
-    .await?;
+    let count = get_note_count(id.clone(), &state.db).await?;
 
     if count > limits.max_note_storage as i64 {
         return Err(Error::BadRequest(ResponseError {
-            message: "You are above your current limit".to_string(),
-            name: "above_limit".to_string(),
+            message: "Limit has been reached".to_string(),
+            name: "max_notes".to_string(),
         }));
     }
 

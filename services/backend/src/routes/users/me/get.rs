@@ -1,6 +1,6 @@
 use hyper::StatusCode;
 
-use crate::{auth::check_auth, error::Result, routes::Response, schemas, state::AppState};
+use crate::{auth::check_auth, error::Result, routes::Response, schemas, state::AppState, utils::{limits, database::notes::get_note_count}};
 
 use {axum::extract::State, hyper::HeaderMap, serde::Serialize, std::sync::Arc};
 
@@ -10,6 +10,11 @@ pub struct UserGetResponse {
     verified_mail: bool,
     username: String,
     email: String,
+
+    // limits
+    used_note_storage: i64,
+    total_note_storage: i32,
+    max_note_length: i32,
 }
 
 pub async fn handler(
@@ -25,6 +30,10 @@ pub async fn handler(
     .fetch_one(&state.db)
     .await?;
 
+    let limits = limits::get_limits(id.clone(), state.clone()).await?;
+
+    let note_count = get_note_count(id, &state.db).await?;
+
     Ok(Response::new_success(
         StatusCode::OK,
         Some(UserGetResponse {
@@ -32,6 +41,11 @@ pub async fn handler(
             email: user.email,
             username: user.username,
             verified_mail: user.verified_mail,
+
+            // limits
+            total_note_storage: limits.max_note_storage,
+            used_note_storage: note_count,
+            max_note_length: limits.max_note_length,
         }),
     ))
 }

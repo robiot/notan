@@ -169,13 +169,6 @@ pub fn validate_url(url: String) -> Result<()> {
             name: "url_long".to_string(),
         }));
     }
-    // check that url contains dot, and tld is at least 2 characters
-    if !regex::Regex::new(r"^\S+\.\S{2,}$").unwrap().is_match(&url) {
-        return Err(Error::UnprocessableEntity(ResponseError {
-            message: "Url is invalid".to_string(),
-            name: "url_invalid".to_string(),
-        }));
-    }
 
     Ok(())
 }
