@@ -26,10 +26,6 @@ const cacheInvalidationKeyReference = { current: generateKey() };
 export default defineConfig({
   resolve: {
     alias: {
-      // "@root": rootDir,
-      // "@src": srcDir,
-      // "@assets": assetsDir,
-      // "@core": coreDir,
       "@popup": path.resolve(__dirname, "./src/core/popup"),
       "@": path.resolve(__dirname, "./src"),
     },
@@ -54,8 +50,6 @@ export default defineConfig({
     emptyOutDir: !isDevelopment,
     rollupOptions: {
       input: {
-        // content: resolve(coreDir, 'content', 'index.ts'),
-        background: resolve(coreDir, "background", "index.ts"),
         popup: resolve(coreDir, "popup", "index.html"),
       },
       output: {
