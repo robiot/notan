@@ -1,0 +1,69 @@
+name: Build Backend
+
+on:
+  push:
+    tags:
+      - "ext-*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Tag without "ext-"
+        id: set_tag
+        run: echo "::set-output name=tag::$(echo ${{ github.ref }} | sed 's/^refs\/tags\/ext-//')"
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.9.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.15.0
+          cache: "pnpm"
+
+      - name: Install node modules only needed
+        run: pnpm --filter @notan/extension... install
+
+      - name: Build Extension for chromium
+        run: |
+          EXT_VERSION=$(echo ${{ steps.set_tag.outputs.tag }})
+          pnpm --filter @notan/extension build
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ext-c.zip ui/extension/dist*
+
+      - name: Upload & release to chrome web store
+        uses: mnao305/chrome-extension-upload@v4.0.1
+        with:
+          file-path: ext-c.zip
+          extension-id: ${{ secrets.GL_EXT_ID }}
+          client-id: ${{ secrets.GL_CLIENT_ID }}
+          client-secret: ${{ secrets.GL_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.GL_REFRESH_TOKEN }}
+          publish: false
+
+      - name: Build Extension for Firefox
+        run: |
+          EXT_VERSION=$(echo ${{ steps.set_tag.outputs.tag }})
+          pnpm --filter @notan/extension build:firefox
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ext-f.zip ui/extension/dist*
+
+      - uses: trmcnvn/firefox-addon@v1
+        with:
+          uuid: ${{ secrets.FIREFOX_EXT_UUID }}
+          xpi: ext-f.zip
+          manifest: manifest.json
+          api-key: ${{ secrets.FIREFOX_API_KEY }}
+          api-secret: ${{ secrets.FIREFOX_API_SECRET }}

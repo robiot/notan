@@ -1,5 +1,3 @@
-import packageJson from "./package.json" assert { type: "json" };
-
 /**
  * After changing, please reload the extension at `chrome://extensions`
  * @type {chrome.runtime.ManifestV3}
@@ -7,7 +5,6 @@ import packageJson from "./package.json" assert { type: "json" };
 const manifest = {
   manifest_version: 3,
   name: "Notan",
-  version: packageJson.version,
   description: "The browser extension for seamless, page-specific note-taking.",
   permissions: ["tabs", "cookies"],
   action: {

@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+import packageJson from "../../package.json" assert { type: "json" };
 
 type Manifest = chrome.runtime.ManifestV3;
 
@@ -11,8 +12,7 @@ class ManifestParser {
       manifest = this.convertToFirefoxCompatibleManifest(manifest);
     }
 
-    // get VITE_APP_URL from .env, and add host permission for that url host_permissions: ["*://*.notan.ax/", "*://*.localhost/"],
-    // only include localhost if VITE_APP_URL is localhost
+    manifest.version = process.env.EXT_VERSION || packageJson.version;
 
     if (process.env.VITE_APP_URL) {
       const url = new URL(process.env.VITE_APP_URL);
