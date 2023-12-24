@@ -6,11 +6,11 @@ reloadOnUpdate("core/background");
 
 console.log("background loaded");
 
-window.addEventListener("message", receiveMessage, false);
+// window.addEventListener("message", receiveMessage, false);
 
-function receiveMessage(event: MessageEvent<any>) {
-  console.log("event", event.origin);
-  //   if (event.origin == "your_extension_id_aeiou12345") {
-  //     event.source.postMessage("" + localStorage.auth_token, event.origin);
-  //   }
-}
+// function receiveMessage(event: MessageEvent<any>) {
+//   console.log("event", event.origin);
+//   //   if (event.origin == "your_extension_id_aeiou12345") {
+//   //     event.source.postMessage("" + localStorage.auth_token, event.origin);
+//   //   }
+// }
