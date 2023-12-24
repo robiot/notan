@@ -71,7 +71,13 @@ export const ProductCard: FC<{
           {product.data?.owns}/{product.data?.max} bought
         </span>
       </div>
-      <Button variant="inverted" className="mt-3">
+      <Button
+        variant="inverted"
+        className="mt-3"
+        onClick={() => {
+          alert("Not implemented yet. Please check by later.");
+        }}
+      >
         Buy
       </Button>
     </div>

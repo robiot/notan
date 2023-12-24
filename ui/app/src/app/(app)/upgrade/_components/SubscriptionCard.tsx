@@ -35,7 +35,13 @@ export const SubscriptionCard: FC<{
         ))}
       </p>
 
-      <Button variant="inverted" className="mt-14">
+      <Button
+        variant="inverted"
+        className="mt-14"
+        onClick={() => {
+          alert("Not implemented yet. Please check by later.");
+        }}
+      >
         Subscribe
       </Button>
     </div>
