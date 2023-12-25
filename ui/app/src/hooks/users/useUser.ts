@@ -9,6 +9,11 @@ type User = {
   email: string;
   username: string;
   verified_mail: boolean;
+
+  max_note_length: number;
+  total_note_storage: number;
+  used_note_storage: number;
+  has_unlimited_notes_per_domain: boolean;
 };
 
 export const useUser = () => {
