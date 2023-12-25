@@ -15,6 +15,7 @@ pub struct UserGetResponse {
     used_note_storage: i64,
     total_note_storage: i32,
     max_note_length: i32,
+    has_unlimited_notes_per_domain: bool,
 }
 
 pub async fn handler(
@@ -46,6 +47,7 @@ pub async fn handler(
             total_note_storage: limits.max_note_storage,
             used_note_storage: note_count,
             max_note_length: limits.max_note_length,
+            has_unlimited_notes_per_domain: limits.has_unlimited_notes_per_domain,
         }),
     ))
 }

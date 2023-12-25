@@ -1,7 +1,7 @@
 use crate::{
     auth::check_auth,
-    error::Result,
-    routes::Response,
+    error::{Error, Result},
+    routes::{Response, ResponseError},
     schemas,
     state::AppState,
     utils::payments::{customer, prices::ensure_product_limit_by_price},
@@ -65,7 +65,41 @@ pub async fn handler(
 
     // Todo add error handling here
     // responding with error (StripeError(Stripe(RequestError { http_status: 402, error_type: Card, message: Some("Your card was declined."), code: Some(CardDeclined), decline_code: Some("generic_decline"), charge
-    stripe::PaymentIntent::create(&state.stripe, payment_intent_data).await?;
+    match stripe::PaymentIntent::create(&state.stripe, payment_intent_data).await {
+        Ok(_) => {}
+        // handle following error responding with error (StripeError(Stripe(RequestError { http_status: 402, error_type: Card, message: Some("Your card was declined."), code: Some(CardDeclined), decline_code: Some("generic_decline"), charge: Some("ch_3ORGunLdGhPNcQTv0Jec2xgz") })))
+        Err(err) => {
+            match err {
+                stripe::StripeError::Stripe(request_error) => {
+                    match request_error.error_type {
+                        stripe::ErrorType::Card => {
+                            return Err(Error::BadRequest(ResponseError {
+                                message: request_error
+                                    .message
+                                    .unwrap_or("unknown_error".to_string()),
+                                name: "card_error".to_string(),
+                            }));
+                        }
+                        _ => {
+                            // Handle other types of Stripe errors
+                            log::error!("Stripe error on transaction: {:?}", request_error);
+
+                            return Err(Error::BadRequest(ResponseError {
+                                message: request_error
+                                    .message
+                                    .unwrap_or("unknown_error".to_string()),
+                                name: "payment_error".to_string(),
+                            }));
+                        }
+                    }
+                }
+                _ => {
+                    // Handle other types of errors
+                    println!("Other error: {:?}", err);
+                }
+            }
+        }
+    }
 
     // Safe to assume that the payment intent was created successfully and charged here
 
