@@ -1,5 +1,6 @@
 import { Book, CheckCircle, Edit } from "lucide-react";
 
+import { getPriceByLookupKey } from "@/hooks/billing/usePriceByLookupKey";
 import { usePrices } from "@/hooks/billing/usePrices";
 
 import { SubscriptionCard } from "./SubscriptionCard";
@@ -7,17 +8,26 @@ import { SubscriptionCard } from "./SubscriptionCard";
 export const SubscriptionsSection = () => {
   const prices = usePrices();
 
-  const getSubscriptionByLookupKey = (lookupKey: string) => {
-    return prices.data?.find((price) => price.lookup_key === lookupKey);
-  };
-
   if (prices.isLoading) return <div>Loading...</div>;
 
   return (
     <div className="grid lg:grid-cols-2 gap-4">
       <SubscriptionCard
-        price={getSubscriptionByLookupKey("plus_monthly")}
+        price={getPriceByLookupKey("plus_monthly", prices.data)}
         title="Plus"
+        alternatives={[
+          {
+            title: "Annualy",
+            key: "plus_annual",
+            period: "year",
+            save_percentage: 16,
+          },
+          {
+            title: "Monthly",
+            period: "month",
+            key: "plus_monthly",
+          },
+        ]}
         perks={[
           {
             icon: <Book />,
@@ -35,8 +45,21 @@ export const SubscriptionsSection = () => {
         gradient="blue"
       />
       <SubscriptionCard
-        price={getSubscriptionByLookupKey("premium_monthly")}
+        price={getPriceByLookupKey("premium_monthly", prices.data)}
         title="Premium"
+        alternatives={[
+          {
+            title: "Annualy",
+            key: "premium_annual",
+            save_percentage: 16,
+            period: "year",
+          },
+          {
+            title: "Monthly",
+            key: "premium_monthly",
+            period: "month",
+          },
+        ]}
         perks={[
           {
             icon: <Book />,

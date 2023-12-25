@@ -2,38 +2,15 @@ import { Button } from "@notan/components/ui/button";
 import Image from "next/image";
 import { FC } from "react";
 
+import {
+  getDescriptionForLookupKey,
+  getTitleForLookupKey,
+} from "@/hooks/billing/usePriceByLookupKey";
 import { Price } from "@/hooks/billing/usePrices";
 import { useProduct } from "@/hooks/billing/useProduct";
 import { cn } from "@/lib/utils";
 
-const getTitleForLookupKey = (lookupKey: string) => {
-  switch (lookupKey) {
-    case "20_note_storage":
-      return "+20 Note Storage";
-    case "40_note_storage":
-      return "+40 Note Storage";
-    case "100_note_length":
-      return "+100 Note Length";
-    case "200_note_length":
-      return "+200 Note Length";
-    default:
-      return "";
-  }
-};
-const getDescriptionForLookupKey = (lookupKey: string) => {
-  switch (lookupKey) {
-    case "20_note_storage":
-      return "Increase note storage by 20 for your account.";
-    case "40_note_storage":
-      return "Increase note storage by 40 for your account.";
-    case "100_note_length":
-      return "Increase note length by 100 for your account.";
-    case "200_note_length":
-      return "Increase note length by 200 for your account.";
-    default:
-      return "";
-  }
-};
+import { BuyFlowDialog } from "./buy_flow/BuyFlowDialog";
 
 export const ProductCard: FC<{
   price?: Price;
@@ -71,15 +48,15 @@ export const ProductCard: FC<{
           {product.data?.owns}/{product.data?.max} bought
         </span>
       </div>
-      <Button
-        variant="inverted"
-        className="mt-3"
-        onClick={() => {
-          alert("Not implemented yet. Please check by later.");
-        }}
+
+      <BuyFlowDialog
+        price_id={price.price_id}
+        title={getTitleForLookupKey(price?.lookup_key)}
       >
-        Buy
-      </Button>
+        <Button variant="inverted" className="mt-3">
+          Buy
+        </Button>
+      </BuyFlowDialog>
     </div>
   );
 };
