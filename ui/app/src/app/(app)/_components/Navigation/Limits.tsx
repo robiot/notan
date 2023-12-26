@@ -23,14 +23,17 @@ export const Limits = () => {
                   className={cn(
                     "rounded-full h-3",
                     user.data?.used_note_storage >=
-                      user.data?.total_note_storage && "bg-red-500"
+                      user.data?.total_note_storage
+                      ? "bg-red-500"
+                      : "bg-primary"
                   )}
                   style={{
-                    width: `${
+                    width: `${Math.min(
                       (user.data?.used_note_storage /
                         user.data?.total_note_storage) *
+                        100,
                       100
-                    }%`,
+                    )}%`,
                   }}
                 />
               </>

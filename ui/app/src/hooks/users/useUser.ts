@@ -19,6 +19,7 @@ type User = {
 export const useUser = () => {
   return useQuery({
     queryKey: ["user"],
+    refetchInterval: 5000,
     queryFn: async () => {
       const response = await api
         .get<ApiResponse<User>>("/users/@me")

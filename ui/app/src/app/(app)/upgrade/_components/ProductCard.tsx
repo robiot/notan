@@ -53,7 +53,14 @@ export const ProductCard: FC<{
         price_id={price.price_id}
         title={getTitleForLookupKey(price?.lookup_key)}
       >
-        <Button variant="inverted" className="mt-3">
+        <Button
+          variant="inverted"
+          className="mt-3"
+          disabled={
+            product.data?.owns !== undefined &&
+            product.data?.owns >= product.data?.max
+          }
+        >
           Buy
         </Button>
       </BuyFlowDialog>

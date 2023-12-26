@@ -76,7 +76,10 @@ export default function AccountPage() {
           <Button
             variant="ghost"
             className="mt-4 gap-3"
-            onClick={() => auth.logout()}
+            onClick={() => {
+              auth.logout();
+              window.location.reload();
+            }}
           >
             <LogOut />
             Log out

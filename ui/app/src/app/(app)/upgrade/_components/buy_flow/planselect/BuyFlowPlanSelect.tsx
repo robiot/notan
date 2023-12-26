@@ -55,6 +55,8 @@ export const BuyFlowPlanSelect: FC<{
     buyFlow.setFlowState({
       ...buyFlow.flowState,
       price_id: getPriceByLookupKey(alternative.key, prices.data)?.price_id,
+      product_id: getPriceByLookupKey(alternative.key, prices.data)
+        ?.product_id!,
       product_info: {
         ...buyFlow.flowState.product_info,
         type: "subscription",
