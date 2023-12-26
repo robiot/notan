@@ -30,7 +30,7 @@ export const HomePage = () => {
         </Button>
         <Input
           inputSize="small"
-          placeholder="Search notes by domain/content"
+          placeholder="Search notes, use * to show all"
           className="w-full focus-visible:ring-0"
           {...form.register("search")}
         />
