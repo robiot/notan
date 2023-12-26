@@ -13,7 +13,11 @@ const queryClient = new QueryClient();
 Sentry.init({
   dsn: enviroment.SENTRY_DSN,
   tracesSampleRate: 1,
-
+  integrations: [
+    new (Sentry.Integrations as any).BrowserTracing({
+      tracingOrigins: [enviroment.API_URL, "https://app.notan.ax"],
+    }),
+  ],
   // Capture Replay for 10% of all sessions,
   // plus for 100% of sessions with an error
   replaysSessionSampleRate: 0.1,
