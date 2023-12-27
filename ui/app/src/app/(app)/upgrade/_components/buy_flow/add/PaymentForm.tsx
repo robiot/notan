@@ -52,7 +52,7 @@ export const PaymentForm: FC<{
         next={
           <Button
             type="button"
-            className="mt-2 w-32"
+            className="w-32"
             disabled={!complete}
             onClick={async () => {
               next();

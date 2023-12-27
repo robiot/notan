@@ -24,7 +24,7 @@ export const AddressForm: FC<{
         next={
           <Button
             type="submit"
-            className="mt-2 w-32"
+            className="w-32"
             loading={loading}
             onClick={async () => {
               next();

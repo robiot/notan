@@ -5,14 +5,17 @@ import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { FC, ReactNode, useState } from "react";
 
+import { api } from "@/lib/api";
 import { StripeAppearance, stripePromise } from "@/lib/stripe";
 
+import { useBuyFlow } from "../../hooks/useBuyFlow";
 import { FooterBackButton } from "../BuyFlowFooter";
 import { AddressForm } from "./AddressForm";
 import { PaymentForm } from "./PaymentForm";
 
 const Form: FC<{
   back: ReactNode;
+  done: () => void;
 }> = ({ back }) => {
   const [page, setPage] = useState<"paymentform" | "addressform">(
     "paymentform"
@@ -45,12 +48,17 @@ const Form: FC<{
       if (!method) return;
 
       console.log(method);
-      // if (method.error) {
-      //   toast({
-      //     title: "Error",
-      //     description: method.error.message,
-      //   });
-      // }
+
+      if (method.error) {
+        toast({
+          title: "Error",
+          description: method.error.message,
+        });
+      }
+
+      await api.post(`/payments/methods/${method.paymentMethod?.id}/attach`, {
+        payment_method_id: method.paymentMethod?.id,
+      });
 
       // console.log(error, paymentMethod);
       // next();
@@ -113,6 +121,8 @@ const Form: FC<{
 export const BuyFlowAddCard: FC<{
   back: ReactNode;
 }> = ({ back }) => {
+  const buyFlow = useBuyFlow();
+
   return (
     <div className="flex flex-col gap-6">
       <DialogHeader>
@@ -128,7 +138,12 @@ export const BuyFlowAddCard: FC<{
           appearance: StripeAppearance,
         }}
       >
-        <Form back={back} />
+        <Form
+          back={back}
+          done={() => {
+            buyFlow.setPage("payment");
+          }}
+        />
       </Elements>
     </div>
   );

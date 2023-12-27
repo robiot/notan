@@ -17,7 +17,7 @@ export const FooterBackButton: FC<{
   onClick: DOMAttributes<HTMLButtonElement>["onClick"];
 }> = ({ onClick }) => {
   return (
-    <Button className="mt-2 px-0 pr-3" variant="ghost" onClick={onClick}>
+    <Button className="px-0 pr-3" variant="ghost" onClick={onClick}>
       <ChevronLeft />
       Back
     </Button>
@@ -29,7 +29,7 @@ export const BuyFlowFooter: FC<{
   next: ReactNode;
 }> = ({ back, next }) => {
   return (
-    <DialogFooter className="mt-1">
+    <DialogFooter className="mt-6">
       <div className="flex flex-col w-full gap-6">
         <div className="w-full justify-between flex gap-2">
           <div>{back}</div>
