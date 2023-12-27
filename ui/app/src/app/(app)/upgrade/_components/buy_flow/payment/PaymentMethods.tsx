@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@notan/components/ui/select";
-import { CreditCard } from "lucide-react";
+import { CreditCard, Plus } from "lucide-react";
 import { useEffect } from "react";
 
 import { usePaymentMethods } from "@/hooks/billing/usePaymentMethods";
@@ -29,7 +29,13 @@ export const PaymentMethods = () => {
     <Select
       defaultValue={methods.data?.at(0)?.id}
       onValueChange={(value) => {
-        console.log("changed", value);
+        // hehe: but it works
+        if (value == "add") {
+          buyFlow.setPage("add_card");
+
+          return;
+        }
+
         buyFlow.setFlowState({
           ...buyFlow.flowState,
           payment_method_id: value,
@@ -55,6 +61,19 @@ export const PaymentMethods = () => {
             )}
           </SelectItem>
         ))}
+        <SelectItem
+          value="add"
+          onClick={(event) => {
+            console.log("got clicked");
+            event.preventDefault();
+            buyFlow.setPage("add_card");
+          }}
+        >
+          <div className="flex ml-2 gap-5 py-2 items-center">
+            <Plus />
+            Add payment method
+          </div>
+        </SelectItem>
       </SelectContent>
     </Select>
   );

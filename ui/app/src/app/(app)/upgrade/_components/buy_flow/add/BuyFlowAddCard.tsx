@@ -1,10 +1,13 @@
 import { DialogHeader, DialogTitle } from "@notan/components/ui/dialog";
 import { toast } from "@notan/components/ui/use-toast";
+import { ApiResponse, hasError } from "@notan/utils/api";
 import { Elements, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import { FC, ReactNode, useState } from "react";
 
+import { usePaymentMethods } from "@/hooks/billing/usePaymentMethods";
 import { api } from "@/lib/api";
 import { StripeAppearance, stripePromise } from "@/lib/stripe";
 
@@ -22,6 +25,8 @@ const Form: FC<{
   );
   const stripe = useStripe();
   const payment = useElements();
+  const buyFlow = useBuyFlow();
+  const methods = usePaymentMethods();
 
   const addCard = useMutation({
     mutationFn: async () => {
@@ -54,14 +59,32 @@ const Form: FC<{
           title: "Error",
           description: method.error.message,
         });
+
+        return;
       }
 
-      await api.post(`/payments/methods/${method.paymentMethod?.id}/attach`, {
-        payment_method_id: method.paymentMethod?.id,
-      });
+      if (!method.paymentMethod?.id) {
+        toast({
+          title: "No id",
+          description: "Please try again",
+        });
 
-      // console.log(error, paymentMethod);
-      // next();
+        return;
+      }
+
+      const response = await api
+        .post<ApiResponse<{ token: string }>>(
+          `/payments/methods/${method.paymentMethod?.id}`
+        )
+        .catch((error: AxiosError) => {
+          hasError(error.response);
+        });
+
+      if (!response) return;
+
+      await methods.refetch();
+
+      buyFlow.setPage("payment");
     },
     mutationKey: ["add_card"],
   });

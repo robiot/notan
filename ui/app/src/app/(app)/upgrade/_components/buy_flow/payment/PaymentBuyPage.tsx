@@ -105,52 +105,54 @@ export const PaymentBuyPage = () => {
   });
 
   return (
-    <div className="flex flex-col gap-6">
-      {alertError !== null && (
-        <Alert variant="destructive">
-          <CreditCard className="h-4 w-4" />
-          <AlertTitle>{alertError?.title}</AlertTitle>
-          <AlertDescription>{alertError?.description}</AlertDescription>
-        </Alert>
-      )}
-      <div className="flex flex-col gap-2">
-        <span className="text-sm font-bold text-foreground/80">Details</span>
-        <div className="flex bg-card p-4 rounded justify-between">
-          <span>
-            {buyFlow.flowState.title}{" "}
-            {buyFlow.flowState.product_info?.subscription_period?.title}
-          </span>
-          <span>
-            <PriceFormated />
-          </span>
+    <div className="flex flex-col">
+      <div className="flex flex-col gap-6">
+        {alertError !== null && (
+          <Alert variant="destructive">
+            <CreditCard className="h-4 w-4" />
+            <AlertTitle>{alertError?.title}</AlertTitle>
+            <AlertDescription>{alertError?.description}</AlertDescription>
+          </Alert>
+        )}
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-bold text-foreground/80">Details</span>
+          <div className="flex bg-card p-4 rounded justify-between">
+            <span>
+              {buyFlow.flowState.title}{" "}
+              {buyFlow.flowState.product_info?.subscription_period?.title}
+            </span>
+            <span>
+              <PriceFormated />
+            </span>
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <span className="text-sm font-bold text-foreground/80">
-          Select payment method
-        </span>
-        <PaymentMethods />
-      </div>
-      <div className="flex flex-col gap-2">
-        <p className="text-xs text-foreground/60">
-          {isSubscription ? (
-            <>
-              By presing {buyButtonText()} you are purchasing a subscription
-              that will charge <PriceFormated /> until you cancel. Canceling can
-              be done under the Billing page. If you have any questions, please
-              contact us.
-            </>
-          ) : (
-            <>
-              By presing {buyButtonText()} you are purchasing a one-time
-              payment.
-            </>
-          )}
-        </p>
-        <p className="text-xs text-foreground/60">
-          A receipt will be sent to{" "}
-          <span className="font-bold">{user.data?.email}</span>
-        </p>
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-bold text-foreground/80">
+            Select payment method
+          </span>
+          <PaymentMethods />
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="text-xs text-foreground/60">
+            {isSubscription ? (
+              <>
+                By presing {buyButtonText()} you are purchasing a subscription
+                that will charge <PriceFormated /> until you cancel. Canceling
+                can be done under the Billing page. If you have any questions,
+                please contact us.
+              </>
+            ) : (
+              <>
+                By presing {buyButtonText()} you are purchasing a one-time
+                payment.
+              </>
+            )}
+          </p>
+          <p className="text-xs text-foreground/60">
+            A receipt will be sent to{" "}
+            <span className="font-bold">{user.data?.email}</span>
+          </p>
+        </div>
       </div>
 
       <BuyFlowFooter

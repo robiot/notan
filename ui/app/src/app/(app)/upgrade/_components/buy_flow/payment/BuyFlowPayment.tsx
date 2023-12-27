@@ -14,6 +14,7 @@ const Content = () => {
     if (methods.isLoading) return;
 
     if (!methods.data || methods.data.length === 0) {
+      console.log("no card");
       buyFlow.setPage("add_card");
     }
   }, [methods.data, methods.isLoading]);
