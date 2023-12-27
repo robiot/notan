@@ -1,10 +1,12 @@
+use tower_http::cors::Any;
+
 use crate::utils::payments::sync;
 
 use {
     axum::routing::get,
     axum::Router,
     colored::Colorize,
-    hyper::{header, Method},
+    hyper::Method,
     log::info,
     sqlx::{
         postgres::{PgConnectOptions, PgPoolOptions},
@@ -111,12 +113,7 @@ url: http://{}:{}
             CorsLayer::new()
                 .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::PUT])
                 .allow_origin(AllowOrigin::any())
-                .allow_headers([
-                    header::CONTENT_TYPE,
-                    header::ORIGIN,
-                    header::ACCEPT,
-                    header::AUTHORIZATION,
-                ]),
+                .allow_headers(Any),
         )
         .with_state(app_state);
 
