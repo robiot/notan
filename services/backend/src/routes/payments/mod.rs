@@ -32,7 +32,7 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
         //
         .route(
             "/subscriptions/:id/cancel",
-            post(subscriptions::id::cancel::handler),
+            delete(subscriptions::id::cancel::handler),
         )
         .route("/subscriptions", get(subscriptions::get::handler))
         //
