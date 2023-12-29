@@ -70,7 +70,7 @@ export const SubscriptionCard: FC<{
             <span>{perk.text}</span>
             {perk.tooltip && (
               <Popover>
-                <PopoverTrigger>
+                <PopoverTrigger asChild>
                   <Button variant="ghost" className="p-0 h-fit w-5">
                     ?
                   </Button>

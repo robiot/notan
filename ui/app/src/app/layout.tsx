@@ -21,7 +21,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={cn("min-h-screen flex flex-col")}>
+    <html
+      lang="en"
+      className={cn("min-h-screen flex flex-col !pointer-events-auto")}
+    >
       <body
         className={cn(
           noto_sans.className,

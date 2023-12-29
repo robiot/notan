@@ -139,6 +139,9 @@ export const PaymentBuyPage = () => {
             className="mt-2 px-8"
             loading={purchase.isPending || paySubscription.isPending}
             onClick={() => {
+              // So stripe 3d secure can work
+              document.body.style.pointerEvents = "";
+
               if (isSubscription) {
                 paySubscription.mutate({
                   payment_method_id: buyFlow.flowState.payment_method_id!,

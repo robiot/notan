@@ -9,7 +9,7 @@ import { ProductsSection } from "./_components/ProductsSection";
 import { SubscriptionsSection } from "./_components/SubscriptionsSection";
 
 export default function UpgradePage() {
-  // return <>Coming soon! Please wait</>;
+  return <>Coming soon! Please wait</>;
 
   return (
     <Container size="xlarge" className="flex flex-col">
