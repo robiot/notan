@@ -1,6 +1,6 @@
 import { Button } from "@notan/components/ui/button";
+import { DialogClose } from "@notan/components/ui/dialog";
 import { Separator } from "@notan/components/ui/separator";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { CheckCircle } from "lucide-react";
 
 export const BuyFlowSuccessPage = () => {

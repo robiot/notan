@@ -39,7 +39,9 @@ export const SubscriptionsSection = () => {
           },
           {
             icon: <CheckCircle />,
-            text: "No restrictions per domain!",
+            text: "No note limit per domain!",
+            tooltip:
+              "By default you can only create 10 notes for ex. wikipedia.com",
           },
         ]}
         gradient="blue"
@@ -71,7 +73,9 @@ export const SubscriptionsSection = () => {
           },
           {
             icon: <CheckCircle />,
-            text: "No restrictions per domain!",
+            text: "No note limit per domain!",
+            tooltip:
+              "By default you can only create 10 notes for ex. wikipedia.com",
           },
         ]}
         gradient="purple"

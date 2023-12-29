@@ -53,7 +53,7 @@ export const Limits = () => {
       </div>
 
       <div className="flex justify-between py-2">
-        <span className="text-sm">Unlimited per domain</span>
+        <span className="text-sm">No domain restrictions</span>
         <span className="text-sm">
           {user.data?.has_unlimited_notes_per_domain ? (
             <>

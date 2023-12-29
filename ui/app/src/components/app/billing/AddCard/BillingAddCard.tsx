@@ -59,8 +59,7 @@ const Form: FC<{
       if (!method) return;
 
       if (method.error) {
-        // setError(method.error.message);
-        console.log(method.error);
+        setError(method.error.message);
 
         return;
       }

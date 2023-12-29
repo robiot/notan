@@ -1,4 +1,9 @@
 import { Button } from "@notan/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@notan/components/ui/popover";
 import { CheckCircle } from "lucide-react";
 import { FC, ReactNode } from "react";
 
@@ -16,6 +21,7 @@ export const SubscriptionCard: FC<{
   perks: {
     icon: ReactNode;
     text: string;
+    tooltip?: string;
   }[];
   gradient?: "blue" | "purple";
 }> = ({ price, alternatives, gradient, title, perks }) => {
@@ -62,6 +68,18 @@ export const SubscriptionCard: FC<{
           >
             {perk.icon}
             <span>{perk.text}</span>
+            {perk.tooltip && (
+              <Popover>
+                <PopoverTrigger>
+                  <Button variant="ghost" className="p-0 h-fit w-5">
+                    ?
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="text-sm">
+                  {perk.tooltip}
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
         ))}
       </div>
