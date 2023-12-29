@@ -19,7 +19,6 @@ export const HomePage = () => {
     form.setFocus("search");
   }, []);
 
-  // todo add loader here
   return (
     <>
       <Topbar>
