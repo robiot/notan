@@ -13,7 +13,6 @@ use {
 pub async fn webhook_handler(invoice: stripe::Invoice, state: &AppState) -> Result<()> {
     let customer_id = invoice::get_invoice_customer_id(invoice.clone())?;
 
-    // todo cancel previous subscription
     let user = sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
         r#"SELECT * FROM public.users WHERE stripe_customer_id = $1"#,
     )

@@ -63,7 +63,6 @@ pub async fn handler(
         body.payment_method_id.as_str(),
     )?);
 
-    // Todo add error handling here
     // responding with error (StripeError(Stripe(RequestError { http_status: 402, error_type: Card, message: Some("Your card was declined."), code: Some(CardDeclined), decline_code: Some("generic_decline"), charge
     match stripe::PaymentIntent::create(&state.stripe, payment_intent_data).await {
         Ok(_) => {}
