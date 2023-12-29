@@ -13,20 +13,11 @@ export type ApiResponse<T> = {
   status: "SUCCESS" | "FAILURE";
 };
 
-// export let api: AxiosInstance = axios.create({
-//   baseURL: enviroment.API_URL,
-//   timeout: 30_000,
-// });
-
-// api.interceptors.request.use((config) => {
-//   const { token } = useAuth.getState();
-
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-
-//   return config;
-// });
+export const getDescriptionForError = (error_name: string, errors: ApiResponse<unknown>["errors"]) => {
+  return errors.find(
+    (error) => error.name == error_name
+  )?.message ?? "unknown";
+};
 
 export const hasError = (
   response: AxiosResponse<unknown, any> | undefined,
