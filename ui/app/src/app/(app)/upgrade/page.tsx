@@ -4,14 +4,17 @@
 import { Container } from "@/components/common/Container";
 import { PageTitle } from "@/components/common/PageTitle";
 
+import { PaymentSuccessDialog } from "./_components/payment_success/PaymentSuccessDialog";
 import { ProductsSection } from "./_components/ProductsSection";
 import { SubscriptionsSection } from "./_components/SubscriptionsSection";
 
 export default function UpgradePage() {
-  return <>Coming soon! Please wait</>;
+  // return <>Coming soon! Please wait</>;
 
   return (
     <Container size="xlarge" className="flex flex-col">
+      <PaymentSuccessDialog />
+
       <div className="mt-5">
         <PageTitle>Subscriptions</PageTitle>
         <SubscriptionsSection />

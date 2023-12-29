@@ -5,16 +5,14 @@ import {
 } from "@notan/components/ui/alert";
 import { Button } from "@notan/components/ui/button";
 import { DialogClose } from "@notan/components/ui/dialog";
-import { ApiResponse, hasError } from "@notan/utils/api";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
 import { CreditCard } from "lucide-react";
 import { useState } from "react";
 
+import { usePaySubscription } from "@/hooks/actions/usePaySubscription";
+import { usePurchase } from "@/hooks/actions/usePurchase";
 import { usePriceById } from "@/hooks/billing/usePriceById";
 import { useProduct } from "@/hooks/billing/useProduct";
 import { useUser } from "@/hooks/users/useUser";
-import { api } from "@/lib/api";
 
 import { useBuyFlow } from "../../hooks/useBuyFlow";
 import { BuyFlowFooter, FooterBackButton } from "../BuyFlowFooter";
@@ -45,6 +43,22 @@ export const PaymentBuyPage = () => {
     description: string;
   } | null>(null);
 
+  const onPaymentComplete = () => {
+    user.refetch();
+    product.refetch();
+    buyFlow.setPage("success");
+  };
+
+  const purchase = usePurchase({
+    setAlertError,
+    onDone: onPaymentComplete,
+  });
+
+  const paySubscription = usePaySubscription({
+    setAlertError,
+    onDone: onPaymentComplete,
+  });
+
   const isSubscription =
     buyFlow.flowState.product_info?.subscription_period !== undefined;
 
@@ -55,54 +69,6 @@ export const PaymentBuyPage = () => {
 
     return "Buy";
   };
-
-  const purchase = useMutation({
-    mutationKey: ["purchase", buyFlow.flowState.price_id],
-    mutationFn: async () => {
-      if (isSubscription) return;
-
-      console.log(buyFlow.flowState.payment_method_id);
-      const response = await api
-        .post<ApiResponse<unknown>>(
-          `/payments/buy/${buyFlow.flowState.price_id}/intent`,
-          {
-            payment_method_id: buyFlow.flowState.payment_method_id,
-          }
-        )
-        .catch((error: AxiosError) => {
-          const response = error.response as AxiosResponse<
-            ApiResponse<any>,
-            any
-          >;
-
-          if (!response) return;
-
-          if (hasError(error.response, "card_error")) {
-            setAlertError({
-              title: "Card declined",
-              // get description from card_error
-              description:
-                response.data.errors.find((error) => error.name == "card_error")
-                  ?.message ?? "unknown",
-            });
-          } else if (hasError(error.response, "payment_error")) {
-            setAlertError({
-              title: "Something went wrong with the payment",
-              description:
-                response.data.errors.find(
-                  (error) => error.name == "payment_error"
-                )?.message ?? "unknown",
-            });
-          }
-        });
-
-      if (!response) return;
-
-      user.refetch();
-      product.refetch();
-      buyFlow.setPage("success");
-    },
-  });
 
   return (
     <div className="flex flex-col">
@@ -171,9 +137,19 @@ export const PaymentBuyPage = () => {
         next={
           <Button
             className="mt-2 px-8"
-            loading={purchase.isPending}
+            loading={purchase.isPending || paySubscription.isPending}
             onClick={() => {
-              purchase.mutate();
+              if (isSubscription) {
+                paySubscription.mutate({
+                  payment_method_id: buyFlow.flowState.payment_method_id!,
+                  price_id: buyFlow.flowState.price_id!,
+                });
+              } else {
+                purchase.mutate({
+                  payment_method_id: buyFlow.flowState.payment_method_id!,
+                  price_id: buyFlow.flowState.price_id!,
+                });
+              }
             }}
           >
             {buyButtonText()}

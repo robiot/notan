@@ -24,7 +24,7 @@ export const ProductCard: FC<{
   return (
     <div
       className={cn(
-        "flex flex-col gap-0 p-7 rounded-2xl",
+        "flex flex-col gap-0 p-14 rounded-2xl",
         gradient ? "bg-purple-blue-gradient" : "bg-card"
       )}
     >
@@ -36,7 +36,7 @@ export const ProductCard: FC<{
         className="h-28 self-center"
       />
 
-      <span className="text-xl mt-6 font-semibold">
+      <span className="text-xl mt-12 font-semibold">
         {getTitleForLookupKey(price?.lookup_key)}
       </span>
       <p className="text-md text-foreground/90">

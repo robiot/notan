@@ -12,11 +12,12 @@ export const BuyFlowSuccessPage = () => {
           <div className="text-2xl text-white">Payment successful</div>
         </div>
       </div>
+
       <Separator />
       <div className="flex flex-col items-center text-center">
         <div className="text-xl">Thank you for your purchase!</div>
         <div className="text-sm mt-3">
-          You can now start using your new ✨features✨
+          You can now start using your new features ✨
         </div>
         <DialogClose asChild>
           <Button className="mt-12 px-12 w-fit">Done</Button>

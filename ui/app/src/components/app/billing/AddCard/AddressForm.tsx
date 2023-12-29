@@ -2,9 +2,8 @@ import { Button } from "@notan/components/ui/button";
 import { AddressElement } from "@stripe/react-stripe-js";
 import { FC, ReactNode } from "react";
 
+import { BuyFlowFooter } from "@/app/(app)/upgrade/_components/buy_flow/BuyFlowFooter";
 import { cn } from "@/lib/utils";
-
-import { BuyFlowFooter } from "../BuyFlowFooter";
 
 export const AddressForm: FC<{
   visible: boolean;

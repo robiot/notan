@@ -1,9 +1,12 @@
 import { Button } from "@notan/components/ui/button";
+import { CheckCircle } from "lucide-react";
 import { FC, ReactNode } from "react";
 
+import { useActiveSubscription } from "@/hooks/billing/useActiveSubscription";
 import { Price } from "@/hooks/billing/usePrices";
 import { cn } from "@/lib/utils";
 
+import { AlreadySubscribingDialog } from "./already_subscribing/AlreadySubscribingDialog";
 import { AlternativeT, BuyFlowDialog } from "./buy_flow/BuyFlowDialog";
 
 export const SubscriptionCard: FC<{
@@ -16,6 +19,28 @@ export const SubscriptionCard: FC<{
   }[];
   gradient?: "blue" | "purple";
 }> = ({ price, alternatives, gradient, title, perks }) => {
+  const subscriptions = useActiveSubscription();
+
+  const isSubscribed =
+    subscriptions.data?.subscription?.product?.id == price?.product_id;
+
+  const subscribeButton = (
+    <Button
+      variant="inverted"
+      className="mt-14 flex gap-5"
+      disabled={isSubscribed}
+    >
+      {isSubscribed ? (
+        <>
+          <CheckCircle className="w-5 h-5" />
+          Currently subscribing
+        </>
+      ) : (
+        <>Subscribe</>
+      )}
+    </Button>
+  );
+
   if (!price) return null;
 
   return (
@@ -41,11 +66,13 @@ export const SubscriptionCard: FC<{
         ))}
       </div>
 
-      <BuyFlowDialog alternatives={alternatives} title={title}>
-        <Button variant="inverted" className="mt-14">
-          Subscribe
-        </Button>
-      </BuyFlowDialog>
+      {subscriptions.data?.notFound ? (
+        <BuyFlowDialog alternatives={alternatives} title={title}>
+          {subscribeButton}
+        </BuyFlowDialog>
+      ) : (
+        <AlreadySubscribingDialog>{subscribeButton}</AlreadySubscribingDialog>
+      )}
     </div>
   );
 };

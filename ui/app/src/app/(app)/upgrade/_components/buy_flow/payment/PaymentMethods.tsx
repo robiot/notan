@@ -5,9 +5,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@notan/components/ui/select";
-import { CreditCard, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useEffect } from "react";
 
+import { PaymentMethodCard } from "@/components/app/billing/PaymentMethodCard";
 import { usePaymentMethods } from "@/hooks/billing/usePaymentMethods";
 
 import { useBuyFlow } from "../../hooks/useBuyFlow";
@@ -48,17 +49,7 @@ export const PaymentMethods = () => {
       <SelectContent>
         {methods.data?.map((method) => (
           <SelectItem value={method.id} key={`method_${method.id}`}>
-            {method.kind == "card" && (
-              <div className="flex ml-2 gap-5 items-center">
-                <CreditCard />
-                <div className="flex items-start flex-col">
-                  <div>**** **** **** {method.card?.last_four}</div>
-                  <span>
-                    {method.card?.brand} | Expires {method.card?.exp}
-                  </span>
-                </div>
-              </div>
-            )}
+            <PaymentMethodCard method={method} />
           </SelectItem>
         ))}
         <SelectItem
