@@ -8,7 +8,8 @@ export const NavigationLink: FC<{
   href: string;
   children: ReactNode;
   icon?: ReactNode;
-}> = ({ href, children, icon }) => {
+  close?: () => void;
+}> = ({ href, children, icon, close }) => {
   const pathname = usePathname();
 
   const isActive = href == "/" ? href == pathname : pathname.startsWith(href);
@@ -19,6 +20,9 @@ export const NavigationLink: FC<{
         "rounded w-full flex items-center p-3 gap-3 hover:bg-accent justify-between",
         isActive && "bg-accent"
       )}
+      onClick={() => {
+        close?.();
+      }}
       href={href}
     >
       <div>{children}</div>
