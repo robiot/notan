@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(sqlx::FromRow, Debug, Serialize, Deserialize)]
-pub struct StripeProductPrice {
-    pub stripe_product_id: String,
+pub struct Price {
+    pub price_key: String,
     pub stripe_price_id: String,
-    pub lookup_key: String,
 }

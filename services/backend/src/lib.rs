@@ -75,6 +75,7 @@ pub async fn start(
         db,
         redis: redis_client,
         stripe: stripe_client,
+        products: utils::products::products(),
     });
 
     // Sync stripe products

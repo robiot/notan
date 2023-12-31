@@ -2,20 +2,22 @@ use std::sync::Arc;
 
 use crate::{error::Result, schemas, state::AppState};
 
+use super::products::utils::get_product_by_id;
+
 const FREE_MAX_STORAGE: i32 = 25;
 const FREE_MAX_NOTE_LENGTH: i32 = 300;
 
 #[derive(Debug, Clone)]
 pub struct Limits {
-    pub max_note_storage: i32,
-    pub max_note_length: i32,
-    pub has_unlimited_notes_per_domain: bool,
+    pub max_notes: i32,
+    pub max_note_characters: i32,
+    pub no_domain_restrictions: bool,
 }
 
 // 太酷了！ 再见！
 pub async fn get_limits(user_id: String, state: Arc<AppState>) -> Result<Limits> {
-    let mut max_note_storage: i32;
-    let mut max_note_length: i32;
+    let mut max_note_storage: i32 = FREE_MAX_STORAGE;
+    let mut max_note_length: i32 = FREE_MAX_NOTE_LENGTH;
     let mut has_unlimited_notes_per_domain: bool = false;
 
     // first we set from active subscription
@@ -28,46 +30,34 @@ pub async fn get_limits(user_id: String, state: Arc<AppState>) -> Result<Limits>
     .await?;
 
     if let Some(subscription) = subscription {
-        let product = sqlx::query_as::<sqlx::Postgres, schemas::stripe_product::StripeProduct>(
-            r#"SELECT * FROM public.stripe_products WHERE stripe_product_id = $1"#,
-        )
-        .bind(subscription.stripe_product_id.clone())
-        .fetch_one(&state.db)
-        .await?;
+        let product = get_product_by_id(state.products.clone(), &subscription.product_id)?;
 
-        // for subscriptions we use the increase fields as defaults instead of free defaults
-        max_note_storage = product.storage_increase.unwrap_or(0);
-        max_note_length = product.length_increase.unwrap_or(0);
-        has_unlimited_notes_per_domain = product.unlimited_per_domain;
-    } else {
-        max_note_storage = FREE_MAX_STORAGE;
-
-        max_note_length = FREE_MAX_NOTE_LENGTH;
+        max_note_storage = product.perks.max_notes_base.unwrap_or(FREE_MAX_STORAGE);
+        max_note_length = product
+            .perks
+            .max_note_characters_base
+            .unwrap_or(FREE_MAX_STORAGE);
+        has_unlimited_notes_per_domain = product.perks.no_domain_restrictions;
     }
 
     // then we get values from all product purchases
-    let purchases = sqlx::query_as::<sqlx::Postgres, schemas::product_purchases::ProductPurchase>(
-        r#"SELECT * FROM public.product_purchases WHERE user_id = $1"#,
+    let owned_products = sqlx::query_as::<sqlx::Postgres, schemas::owned_product::OwnedProduct>(
+        r#"SELECT * FROM public.owned_products WHERE user_id = $1"#,
     )
     .bind(user_id.clone())
     .fetch_all(&state.db)
     .await?;
 
-    for purchase in purchases {
-        let product = sqlx::query_as::<sqlx::Postgres, schemas::stripe_product::StripeProduct>(
-            r#"SELECT * FROM public.stripe_products WHERE stripe_product_id = $1"#,
-        )
-        .bind(purchase.stripe_product_id.clone())
-        .fetch_one(&state.db)
-        .await?;
+    for owned_product in owned_products {
+        let product = get_product_by_id(state.products.clone(), &owned_product.product_id)?;
 
-        max_note_storage += product.storage_increase.unwrap_or(0);
-        max_note_length += product.length_increase.unwrap_or(0);
+        max_note_storage += product.perks.max_notes_increase;
+        max_note_length += product.perks.max_note_characters_increase;
     }
 
     Ok(Limits {
-        max_note_storage,
-        max_note_length,
-        has_unlimited_notes_per_domain,
+        max_notes: max_note_storage,
+        max_note_characters: max_note_length,
+        no_domain_restrictions: has_unlimited_notes_per_domain,
     })
 }

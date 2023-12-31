@@ -1,4 +1,4 @@
-use crate::{auth::check_auth, error::Result, routes::Response, state::AppState};
+use crate::{auth::check_auth, error::Result, routes::Response, state::AppState, utils::products::utils::get_product_by_id};
 
 use {
     axum::extract::{Path, State},
@@ -29,7 +29,7 @@ pub async fn handler(
     // get how many times user has the product with id params.id
     let owns_count: i64 = sqlx::query_scalar(
         r#"
-        SELECT COUNT(*) FROM public.product_purchases WHERE user_id = $1 AND stripe_product_id = $2;
+        SELECT COUNT(*) FROM public.owned_products WHERE user_id = $1 AND product_id = $2;
         "#,
     )
     .bind(id.clone())
@@ -37,18 +37,13 @@ pub async fn handler(
     .fetch_one(&state.db)
     .await?;
 
-    let product = sqlx::query_as::<sqlx::Postgres, crate::schemas::stripe_product::StripeProduct>(
-        r#"SELECT * FROM public.stripe_products WHERE stripe_product_id = $1"#,
-    )
-    .bind(params.product_id.clone())
-    .fetch_one(&state.db)
-    .await?;
+    let product = get_product_by_id(state.products.clone(), &params.product_id)?;
 
     Ok(Response::new_success(
         StatusCode::OK,
         Some(ProductGetResponse {
-            product_id: product.stripe_product_id,
-            name: product.name,
+            product_id: product.id,
+            name: product.title,
             owns: owns_count as i32,
             max: product.max_own.unwrap_or(0),
         }),

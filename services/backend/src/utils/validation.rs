@@ -143,7 +143,7 @@ pub fn validate_title(title: String) -> Result<()> {
 // validate note
 pub fn validate_note_body(note: String, limits: Limits) -> Result<()> {
     // check if note is too long
-    if note.len() > limits.max_note_length as usize {
+    if note.len() > limits.max_note_characters as usize {
         return Err(Error::UnprocessableEntity(ResponseError {
             message: "Note is too long".to_string(),
             name: "note_long".to_string(),
@@ -199,7 +199,7 @@ pub async fn validate_url_usage(
         }
     };
 
-    if !limits.has_unlimited_notes_per_domain {
+    if !limits.no_domain_restrictions {
         let mut count: i32 = 0;
 
         let notes = sqlx::query_as::<sqlx::Postgres, schemas::note::Note>(

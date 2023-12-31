@@ -5,7 +5,7 @@ use sqlx::types::chrono;
 pub struct ActiveSubscription {
     pub stripe_subscription_id: String,
     pub user_id: String,
-    pub stripe_product_id: String,
+    pub product_id: String,
     pub start_date: chrono::DateTime<chrono::Utc>,
     pub end_date: chrono::DateTime<chrono::Utc>,
     pub created_at: chrono::DateTime<chrono::Utc>,

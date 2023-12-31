@@ -95,7 +95,7 @@ pub async fn webhook_handler(invoice: stripe::Invoice, state: &AppState) -> Resu
 
             sqlx::query(
             r#"
-                INSERT INTO public.active_subscriptions (stripe_subscription_id, user_id, stripe_product_id, start_date, end_date)
+                INSERT INTO public.active_subscriptions (stripe_subscription_id, user_id, product_id, start_date, end_date)
                 VALUES ($1, $2, $3, $4, $5)
                 "#,
             )

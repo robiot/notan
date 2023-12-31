@@ -1,194 +1,232 @@
-use std::{collections::HashMap, sync::Arc};
-
-use crate::{
-    error::{Error, Result},
-    state::AppState,
+use std::{
+    collections::hash_map::DefaultHasher,
+    hash::{Hash, Hasher},
+    str::FromStr,
+    sync::Arc,
 };
 
-// this really needs rework in the future to check if the products are up to date and if not, update them
+use crate::{error::Result, schemas, state::AppState, utils::products::BillingPeriod};
+
+// maybe split this up into multiple functions in the future
+// hey have fun reading this really long function
 pub async fn ensure_stripe_products(state: Arc<AppState>) -> Result<()> {
-    // todo: check if products are up to date
-    let prices_db = sqlx::query_as::<
-        sqlx::Postgres,
-        crate::schemas::stripe_product_price::StripeProductPrice,
-    >(r#"SELECT * FROM public.stripe_product_prices"#)
-    .fetch_all(&state.db)
-    .await?;
+    // generate a checksum for state.products
+    let mut hasher = DefaultHasher::new();
+    state.products.hash(&mut hasher);
+    let products_checksum = hasher.finish().to_string();
 
-    let products = sqlx::query_as::<sqlx::Postgres, crate::schemas::stripe_product::StripeProduct>(
-        r#"SELECT * FROM public.stripe_products"#,
+    // check if the checksum is the same as the one in the db
+    let last_sync = sqlx::query_as::<sqlx::Postgres, schemas::products_sync::ProductsSync>(
+        r#"SELECT * FROM public._products_sync WHERE hash = $1"#,
     )
-    .fetch_all(&state.db)
+    .bind(products_checksum.clone())
+    .fetch_optional(&state.db)
     .await?;
 
-    let prices = stripe::Price::list(
+    if let Some(last_sync) = last_sync {
+        if last_sync.hash == products_checksum.to_string() {
+            log::info!("Products are up to date, skipping sync");
+            return Ok(());
+        }
+    }
+
+    log::info!("Syncing stripe products...");
+
+    // loop over state.products and check if they exist on stripe, if not, create them
+    let stripe_products = stripe::Product::list(
         &state.stripe,
-        &stripe::ListPrices {
-            limit: Some(100),
-            currency: Some(stripe::Currency::EUR),
-            expand: &["data.product"],
+        &stripe::ListProducts {
+            active: Some(true),
             ..Default::default()
         },
     )
     .await?;
 
-    // if prices_db.len() == 0 || products.len() == 0 {
-    // load all products and prices from stripe
-    let mut inserted_products: Vec<String> = Vec::new();
-
-    for price in prices.data.iter() {
-        let stripe_product = price
-            .product
-            .clone()
-            .and_then(|product| match product {
-                stripe::Expandable::Object(product) => Some(product),
-                _ => None,
-            })
-            .ok_or(Error::StripeFieldNotFoundError(
-                "Price product expandable".to_string(),
-            ))?;
-
-        // check if price with price.id.to_string() exists in stripe_product_prices
-        if prices_db
+    for product in state.products.clone() {
+        let stripe_product = stripe_products
+            .data
             .iter()
-            .any(|price_db| price_db.stripe_price_id == price.id.to_string())
-        {
-            continue;
-        }
+            .find(|&p| p.id.to_string() == product.id);
 
-        // Insert price
-        sqlx::query(
-                r#"
-                    INSERT INTO public.stripe_product_prices (stripe_price_id, stripe_product_id, lookup_key)
-                    VALUES ($1, $2, $3)
-                    "#,
-            )
-            .bind(price.id.to_string())
-            .bind(stripe_product.id.to_string())
-            .bind(price.lookup_key.clone())
-            .execute(&state.db)
-            .await?;
+        if let Some(stripe_product) = stripe_product {
+            stripe::Product::update(
+                &state.stripe,
+                &stripe_product.id,
+                stripe::UpdateProduct {
+                    name: Some(&product.title),
+                    description: Some(product.description.clone()),
 
-        let currency_options = if let Some(currency_options) = price.currency_options.clone() {
-            currency_options
-        } else {
-            let currency = price.currency.ok_or(Error::StripeFieldNotFoundError(
-                "Price currency".to_string(),
-            ))?;
-
-            let mut new_hashmap: HashMap<stripe::Currency, stripe::CurrencyOption> = HashMap::new();
-
-            new_hashmap.insert(
-                currency,
-                stripe::CurrencyOption {
-                    unit_amount: price.unit_amount,
                     ..Default::default()
                 },
-            );
-
-            new_hashmap
-        };
-
-        // iterate over currency options and insert them into db
-        for (currency, currency_option) in currency_options.iter() {
-            let unit_amount =
-                currency_option
-                    .unit_amount
-                    .ok_or(Error::StripeFieldNotFoundError(
-                        "currency_option.unit_amount".to_string(),
-                    ))?;
-
-            // check if price currency for price.id.to_string() exists in stripe_price_currencies databaser
-            let currency_db = sqlx::query(
-                    r#"
-                    SELECT * FROM public.stripe_price_currencies WHERE stripe_price_id = $1 AND currency = $2
-                    "#,
-                )
-                .bind(price.id.to_string())
-                .bind(currency.to_string())
-                .fetch_optional(&state.db)
-                .await?;
-
-            if currency_db.is_some() {
-                continue;
-            }
-
-            sqlx::query(
-                r#"
-                    INSERT INTO public.stripe_price_currencies (stripe_price_id, currency, price)
-                    VALUES ($1, $2, $3)
-                    "#,
             )
-            .bind(price.id.to_string())
-            .bind(currency.to_string())
-            .bind(unit_amount)
-            .execute(&state.db)
+            .await?;
+        } else {
+            stripe::Product::create(
+                &state.stripe,
+                stripe::CreateProduct {
+                    id: Some(&product.id),
+                    name: &product.title,
+                    statement_descriptor: None,
+                    description: Some(&product.description.clone()),
+                    active: Some(true),
+                    expand: &[],
+                    metadata: None,
+                    features: None,
+                    images: None,
+                    package_dimensions: None,
+                    shippable: None,
+                    tax_code: Some(stripe::TaxCodeId::from_str("txcd_10103000")?),
+                    type_: None,
+                    unit_label: None,
+                    url: None,
+                    default_price_data: None,
+                    // this didn't work for some damn reason -.-
+                    // ..Default::default()
+                },
+            )
             .await?;
         }
 
-        // Insert product
-        if inserted_products.contains(&stripe_product.id.to_string()) {
-            continue;
-        }
+        // loop over the prices and check if they exist on stripe, if not, create them
+        let stripe_prices = stripe::Price::list(
+            &state.stripe,
+            &stripe::ListPrices {
+                active: Some(true),
+                product: Some(stripe::IdOrCreate::Id(&product.id)),
+                ..Default::default()
+            },
+        )
+        .await?;
 
-        let name = stripe_product
-            .name
-            .ok_or(Error::StripeFieldNotFoundError("Product name".to_string()))?;
+        for price in product.prices {
+            let stripe_price = stripe_prices
+                .data
+                .iter()
+                .find(|&p| p.lookup_key == Some(price.key.clone()));
 
-        let metadata = stripe_product
-            .metadata
-            .ok_or(Error::StripeFieldNotFoundError(
-                "Product metadata".to_string(),
-            ))?;
+            // for if we want to support multiple currencies
+            // let mut currency_options: HashMap<
+            //     stripe::Currency,
+            //     stripe::CreatePriceCurrencyOptions,
+            //     RandomState,
+            // > = HashMap::new();
 
-        let max_own = metadata.get("max_own").and_then(|v| v.parse::<i32>().ok());
+            // for price_currency in price.price_currencies {
+            //     currency_options.insert(
+            //         price_currency.currency,
+            //         stripe::CreatePriceCurrencyOptions {
+            //             unit_amount: Some(price_currency.price),
 
-        let storage_increase = metadata
-            .get("storage_increase")
-            .and_then(|v| v.parse::<i32>().ok());
+            //             ..Default::default()
+            //         },
+            //     );
+            // }
 
-        let length_increase = metadata
-            .get("length_increase")
-            .and_then(|v| v.parse::<i32>().ok());
+            // because we need optional
+            let db_price = sqlx::query_as::<sqlx::Postgres, schemas::price::Price>(
+                r#"SELECT * FROM public.prices WHERE price_key = $1"#,
+            )
+            .bind(price.key.clone())
+            .fetch_optional(&state.db)
+            .await?;
 
-        let unlimited_per_domain =
-            if let Some(unlimited_per_domain) = metadata.get("unlimited_per_domain") {
-                if unlimited_per_domain == "true" {
-                    true
+            let first_currency = price.price_currencies.first();
+
+            let stripe_price_id: Option<String>;
+
+            if let Some(first_currency) = first_currency {
+                if let Some(stripe_price) = stripe_price {
+                    stripe::Price::update(
+                        &state.stripe,
+                        &stripe_price.id,
+                        stripe::UpdatePrice {
+                            active: Some(true),
+                            lookup_key: Some(&price.key.clone()),
+
+                            ..Default::default()
+                        },
+                    )
+                    .await?;
+
+                    stripe_price_id = Some(stripe_price.id.to_string());
                 } else {
-                    false
+                    let billing_interval = match price.billing_period {
+                        BillingPeriod::Monthly => Some(stripe::CreatePriceRecurringInterval::Month),
+                        BillingPeriod::Yearly => Some(stripe::CreatePriceRecurringInterval::Year),
+                        _ => None,
+                    };
+
+                    let recurring = if let Some(billing_interval) = billing_interval {
+                        Some(stripe::CreatePriceRecurring {
+                            interval: billing_interval,
+                            aggregate_usage: None,
+                            interval_count: Some(1),
+                            ..Default::default()
+                        })
+                    } else {
+                        None
+                    };
+
+                    let stripe_new_price = stripe::Price::create(
+                        &state.stripe,
+                        stripe::CreatePrice {
+                            active: Some(true),
+                            lookup_key: Some(&price.key.clone()),
+                            product: Some(stripe::IdOrCreate::Id(&product.id.clone())),
+                            currency: first_currency.currency,
+                            unit_amount: Some(first_currency.price),
+                            recurring,
+                            billing_scheme: None,
+                            currency_options: None,
+                            custom_unit_amount: None,
+                            metadata: None,
+                            nickname: None,
+                            product_data: None,
+                            tax_behavior: None,
+                            tiers: None,
+                            tiers_mode: None,
+                            transfer_lookup_key: None,
+                            transform_quantity: None,
+                            unit_amount_decimal: None,
+                            expand: &[],
+                            // weird, doenst exist here either
+                            // ..Default::default()
+                        },
+                    )
+                    .await?;
+
+                    stripe_price_id = Some(stripe_new_price.id.to_string());
                 }
-            } else {
-                false
-            };
 
-        // check if product with stripe_product.id exists in stripe_products database
-        if products
-            .iter()
-            .any(|product| product.stripe_product_id == stripe_product.id.to_string())
-        {
-            continue;
+                // Might have been inserted from another instance, so we always check if it exists and update it
+                if db_price.is_none() {
+                    sqlx::query(
+                        r#"
+                    INSERT INTO public.prices (price_key, stripe_price_id)
+                    VALUES ($1, $2)
+                    "#,
+                    )
+                    .bind(price.key.clone())
+                    .bind(stripe_price_id)
+                    .execute(&state.db)
+                    .await?;
+                }
+            }
         }
-
-        sqlx::query(
-                r#"
-                INSERT INTO public.stripe_products (stripe_product_id, name, max_own, storage_increase, length_increase, unlimited_per_domain)
-                VALUES ($1, $2, $3, $4, $5, $6)
-                "#,
-            )
-            .bind(stripe_product.id.to_string())
-            .bind(name)
-            // null if not set
-            .bind(max_own)
-            .bind(storage_increase)
-            .bind(length_increase)
-            .bind(unlimited_per_domain)
-            .execute(&state.db)
-            .await?;
-
-        inserted_products.push(stripe_product.id.to_string());
     }
-    // }
+
+    // Insert the new checksum into the db
+
+    sqlx::query(
+        r#"
+        INSERT INTO public._products_sync (hash)
+        VALUES ($1)
+        ON CONFLICT (id) DO UPDATE SET hash = $1;
+        "#,
+    )
+    .bind(products_checksum)
+    .execute(&state.db)
+    .await?;
 
     Ok(())
 }

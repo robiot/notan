@@ -1,1 +1,1 @@
-pub mod price_id;
+pub mod price_key;

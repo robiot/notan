@@ -1,11 +1,11 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 pub mod intent;
 pub mod subscribe;
 
 #[derive(Deserialize)]
 pub struct BuyIdParams {
-    pub price_id: String,
+    pub price_key: String,
 }
 
 #[derive(Serialize, Deserialize)]

@@ -1,6 +1,6 @@
 use sqlx::PgPool;
 
-use crate::config::Config;
+use crate::{config::Config, utils::products::Product};
 
 #[derive(Clone)]
 pub struct AppState {
@@ -8,4 +8,5 @@ pub struct AppState {
     pub db: PgPool,
     pub redis: redis::Client,
     pub stripe: stripe::Client,
+    pub products: Vec<Product>
 }

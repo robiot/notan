@@ -20,12 +20,12 @@ pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
         // Buy
         //
         .route(
-            "/buy/:price_id/intent",
-            post(buy::price_id::intent::handler),
+            "/buy/:price_key/intent",
+            post(buy::price_key::intent::handler),
         )
         .route(
-            "/buy/:price_id/subscribe",
-            post(buy::price_id::subscribe::handler),
+            "/buy/:price_key/subscribe",
+            post(buy::price_key::subscribe::handler),
         )
         //
         // Subscriptions

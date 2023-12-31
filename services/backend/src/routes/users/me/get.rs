@@ -44,10 +44,10 @@ pub async fn handler(
             verified_mail: user.verified_mail,
 
             // limits
-            total_note_storage: limits.max_note_storage,
+            total_note_storage: limits.max_notes,
             used_note_storage: note_count,
-            max_note_length: limits.max_note_length,
-            has_unlimited_notes_per_domain: limits.has_unlimited_notes_per_domain,
+            max_note_length: limits.max_note_characters,
+            has_unlimited_notes_per_domain: limits.no_domain_restrictions,
         }),
     ))
 }

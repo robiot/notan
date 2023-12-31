@@ -3,3 +3,4 @@ pub mod validation;
 pub mod database;
 pub mod payments;
 pub mod limits;
+pub mod products;

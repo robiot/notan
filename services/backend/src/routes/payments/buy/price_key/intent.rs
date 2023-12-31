@@ -2,9 +2,11 @@ use crate::{
     auth::check_auth,
     error::{Error, Result},
     routes::{Response, ResponseError},
-    schemas,
     state::AppState,
-    utils::payments::{customer, prices::ensure_product_limit_by_price},
+    utils::{
+        payments::{customer, prices::ensure_product_limit_by_price},
+        products::utils::{get_price_by_price_key, get_price_currency_from_price, get_product_by_price_key},
+    },
 };
 
 use {
@@ -26,7 +28,7 @@ pub async fn handler(
 ) -> Result<Response<String>> {
     let id = check_auth(headers.clone(), state.clone()).await?;
     let customer = customer::get_stripe_customer_by_user_id(id.clone(), state.clone()).await?;
-    ensure_product_limit_by_price(id.clone(), params.price_id.clone(), state.clone()).await?;
+    ensure_product_limit_by_price(id.clone(), params.price_key.clone(), state.clone()).await?;
 
     let user = sqlx::query_as::<sqlx::Postgres, crate::schemas::user::User>(
         r#"SELECT * FROM public.users WHERE id = $1"#,
@@ -35,25 +37,15 @@ pub async fn handler(
     .fetch_one(&state.db)
     .await?;
 
-    let product_price =
-        sqlx::query_as::<sqlx::Postgres, crate::schemas::stripe_product_price::StripeProductPrice>(
-            r#"SELECT * FROM public.stripe_product_prices WHERE stripe_price_id = $1"#,
-        )
-        .bind(params.price_id.clone())
-        .fetch_one(&state.db)
-        .await?;
+    let product = get_product_by_price_key(state.products.clone(), &params.price_key.clone())?;
 
-    let stripe_price_data =
-        sqlx::query_as::<sqlx::Postgres, schemas::stripe_price_currency::StripePriceCurrency>(
-            r#"SELECT * FROM public.stripe_price_currencies WHERE stripe_price_id = $1 AND currency = 'eur';"#,
-        )
-        .bind(params.price_id.clone())
-        .fetch_one(&state.db)
-        .await?;
+    let product_price = get_price_by_price_key(state.products.clone(), &params.price_key.clone())?;
+
+    let price_currency = get_price_currency_from_price(product_price, stripe::Currency::EUR)?;
 
     // create payment intent, we only use EUR for now
     let mut payment_intent_data =
-        stripe::CreatePaymentIntent::new(stripe_price_data.price, stripe::Currency::EUR);
+        stripe::CreatePaymentIntent::new(price_currency.price, stripe::Currency::EUR);
 
     payment_intent_data.payment_method_types = Some(vec!["card".to_string()]);
     payment_intent_data.customer = Some(customer.id);
@@ -63,6 +55,7 @@ pub async fn handler(
         body.payment_method_id.as_str(),
     )?);
 
+    // todo handle payment intent on client instead for 3d secure support
     // responding with error (StripeError(Stripe(RequestError { http_status: 402, error_type: Card, message: Some("Your card was declined."), code: Some(CardDeclined), decline_code: Some("generic_decline"), charge
     match stripe::PaymentIntent::create(&state.stripe, payment_intent_data).await {
         Ok(_) => {}
@@ -105,12 +98,12 @@ pub async fn handler(
     // insert into product_purchases
     sqlx::query(
         r#"
-        INSERT INTO public.product_purchases (user_id, stripe_product_id)
+        INSERT INTO public.owned_products (user_id, product_id)
         VALUES ($1, $2)
         "#,
     )
     .bind(id.clone())
-    .bind(product_price.stripe_product_id.clone())
+    .bind(product.id.clone())
     .execute(&state.db)
     .await?;
 

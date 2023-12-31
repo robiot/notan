@@ -21,7 +21,7 @@ impl User {
         let header = &Header::default();
         
         let iat = OffsetDateTime::now_utc();
-        let exp = iat + Duration::days(7);
+        let exp = iat + Duration::days(60);
 
         let user = User {
             aud: "user".to_string(),

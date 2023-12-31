@@ -32,7 +32,7 @@ pub async fn handler(
 
     let count = get_note_count(id.clone(), &state.db).await?;
 
-    if count >= limits.max_note_storage as i64 {
+    if count >= limits.max_notes as i64 {
         return Err(Error::BadRequest(ResponseError {
             message: "Limit has been reached".to_string(),
             name: "max_notes".to_string(),

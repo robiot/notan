@@ -4,7 +4,7 @@ use crate::{
     routes::{Response, ResponseError},
     schemas,
     state::AppState,
-    utils::payments::customer,
+    utils::{database::prices::get_price_by_price_key, payments::customer},
 };
 
 use {
@@ -49,6 +49,8 @@ pub async fn handler(
         }));
     }
 
+    let db_price = get_price_by_price_key(params.price_key.clone(), &state.db).await?;
+
     // Subscription
     let mut subscription_data = stripe::CreateSubscription::new(customer.id);
     subscription_data.currency = Some(stripe::Currency::EUR);
@@ -56,7 +58,7 @@ pub async fn handler(
     subscription_data.payment_behavior =
         Some(stripe::SubscriptionPaymentBehavior::DefaultIncomplete);
     subscription_data.items = Some(vec![stripe::CreateSubscriptionItems {
-        price: Some(params.price_id.clone()),
+        price: Some(db_price.stripe_price_id.clone()),
 
         ..Default::default()
     }]);
@@ -71,7 +73,7 @@ pub async fn handler(
 
     let subscription = stripe::Subscription::create(&state.stripe, subscription_data).await?;
 
-    let client_secret = subscription
+    let first_pi = subscription
         .latest_invoice
         .clone()
         .and_then(|invoice| match invoice {
@@ -79,14 +81,30 @@ pub async fn handler(
             _ => None,
         })
         .and_then(|payment_intent| match payment_intent {
-            stripe::Expandable::Object(payment_intent) => payment_intent.client_secret,
+            stripe::Expandable::Object(payment_intent) => Some(payment_intent),
             _ => None,
         })
         .ok_or(Error::StripeFieldNotFoundError(
-            "Price Subscription invoice.payment_intent, or payment_intent.client_secret"
-                .to_string(),
+            "Price Subscription invoice.payment_intent".to_string(),
         ))?;
     // Inserted into database by webhook
+
+    let client_secret = first_pi
+        .clone()
+        .client_secret
+        .ok_or(Error::StripeFieldNotFoundError(
+            "Price Subscription first_pi client_secret".to_string(),
+        ))?;
+
+    stripe::PaymentIntent::update(
+        &state.stripe,
+        &first_pi.id,
+        stripe::UpdatePaymentIntent {
+            setup_future_usage: Some(stripe::PaymentIntentSetupFutureUsageFilter::OffSession),
+            ..Default::default()
+        },
+    )
+    .await?;
 
     Ok(Response::new_success(
         StatusCode::OK,
