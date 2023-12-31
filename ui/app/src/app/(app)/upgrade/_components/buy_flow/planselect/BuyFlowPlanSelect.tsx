@@ -2,7 +2,7 @@ import { Button } from "@notan/components/ui/button";
 import { DialogHeader, DialogTitle } from "@notan/components/ui/dialog";
 import { FC, useEffect } from "react";
 
-import { getPriceByLookupKey } from "@/hooks/billing/usePriceByLookupKey";
+import { getPriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
 import { Price, usePrices } from "@/hooks/billing/usePrices";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ const Alternative: FC<{
 }> = ({ price, alternative, onClick }) => {
   const buyFlow = useBuyFlow();
 
-  const selected = price?.price_id == buyFlow.flowState.price_id;
+  const selected = price?.price_key == buyFlow.flowState.price_key;
 
   if (!price) return null;
 
@@ -54,9 +54,8 @@ export const BuyFlowPlanSelect: FC<{
   const setSubscriptionPlan = (alternative: AlternativeT) => {
     buyFlow.setFlowState({
       ...buyFlow.flowState,
-      price_id: getPriceByLookupKey(alternative.key, prices.data)?.price_id,
-      product_id: getPriceByLookupKey(alternative.key, prices.data)
-        ?.product_id!,
+      price_key: getPriceByPriceKey(alternative.key, prices.data)?.price_key,
+      product_id: getPriceByPriceKey(alternative.key, prices.data)?.product_id!,
       product_info: {
         ...buyFlow.flowState.product_info,
         type: "subscription",
@@ -83,7 +82,7 @@ export const BuyFlowPlanSelect: FC<{
         {alternatives?.map((alternative) => (
           <Alternative
             key={`sub_alternative_${alternative.key}`}
-            price={getPriceByLookupKey(alternative.key, prices.data)}
+            price={getPriceByPriceKey(alternative.key, prices.data)}
             alternative={alternative}
             onClick={() => {
               setSubscriptionPlan(alternative);

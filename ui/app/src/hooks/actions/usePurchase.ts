@@ -11,11 +11,11 @@ export const usePurchase = (global: {
   return useMutation({
     mutationKey: ["purchase"],
     mutationFn: async (data: {
-      price_id: string;
+      lookup_key: string;
       payment_method_id: string;
     }) => {
       const response = await api
-        .post<ApiResponse<unknown>>(`/payments/buy/${data.price_id}/intent`, {
+        .post<ApiResponse<unknown>>(`/payments/buy/${data.lookup_key}/intent`, {
           payment_method_id: data.payment_method_id,
         })
         .catch((error: AxiosError) => {

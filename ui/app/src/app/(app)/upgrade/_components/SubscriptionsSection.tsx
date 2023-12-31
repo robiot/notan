@@ -1,6 +1,6 @@
 import { Book, CheckCircle, Edit } from "lucide-react";
 
-import { getPriceByLookupKey } from "@/hooks/billing/usePriceByLookupKey";
+import { getPriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
 import { usePrices } from "@/hooks/billing/usePrices";
 
 import { SubscriptionCard } from "./SubscriptionCard";
@@ -13,12 +13,12 @@ export const SubscriptionsSection = () => {
   return (
     <div className="grid lg:grid-cols-2 gap-4">
       <SubscriptionCard
-        price={getPriceByLookupKey("plus_monthly", prices.data)}
+        price={getPriceByPriceKey("plus_monthly", prices.data)}
         title="Plus"
         alternatives={[
           {
             title: "Annualy",
-            key: "plus_annual",
+            key: "plus_annually",
             period: "year",
             save_percentage: 16,
           },
@@ -47,12 +47,12 @@ export const SubscriptionsSection = () => {
         gradient="blue"
       />
       <SubscriptionCard
-        price={getPriceByLookupKey("premium_monthly", prices.data)}
+        price={getPriceByPriceKey("premium_monthly", prices.data)}
         title="Premium"
         alternatives={[
           {
             title: "Annualy",
-            key: "premium_annual",
+            key: "premium_annually",
             save_percentage: 16,
             period: "year",
           },

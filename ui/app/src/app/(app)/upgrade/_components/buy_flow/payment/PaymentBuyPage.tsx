@@ -10,7 +10,7 @@ import { useState } from "react";
 
 import { usePaySubscription } from "@/hooks/actions/usePaySubscription";
 import { usePurchase } from "@/hooks/actions/usePurchase";
-import { usePriceById } from "@/hooks/billing/usePriceById";
+import { usePriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
 import { useProduct } from "@/hooks/billing/useProduct";
 import { useUser } from "@/hooks/users/useUser";
 
@@ -21,7 +21,7 @@ import { PaymentMethods } from "./PaymentMethods";
 const PriceFormated = () => {
   const flow = useBuyFlow();
 
-  const price = usePriceById(flow.flowState.price_id);
+  const price = usePriceByPriceKey(flow.flowState.price_key);
 
   return (
     <>
@@ -145,12 +145,12 @@ export const PaymentBuyPage = () => {
               if (isSubscription) {
                 paySubscription.mutate({
                   payment_method_id: buyFlow.flowState.payment_method_id!,
-                  price_id: buyFlow.flowState.price_id!,
+                  lookup_key: buyFlow.flowState.price_key!,
                 });
               } else {
                 purchase.mutate({
                   payment_method_id: buyFlow.flowState.payment_method_id!,
-                  price_id: buyFlow.flowState.price_id!,
+                  lookup_key: buyFlow.flowState.price_key!,
                 });
               }
             }}

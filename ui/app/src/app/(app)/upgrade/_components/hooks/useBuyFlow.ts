@@ -4,7 +4,7 @@ type BuyFlowState = {
   page?: "plan" | "payment" | "add_card" | "success" | "error";
   title?: string;
   payment_method_id?: string;
-  price_id?: string;
+  price_key?: string;
   product_id?: string;
   product_info?: {
     type: "subscription" | "one-time";

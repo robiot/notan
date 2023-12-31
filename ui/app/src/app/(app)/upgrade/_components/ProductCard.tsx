@@ -3,9 +3,9 @@ import Image from "next/image";
 import { FC } from "react";
 
 import {
-  getDescriptionForLookupKey,
-  getTitleForLookupKey,
-} from "@/hooks/billing/usePriceByLookupKey";
+  getDescriptionForPriceKey,
+  getTitleForPriceKey,
+} from "@/hooks/billing/usePriceByPriceKey";
 import { Price } from "@/hooks/billing/usePrices";
 import { useProduct } from "@/hooks/billing/useProduct";
 import { cn } from "@/lib/utils";
@@ -37,10 +37,10 @@ export const ProductCard: FC<{
       />
 
       <span className="text-xl mt-12 font-semibold">
-        {getTitleForLookupKey(price?.lookup_key)}
+        {getTitleForPriceKey(price?.price_key)}
       </span>
       <p className="text-md text-foreground/90">
-        {getDescriptionForLookupKey(price?.lookup_key)}
+        {getDescriptionForPriceKey(price?.price_key)}
       </p>
       <div className="flex justify-between gap-2 mt-4">
         <span className="text-lg font-bold">{price.price / 100}€</span>
@@ -50,8 +50,8 @@ export const ProductCard: FC<{
       </div>
 
       <BuyFlowDialog
-        price_id={price.price_id}
-        title={getTitleForLookupKey(price?.lookup_key)}
+        price_key={price.price_key}
+        title={getTitleForPriceKey(price?.price_key)}
       >
         <Button
           variant="inverted"

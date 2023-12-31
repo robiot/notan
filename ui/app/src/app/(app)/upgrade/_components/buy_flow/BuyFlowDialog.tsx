@@ -6,7 +6,7 @@ import {
 } from "@notan/components/ui/dialog";
 import { FC, ReactNode } from "react";
 
-import { usePriceById } from "@/hooks/billing/usePriceById";
+import { usePriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
 
 import { useBuyFlow } from "../hooks/useBuyFlow";
 import { BuyFlowAddCard } from "./add/BuyFlowAddCard";
@@ -25,11 +25,11 @@ export type AlternativeT = {
 export const BuyFlowDialog: FC<{
   children: ReactNode;
   title?: string;
-  price_id?: string;
+  price_key?: string;
   alternatives?: AlternativeT[];
-}> = ({ children, alternatives, price_id, title }) => {
+}> = ({ children, alternatives, price_key, title }) => {
   const { flowState, setFlowState, resetFlowState, setPage } = useBuyFlow();
-  const price = usePriceById(price_id);
+  const price = usePriceByPriceKey(price_key);
   const isSubscription =
     flowState.product_info?.subscription_period !== undefined;
 
@@ -46,14 +46,14 @@ export const BuyFlowDialog: FC<{
           setFlowState({
             ...flowState,
             title,
-            price_id,
+            price_key,
           });
           setPage("plan");
-        } else if (price_id !== undefined) {
+        } else if (price_key !== undefined) {
           setFlowState({
             ...flowState,
             title,
-            price_id,
+            price_key,
             product_id: price?.product_id!,
           });
           setPage("payment");

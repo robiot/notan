@@ -22,7 +22,7 @@ export const AwaitSubscriptionPage: FC<{
   }, []);
 
   useEffect(() => {
-    if (!subscription.data?.notFound) {
+    if (subscription.data?.notFound === false) {
       onDone();
     }
   }, [subscription.data?.notFound]);

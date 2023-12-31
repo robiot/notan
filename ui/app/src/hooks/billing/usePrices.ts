@@ -5,10 +5,9 @@ import { AxiosError } from "axios";
 import { api } from "@/lib/api";
 
 export type Price = {
-  lookup_key: string;
-  price: number;
-  price_id: string;
+  price_key: string;
   product_id: string;
+  price: number;
 };
 
 export const usePrices = () => {

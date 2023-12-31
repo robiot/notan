@@ -22,7 +22,12 @@ export const SideNavigationBar: FC<{
     >
       <div className="flex flex-col gap-2">
         {NavigationLinks.map((link) => (
-          <NavigationLink href={link.to} close={close} icon={link.icon}>
+          <NavigationLink
+            key={link.name}
+            href={link.to}
+            close={close}
+            icon={link.icon}
+          >
             {link.name}
           </NavigationLink>
         ))}

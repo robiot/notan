@@ -28,6 +28,7 @@ export const TopNavigation = () => {
           <Button
             size="icon"
             variant="ghost"
+            className="flex md:hidden"
             onClick={() => {
               setNavbarOpen(!navbarOpen);
             }}
