@@ -6,7 +6,7 @@ use crate::{
 };
 
 use {
-    chrono::{TimeZone, Utc, LocalResult},
+    chrono::{LocalResult, TimeZone, Utc},
     std::str::FromStr,
 };
 
@@ -55,6 +55,17 @@ pub async fn webhook_handler(invoice: stripe::Invoice, state: &AppState) -> Resu
             .bind(subscription.id.to_string().clone())
             .fetch_optional(&state.db)
             .await?;
+
+        // enable automatic collection for subscription
+        stripe::Subscription::update(
+            &state.stripe,
+            &subscription.id,
+            stripe::UpdateSubscription {
+                collection_method: Some(stripe::CollectionMethod::ChargeAutomatically),
+                ..Default::default()
+            },
+        )
+        .await?;
 
         if let Some(active_subscription) = active_subscription {
             sqlx::query(

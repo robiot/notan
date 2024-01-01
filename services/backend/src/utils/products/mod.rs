@@ -83,7 +83,7 @@ pub fn products() -> Vec<Product> {
             no_domain_restrictions: true,
             max_notes_increase: 0,
             max_note_characters_increase: 0,
-            max_notes_base: Some(590),
+            max_notes_base: Some(560),
             max_note_characters_base: Some(2000),
         },
         max_own: None,

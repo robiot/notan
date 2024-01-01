@@ -1,4 +1,3 @@
-
 use crate::{
     error::{Error, Result},
     routes::{Response, ResponseError},
@@ -45,6 +44,7 @@ pub async fn handler(
     ) {
         Ok(event) => event,
         Err(e) => {
+            log::info!("body: {}", body);
             log::warn!("Failed to parse webhook: {:?}", e);
             return Ok(Response::new_success(StatusCode::OK, None));
             // return Err(Error::BadRequest(ResponseError {
@@ -60,14 +60,21 @@ pub async fn handler(
                 super::_actions::invoice_paid::webhook_handler(invoice, &state).await?;
             }
         }
-        EventType::InvoicePaymentFailed => {
+        EventType::InvoicePaymentFailed | EventType::InvoiceFinalizationFailed => {
             if let EventObject::Invoice(invoice) = event.data.object {
                 super::_actions::invoice_payment_failed::webhook_handler(invoice, &state).await?;
             }
         }
         EventType::CustomerSubscriptionDeleted => {
             if let EventObject::Subscription(subscription) = event.data.object {
-                super::_actions::subscription_deleted::webhook_handler(subscription, &state).await?;
+                super::_actions::subscription_deleted::webhook_handler(subscription, &state)
+                    .await?;
+            }
+        }
+        EventType::PaymentIntentSucceeded => {
+            if let EventObject::PaymentIntent(payment_intent) = event.data.object {
+                super::_actions::payment_intent_succeeded::webhook_handler(payment_intent, &state)
+                    .await?;
             }
         }
         // subscription paid -> save to db

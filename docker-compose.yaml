@@ -24,8 +24,6 @@ services:
     image: stripe/stripe-cli
     network_mode: host
     profiles: ["all"]
-    logging:
-      driver: "none"
     container_name: stripe-cli
     command: "listen --api-key ${STRIPE_SECRET_KEY} --device-name docker --forward-to 0.0.0.0:8000/payments/webhook"
 
