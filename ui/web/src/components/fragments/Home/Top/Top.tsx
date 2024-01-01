@@ -7,7 +7,7 @@ import { Hero, HeroHeading, HeroSubHeading } from "@/components/common/Hero";
 
 export const HomeTopSection = () => {
   return (
-    <Hero className="h-[45rem] bg-blue-gradient">
+    <Hero className="h-[45rem] bg-blue-gradient ">
       <Navbar />
 
       <Container
@@ -34,14 +34,14 @@ export const HomeTopSection = () => {
           <Image
             src="/preview/create2.png"
             alt="create"
-            className="h-40 sm:h-80 w-auto rounded-sm border-border border"
+            className="h-40 sm:h-80 w-auto rounded border-border border"
             width={380}
             height={600}
           />
           <Image
             src="/preview/create.png"
             alt="create"
-            className="h-56 sm:h-96 w-auto rounded-sm border-border border"
+            className="h-56 sm:h-96 w-auto rounded border-border border"
             width={380}
             height={600}
             loading="eager"
@@ -49,7 +49,7 @@ export const HomeTopSection = () => {
           <Image
             src="/preview/list.png"
             alt="create"
-            className="h-40 sm:h-80 w-auto rounded-sm border-border border"
+            className="h-40 sm:h-80 w-auto rounded border-border border"
             width={380}
             height={600}
           />

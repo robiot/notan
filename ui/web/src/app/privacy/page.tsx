@@ -134,9 +134,6 @@ export default function Privacy() {
             <p>Email address</p>
           </li>
           <li>
-            <p>First name and last name</p>
-          </li>
-          <li>
             <p>Usage Data</p>
           </li>
         </ul>
@@ -419,6 +416,8 @@ export default function Privacy() {
           <li>By email: {mail}</li>
         </ul>
       </Container>
+
+      <div className="mt-28" />
     </>
   );
 }

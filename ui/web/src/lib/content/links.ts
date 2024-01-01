@@ -11,8 +11,12 @@ export const NavigationLinks = [
 
 export const LegalLinks = [
   {
-    label: "Privacy policy",
+    label: "Privacy Policy",
     href: "/privacy",
+  },
+  {
+    label: "Terms of Service",
+    href: "/terms",
   },
 ];
 

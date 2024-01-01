@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { NavigationLinks } from "@/lib/content/links";
+import { enviroment } from "@/lib/enviroment";
 import { cn } from "@/lib/utils";
 
 import { Container } from "../../common/Container";
@@ -37,24 +40,30 @@ export const Navbar = () => {
       )}
     >
       <Container className="flex items-center justify-between px-3">
-        {/* <Image
-          src="/notan.svg"
-          alt="logo"
-          width={120}
-          height={20}
-          className="h-5 w-auto text-primary fill-primary"
-        /> */}
+        <div className="flex items-center gap-8">
+          <NavLink href={"/"} invert={isNotTop}>
+            <Logo />
+          </NavLink>
 
-        <NavLink href={"/"} invert={isNotTop}>
-          <Logo />
-        </NavLink>
+          <div className="flex gap-8 font-normal">
+            {NavigationLinks.map((link) => (
+              <NavLink href={link.href} key={link.href} invert={isNotTop}>
+                {link.label}
+              </NavLink>
+            ))}
+          </div>
+        </div>
 
-        <div className="flex gap-8 font-normal">
-          {NavigationLinks.map((link) => (
-            <NavLink href={link.href} key={link.href} invert={isNotTop}>
-              {link.label}
-            </NavLink>
-          ))}
+        <div className="flex gap-2">
+          <Button variant="ghost" className="transition-none">
+            <Link href={`${enviroment.APP_URL}/login`}>Log in</Link>
+          </Button>
+          <Button
+            className={cn(!isNotTop && "bg-white hover:bg-white/80 text-black")}
+            variant="secondary"
+          >
+            <Link href={`${enviroment.APP_URL}/signup`}>Sign up</Link>
+          </Button>
         </div>
       </Container>
     </nav>

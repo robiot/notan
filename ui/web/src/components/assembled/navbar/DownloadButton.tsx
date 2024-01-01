@@ -1,10 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { Button } from "@notan/components/ui/button";
 import { detect } from "detect-browser";
 import { Download } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-import { Button } from "@/components/ui/button";
 
 export const DownloadButton = () => {
   const [_browser, setBrowser] = useState<string | null>("your browser");
@@ -50,7 +49,10 @@ export const DownloadButton = () => {
   }, []);
 
   return (
-    <Button className="w-fit font-bold h-12" asChild>
+    <Button
+      className="w-fit font-bold h-12 bg-white hover:bg-white/80 text-black"
+      asChild
+    >
       <Link
         href={link ?? ""}
         target="_blank"

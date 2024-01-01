@@ -22,7 +22,9 @@ export const Footer: FC = () => {
           </div>
         </div>
 
-        <div className="mt-24 text-center md:text-start">© 2023 Robiot</div>
+        <div className="mt-24 text-center md:text-start">
+          Copyright © {new Date().getFullYear()} Robiot. All rights reserved.
+        </div>
       </Container>
     </footer>
   );
