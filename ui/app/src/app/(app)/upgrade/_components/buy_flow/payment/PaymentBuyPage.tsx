@@ -8,10 +8,8 @@ import { DialogClose } from "@notan/components/ui/dialog";
 import { CreditCard } from "lucide-react";
 import { useState } from "react";
 
-import { usePaySubscription } from "@/hooks/actions/usePaySubscription";
-import { usePurchase } from "@/hooks/actions/usePurchase";
+import { useBuy } from "@/hooks/actions/useBuy";
 import { usePriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
-import { useProduct } from "@/hooks/billing/useProduct";
 import { useUser } from "@/hooks/users/useUser";
 
 import { useBuyFlow } from "../../hooks/useBuyFlow";
@@ -36,27 +34,14 @@ const PriceFormated = () => {
 export const PaymentBuyPage = () => {
   const user = useUser();
   const buyFlow = useBuyFlow();
-  const product = useProduct(buyFlow.flowState.product_id);
 
   const [alertError, setAlertError] = useState<{
     title: string;
     description: string;
   } | null>(null);
 
-  const onPaymentComplete = () => {
-    user.refetch();
-    product.refetch();
-    buyFlow.setPage("success");
-  };
-
-  const purchase = usePurchase({
+  const paySubscription = useBuy({
     setAlertError,
-    onDone: onPaymentComplete,
-  });
-
-  const paySubscription = usePaySubscription({
-    setAlertError,
-    onDone: onPaymentComplete,
   });
 
   const isSubscription =
@@ -137,22 +122,17 @@ export const PaymentBuyPage = () => {
         next={
           <Button
             className="mt-2 px-8"
-            loading={purchase.isPending || paySubscription.isPending}
+            loading={paySubscription.isPending}
             onClick={() => {
               // So stripe 3d secure can work
               document.body.style.pointerEvents = "";
 
-              if (isSubscription) {
-                paySubscription.mutate({
-                  payment_method_id: buyFlow.flowState.payment_method_id!,
-                  lookup_key: buyFlow.flowState.price_key!,
-                });
-              } else {
-                purchase.mutate({
-                  payment_method_id: buyFlow.flowState.payment_method_id!,
-                  lookup_key: buyFlow.flowState.price_key!,
-                });
-              }
+              paySubscription.mutate({
+                payment_method_id: buyFlow.flowState.payment_method_id!,
+                price_key: buyFlow.flowState.price_key!,
+                product_id: buyFlow.flowState.product_id!,
+                payment_type: isSubscription ? "subscribe" : "intent",
+              });
             }}
           >
             {buyButtonText()}

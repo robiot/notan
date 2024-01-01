@@ -39,7 +39,14 @@ export const DeleteButton: FC<{
         .delete<ApiResponse<unknown>>(`/payments/methods/${method.id}`)
         .catch((error: AxiosError) => {
           // yes logic looks inverted here, but it worksd
-          if (!hasError(error.response)) {
+          if (hasError(error.response, "default_payment_method")) {
+            toast({
+              title: "Payment method for subscription",
+              variant: "destructive",
+              description:
+                "This payment method is used for a subscription. Please cancel the subscription first.",
+            });
+          } else {
             toast({
               title: "Error",
               description: "Something went wrong",

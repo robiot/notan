@@ -4,6 +4,7 @@ import { Input } from "@notan/components/ui/input";
 import { ApiResponse, hasError } from "@notan/utils/api";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -122,6 +123,25 @@ export const LoginForm = () => {
         {...register("password")}
       />
 
+      <p className="text-xs max-w-[90%] text-muted-foreground mb-4 mt-1">
+        By signing up, you agree that you have read our{" "}
+        <Link
+          href="https://notan.ax/terms"
+          className="text-blue-500"
+          target="_blank"
+        >
+          Terms of Service
+        </Link>{" "}
+        and{" "}
+        <Link
+          href="https://notan.ax/privacy"
+          className="text-blue-500"
+          target="_blank"
+        >
+          Privacy Policy
+        </Link>{" "}
+        and that you are agreeing to them.
+      </p>
       <Button
         className="mt-2"
         type="submit"

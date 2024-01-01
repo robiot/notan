@@ -22,10 +22,11 @@ export const AddressForm: FC<{
         back={back}
         next={
           <Button
-            type="submit"
+            type="button"
             className="w-32"
             loading={loading}
             onClick={async () => {
+              console.log("clicked");
               next();
             }}
           >

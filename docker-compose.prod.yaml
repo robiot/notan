@@ -55,6 +55,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_EXTRA_ARGS: --endpoint-url https://${AWS_R2_USER}.r2.cloudflarestorage.com
+      BACKUP_FILENAME: latest.tar.gz
     volumes:
       - grafanadata:/backup/grafana-data:ro
       - postgresdata:/backup/postgres-data:ro

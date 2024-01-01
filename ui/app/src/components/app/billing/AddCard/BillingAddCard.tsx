@@ -35,6 +35,7 @@ const Form: FC<{
 
   const addCard = useMutation({
     mutationFn: async () => {
+      console.log("got submit");
       await payment?.submit();
       const card = payment?.getElement("payment");
 
@@ -119,8 +120,6 @@ const Form: FC<{
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-
-          // addCard.mutate();
         }}
       >
         <PaymentForm
@@ -159,6 +158,7 @@ const Form: FC<{
             }
             loading={addCard.isPending}
             next={() => {
+              console.log("next");
               addCard.mutate();
             }}
           />

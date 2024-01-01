@@ -15,7 +15,7 @@ export const Limits = () => {
     <div className="flex flex-col">
       <span className="text-xl">Limits</span>
       <div className="py-2 flex flex-col gap-1">
-        <div className="rounded-full h-3 w-full bg-accent relative">
+        <div className="rounded-full h-3 w-full bg-accent relative overflow-hidden">
           {user.data?.used_note_storage !== undefined &&
             user.data?.total_note_storage !== undefined && (
               <>

@@ -1,31 +1,76 @@
 import { Separator } from "@notan/components/ui/separator";
 import { Spinner } from "@notan/components/ui/spinner";
+import { captureMessage } from "@sentry/nextjs";
+import { useSearchParams } from "next/navigation";
 import { FC, useEffect } from "react";
 
 import { useActiveSubscription } from "@/hooks/billing/useActiveSubscription";
+import { useProduct } from "@/hooks/billing/useProduct";
+import { useUser } from "@/hooks/users/useUser";
+import { stripePromise } from "@/lib/stripe";
 
 export const AwaitSubscriptionPage: FC<{
   onDone: () => void;
 }> = ({ onDone }) => {
+  const parameters = useSearchParams();
+
   const subscription = useActiveSubscription();
+  const user = useUser();
+  const product = useProduct(parameters.get("product_id") ?? "");
+
+  const paymentIntentId = parameters.get("payment_intent_client_secret");
 
   useEffect(() => {
-    // refetch subscription every second until subscription.data.notFound is false
+    if (paymentIntentId == null) return;
 
-    const interval = setInterval(() => {
-      subscription.refetch();
-    }, 1000);
+    const checkPaymentStatus = async () => {
+      const stripe = await stripePromise;
 
-    return () => {
-      clearInterval(interval);
+      console.log("checking payment status");
+
+      if (stripe == null) return;
+
+      const paymentIntent = await stripe.retrievePaymentIntent(paymentIntentId);
+
+      if (paymentIntent.error) {
+        captureMessage(
+          "Payment intent retrieve error" + paymentIntent.error.message,
+          "error"
+        );
+
+        alert(paymentIntent.error.message);
+
+        return;
+      }
+
+      if (paymentIntent.paymentIntent == null) {
+        captureMessage("Payment intent was undefined", "fatal");
+
+        alert("Unexpected error");
+
+        return;
+      }
+
+      if (paymentIntent.paymentIntent.status === "succeeded") {
+        console.log("its done");
+        clearInterval(paymentStatusInterval); // Stop checking once payment is successful
+
+        // Since we not have new limits, we need to refetch the data
+        await subscription.refetch();
+        await user.refetch();
+        await product.refetch();
+
+        onDone();
+      } else {
+        console.log(`Payment status: ${paymentIntent.paymentIntent.status}`);
+      }
     };
-  }, []);
 
-  useEffect(() => {
-    if (subscription.data?.notFound === false) {
-      onDone();
-    }
-  }, [subscription.data?.notFound]);
+    const paymentStatusInterval = setInterval(checkPaymentStatus, 1000); // Check every second
+
+    // Cleanup function to clear the interval when the component is unmounted
+    return () => clearInterval(paymentStatusInterval);
+  }, [paymentIntentId]); // Re-run effect when paymentIntentId changes
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-5">

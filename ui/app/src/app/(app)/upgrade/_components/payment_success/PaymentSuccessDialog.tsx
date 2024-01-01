@@ -2,7 +2,6 @@ import {
   AlertDialog,
   AlertDialogContent,
 } from "@notan/components/ui/alert-dialog";
-import { Dialog, DialogContent } from "@notan/components/ui/dialog";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -10,14 +9,13 @@ import { BuyFlowSuccessPage } from "../buy_flow/success/BuyFlowSuccessPage";
 import { AwaitSubscriptionPage } from "./AwaitSubscriptionPage";
 
 export const PaymentSuccessDialog = () => {
+  const parameters = useSearchParams();
+
   const [isOpen, setIsOpen] = useState<boolean | undefined>();
   const [page, setPage] = useState<"await" | "success">("await");
-  const parameters = useSearchParams();
 
   // get if query param success is true then show dialog
   useEffect(() => {
-    console.log(parameters);
-
     if (parameters.get("success") == "true") {
       setIsOpen(true);
     }
@@ -25,25 +23,19 @@ export const PaymentSuccessDialog = () => {
 
   if (isOpen == undefined) return null;
 
-  if (page == "await")
-    return (
-      <AlertDialog open={true}>
-        <AlertDialogContent>
+  return (
+    <AlertDialog defaultOpen>
+      <AlertDialogContent className="!outline-0">
+        {page == "await" && (
           <AwaitSubscriptionPage
             onDone={() => {
               setPage("success");
             }}
           />
-        </AlertDialogContent>
-      </AlertDialog>
-    );
+        )}
 
-  if (page == "success")
-    return (
-      <Dialog defaultOpen={isOpen}>
-        <DialogContent>
-          <BuyFlowSuccessPage />
-        </DialogContent>
-      </Dialog>
-    );
+        {page == "success" && <BuyFlowSuccessPage />}
+      </AlertDialogContent>
+    </AlertDialog>
+  );
 };

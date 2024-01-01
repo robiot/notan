@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-ternary */
 import { ApiResponse, hasError } from "@notan/utils/api";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -5,15 +6,16 @@ import { AxiosError } from "axios";
 import { api } from "@/lib/api";
 import { stripePromise } from "@/lib/stripe";
 
-export const usePaySubscription = (global: {
+export const useBuy = (global: {
   setAlertError: (alert: { title: string; description: string }) => void;
-  onDone: () => void;
 }) => {
   return useMutation({
-    mutationKey: ["pay_subscription"],
+    mutationKey: ["pay_price"],
     mutationFn: async (data: {
-      lookup_key: string;
+      price_key: string;
       payment_method_id: string;
+      product_id: string;
+      payment_type: "subscribe" | "intent";
     }) => {
       console.log("shiet");
 
@@ -33,7 +35,7 @@ export const usePaySubscription = (global: {
           ApiResponse<{
             client_secret: string;
           }>
-        >(`/payments/buy/${data.lookup_key}/subscribe`, {
+        >(`/payments/buy/${data.price_key}/${data.payment_type}`, {
           payment_method_id: data.payment_method_id,
         })
         .catch((error: AxiosError) => {
@@ -51,7 +53,7 @@ export const usePaySubscription = (global: {
       const payment = await stripe
         .confirmPayment({
           confirmParams: {
-            return_url: `${window.location.href}?success=true`,
+            return_url: `${window.location.href}?success=true&product_id=${data.product_id}&payment_type=${data.payment_type}`,
           },
           clientSecret: response.data.data.client_secret,
         })
