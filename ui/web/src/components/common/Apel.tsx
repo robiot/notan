@@ -3,15 +3,14 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useEffect, useState } from "react";
-
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
+} from "@notan/components/ui/dialog";
+import React, { useEffect, useState } from "react";
 
 const TheGame = () => {
   const [timer, setTimer] = useState(0);

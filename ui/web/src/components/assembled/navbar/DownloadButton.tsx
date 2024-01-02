@@ -3,9 +3,14 @@ import { Button } from "@notan/components/ui/button";
 import { detect } from "detect-browser";
 import { Download } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
-export const DownloadButton = () => {
+import { cn } from "@/lib/utils";
+
+export const DownloadButton: FC<{
+  size?: "small" | "normal";
+  className?: string;
+}> = ({ size, className }) => {
   const [_browser, setBrowser] = useState<string | null>("your browser");
   const [link, setLink] = useState<string | null>(null);
 
@@ -50,7 +55,11 @@ export const DownloadButton = () => {
 
   return (
     <Button
-      className="w-fit font-bold h-12 bg-white hover:bg-white/80 text-black"
+      className={cn(
+        "w-fit gap-1 h-11 rounded-md",
+        size == "small" ? "h-9" : "h-12",
+        className
+      )}
       asChild
     >
       <Link
@@ -65,7 +74,7 @@ export const DownloadButton = () => {
           }
         }}
       >
-        <Download className="w-4 mr-2" />
+        {size !== "small" && <Download className="w-4 mr-2" />}
         Add to {_browser}
       </Link>
     </Button>

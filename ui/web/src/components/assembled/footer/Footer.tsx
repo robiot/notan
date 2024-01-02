@@ -8,10 +8,10 @@ import { FooterCategory } from "./Category";
 
 export const Footer: FC = () => {
   return (
-    <footer className="w-full border-t py-24">
+    <footer className="w-full border-t border-t-border py-24">
       <Container className="flex h-fit flex-col">
         <div className="flex justify-between flex-col items-center text-center md:items-start md:text-start md:flex-row gap-y-10">
-          <div className="text-accent">
+          <div className="text-foreground">
             <Logo />
           </div>
 

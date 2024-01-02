@@ -1,21 +1,21 @@
 "use client";
 
+import { HomeAnywhereSection } from "@/components/fragments/Home/Anywhere/Anywhere";
 import { HomeBrowsersSection } from "@/components/fragments/Home/Browsers/Browsers";
-import { HomeElevateWorkflowSection } from "@/components/fragments/Home/ElevateWorkflow/ElevateWorkflow";
 import { HomeJoinSection } from "@/components/fragments/Home/Join/Join";
-import { HomeSyncSection } from "@/components/fragments/Home/Sync/Sync";
+import { NotesLikeBookmarksSection } from "@/components/fragments/Home/NotesLikeBookmarks/NotesLikeBookmarks";
+import { HomeSearchSection } from "@/components/fragments/Home/Search/Search";
 import { HomeTopSection } from "@/components/fragments/Home/Top/Top";
-import { HomeUsecasesSection } from "@/components/fragments/Home/Usecases/Usecases";
 
 export default function Home() {
   return (
     <>
       <HomeTopSection />
       <HomeBrowsersSection />
-      <HomeElevateWorkflowSection />
-      <HomeSyncSection />
-      <HomeUsecasesSection />
-      <HomeJoinSection />
+      <NotesLikeBookmarksSection />
+      <HomeSearchSection />
+      <HomeAnywhereSection />
+      {/* <HomeJoinSection /> */}
     </>
   );
 }

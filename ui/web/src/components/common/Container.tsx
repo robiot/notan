@@ -15,7 +15,7 @@ export const Container: FC<{
         !noPadding && "px-5 xl:px-0",
         size == "xlarge" && "max-w-6xl",
         size == "large" && "max-w-5xl",
-        size == "small" && "max-w-[38rem]",
+        size == "small" && "max-w-[50rem]",
 
         className
       )}

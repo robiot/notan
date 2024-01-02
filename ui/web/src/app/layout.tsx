@@ -1,5 +1,6 @@
-import "./globals.css";
 import "@/styles/index.css";
+import "@notan/components/styles/globals.css";
+import "./globals.css";
 
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";

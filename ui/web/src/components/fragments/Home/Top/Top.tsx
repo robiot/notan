@@ -1,60 +1,35 @@
-import Image from "next/image";
-
 import { DownloadButton } from "@/components/assembled/navbar/DownloadButton";
 import { Navbar } from "@/components/assembled/navbar/Navbar";
 import { Container } from "@/components/common/Container";
-import { Hero, HeroHeading, HeroSubHeading } from "@/components/common/Hero";
+import { HeroHeading, HeroSubHeading } from "@/components/common/Hero";
+
+import { CheckItem } from "./CheckItem";
 
 export const HomeTopSection = () => {
   return (
-    <Hero className="h-[45rem] bg-blue-gradient ">
+    <>
       <Navbar />
 
-      <Container
-        noPadding
-        className="relative border-x border-l-border/60 border-r-white/10"
-      >
-        <Container
-          size="small"
-          className="pointer-events-none left-1/2 -translate-x-1/2 absolute h-full border-x border-l-border/60 border-r-white/10"
-        />
-
-        <Container size="small" className="h-fit pt-36 text-center">
-          <HeroHeading>Seamless note taking for your current page</HeroHeading>
+      <Container size="small" className="h-fit pt-28 text-center">
+        <div className="flex flex-col gap-9 items-center">
+          <HeroHeading>
+            Take notes for your{" "}
+            <span className="text-primary">current page</span> without leaving
+            the browser
+          </HeroHeading>
           <HeroSubHeading>
-            The browser extension for seamless, page-specific note-taking.
+            Use this browser extension for saving notes for web pages instead of
+            saving them somewhere that you will forget about.
           </HeroSubHeading>
 
-          <div className="mt-7">
-            <DownloadButton />
-          </div>
-        </Container>
+          <DownloadButton className="px-5" />
 
-        <div className="overflow-x-hidden relative z-10 flex justify-center items-center gap-7 mt-32 sm:mt-16">
-          <Image
-            src="/preview/create2.png"
-            alt="create"
-            className="h-40 sm:h-80 w-auto rounded border-border border"
-            width={380}
-            height={600}
-          />
-          <Image
-            src="/preview/create.png"
-            alt="create"
-            className="h-56 sm:h-96 w-auto rounded border-border border"
-            width={380}
-            height={600}
-            loading="eager"
-          />
-          <Image
-            src="/preview/list.png"
-            alt="create"
-            className="h-40 sm:h-80 w-auto rounded border-border border"
-            width={380}
-            height={600}
-          />
+          <div className="flex items-center gap-5">
+            <CheckItem>No credit card required</CheckItem>
+            <CheckItem>Free plan by default</CheckItem>
+          </div>
         </div>
       </Container>
-    </Hero>
+    </>
   );
 };

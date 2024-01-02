@@ -6,16 +6,13 @@ import { cn } from "@/lib/utils";
 export const NavLink: FC<{
   href: string;
   children: ReactNode;
-  invert?: boolean;
-}> = ({ href, children, invert }) => {
+}> = ({ href, children }) => {
   return (
     <Link
       href={href}
       className={cn(
-        "transition-colors duration-200",
-        invert
-          ? "text-foreground hover:text-foreground/80"
-          : "text-background hover:text-background/70"
+        "transition-colors duration-200 font-normal",
+        "text-foreground hover:text-foreground/80"
       )}
     >
       {children}

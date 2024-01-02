@@ -1,11 +1,19 @@
 export const NavigationLinks = [
+  // {
+  //   label: "Home",
+  //   href: "/",
+  // },
   {
-    label: "Home",
-    href: "/",
+    label: "Contact",
+    href: "/contact",
   },
   {
     label: "About",
     href: "/about",
+  },
+  {
+    label: "Pricing",
+    href: "/pricing",
   },
 ];
 
