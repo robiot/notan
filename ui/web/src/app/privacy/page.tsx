@@ -2,7 +2,6 @@
 
 import { Container } from "@/components/common/Container";
 import { Hero, HeroHeading } from "@/components/common/Hero";
-import { getMail } from "@/lib/mail";
 
 export default function Privacy() {
   return (
@@ -402,11 +401,8 @@ export default function Privacy() {
         <h2>Contact Us</h2>
         <p>
           If you have any questions about this Privacy Policy, You can contact
-          us:
+          us.
         </p>
-        <ul>
-          <li>By email: {getMail()}</li>
-        </ul>
       </Container>
 
       <div className="mt-28" />

@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 import { Container } from "@/components/common/Container";
-import { LegalLinks, NavigationLinks, SocialLinks } from "@/lib/content/links";
+import { LegalLinks, NavigationLinks } from "@/lib/content/links";
 
 import { Logo } from "../navbar/Logo";
 import { FooterCategory } from "./Category";
@@ -18,7 +18,6 @@ export const Footer: FC = () => {
           <div className="flex gap-12 flex-col items-center text-center md:items-start md:text-start md:flex-row">
             <FooterCategory title="Pages" links={NavigationLinks} />
             <FooterCategory title="Legal" links={LegalLinks} />
-            <FooterCategory title="Social" links={SocialLinks} />
           </div>
         </div>
 
