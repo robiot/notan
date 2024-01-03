@@ -1,51 +1,47 @@
-.privacyp {
-    @apply mb-6;
-}
-
-.privacyp h1 {
+.md-content h1 {
     @apply text-3xl font-bold mb-2 mt-4;
 }
 
-.privacyp h2 {
+.md-content h2 {
     @apply text-2xl font-bold mb-2 mt-4;
 }
 
-.privacyp h3 {
+.md-content h3 {
     @apply text-xl font-bold mb-2 mt-4;
 }
 
-.privacyp h4 {
+.md-content h4 {
     @apply text-lg font-bold mb-2 mt-4;
 }
 
-.privacyp h5 {
+.md-content h5 {
     @apply text-base font-bold mb-2 mt-4;
 }
 
-.privacyp p {
+.md-content p {
     @apply text-base my-2;
 }
 
-.privacyp ul {
+.md-content ul {
     @apply list-disc;
 }
 
-.privacyp li {
+.md-content li {
     @apply mb-2;
 }
 
-.privacyp a {
+.md-content a {
     @apply text-blue-500 hover:text-blue-600;
 }
 
-.privacyp a:hover {
+.md-content a:hover {
     @apply underline;
 }
 
-.privacyp blockquote {
+.md-content blockquote {
     @apply border-l-4 border-gray-300 pl-4 italic;
 }
 
-.privacyp pre {
+.md-content pre {
     @apply bg-gray-100 p-4 rounded;
 }

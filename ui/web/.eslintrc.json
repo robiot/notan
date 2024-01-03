@@ -4,7 +4,7 @@
       "ecmaVersion": 2022
   },
   "extends": ["plugin:robiot/recommended", "plugin:@next/next/recommended"],
-  "ignorePatterns": ["!**/*", "*.cjs"],
+  "ignorePatterns": ["!**/*", "*.cjs", "*.mdx"],
   "plugins": ["robiot", "@next/next"],
   "env": {
       "node": true,
@@ -15,6 +15,13 @@
           "version": "detect"
       }
   },
+  "overrides": [
+    {
+      "files": "*.mdx",
+      // "parser": "eslint-mdx", // enable `eslint-mdx` manually if it does not work
+      "extends": "plugin:mdx/recommended"
+    }
+  ],
   "globals": {
       "JSX": "readonly"
   }

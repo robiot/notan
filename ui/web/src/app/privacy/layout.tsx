@@ -1,7 +1,7 @@
+import { Container } from "@/components/common/Container";
+import { HeroHeading } from "@/components/common/Hero";
 import { Metadata } from "next";
 import { ReactNode } from "react";
-
-import { Navbar } from "@/components/assembled/navbar/Navbar";
 
 export const metadata: Metadata = {
   title: "Notan | Privacy Policy",
@@ -9,10 +9,12 @@ export const metadata: Metadata = {
 
 export default function PrivacyLayout({ children }: { children: ReactNode }) {
   return (
-    <>
-      <Navbar />
+    <Container size="small" className="h-fit pt-28">
+      <div className="mb-24 text-center">
+        <HeroHeading>Privacy Policy</HeroHeading>
+      </div>
 
-      {children}
-    </>
+      <div className="md-content mb-40">{children}</div>
+    </Container>
   );
 }

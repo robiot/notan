@@ -1,5 +1,4 @@
 import { DownloadButton } from "@/components/assembled/navbar/DownloadButton";
-import { Navbar } from "@/components/assembled/navbar/Navbar";
 import { Container } from "@/components/common/Container";
 import { HeroHeading, HeroSubHeading } from "@/components/common/Hero";
 
@@ -8,8 +7,6 @@ import { CheckItem } from "./CheckItem";
 export const HomeTopSection = () => {
   return (
     <>
-      <Navbar />
-
       <Container size="small" className="h-fit pt-28 text-center">
         <div className="flex flex-col gap-9 items-center">
           <HeroHeading>

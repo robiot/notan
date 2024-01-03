@@ -7,6 +7,7 @@ import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
 import { Footer } from "@/components/assembled/footer/Footer";
+import { Navbar } from "@/components/assembled/navbar/Navbar";
 import { Analytics } from "@/components/common/Analytics";
 import { ApelEasterEgg } from "@/components/common/Apel";
 import { MetaDescription, MetaTitle } from "@/lib/content/meta";
@@ -48,6 +49,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={cn(noto_sans.className, "bg-background text-foreground")}
       >
+        <Navbar />
+
         <ApelEasterEgg />
         {children}
 
