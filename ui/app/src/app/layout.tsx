@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
+import { Analytics } from "@/components/common/Analytics";
 import { LoginContext } from "@/components/context/LoginContext";
 import { RootProviders } from "@/components/context/RootProviders";
 import { cn } from "@/lib/utils";
@@ -34,6 +35,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <RootProviders>
           <LoginContext>{children}</LoginContext>
         </RootProviders>
+
+        <Analytics />
       </body>
     </html>
   );

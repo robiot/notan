@@ -19,7 +19,7 @@ export const ContactOptionsSection = () => {
           </OptionItem>
           <OptionItem
             title="Other"
-            description="If you are having other problems Please contact us and describe your issue."
+            description="If you are having other problems. Please contact us and describe your issue."
           >
             <MailButton mailType="info" />
           </OptionItem>

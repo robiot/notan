@@ -2,12 +2,12 @@ import "@/styles/index.css";
 import "@notan/components/styles/globals.css";
 import "./globals.css";
 
-import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
 import { Footer } from "@/components/assembled/footer/Footer";
+import { Analytics } from "@/components/common/Analytics";
 import { ApelEasterEgg } from "@/components/common/Apel";
 import { MetaDescription, MetaTitle } from "@/lib/content/meta";
 import { cn } from "@/lib/utils";
@@ -52,6 +52,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {children}
 
         <Footer />
+
         <Analytics />
       </body>
     </html>

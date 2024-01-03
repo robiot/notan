@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/common/Content";
 
 export const AboutBackgroundSection = () => {
   return (
-    <div className="py-24">
+    <div className="pt-24">
       <Container className="h-fit flex flex-col gap-5">
         <SectionHeading>Background</SectionHeading>
         <div className="flex gap-x-20 gap-y-10 flex-col md:flex-row">
