@@ -20,7 +20,7 @@ export const Hero: FC<{ children: ReactNode; className?: string }> = ({
 
 export const HeroHeading: FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <h1 className="text-2xl sm:text-[2.8rem] !leading-tight font-extrabold">
+    <h1 className="text-3xl sm:text-[2.8rem] !leading-tight font-extrabold">
       {children}
     </h1>
   );

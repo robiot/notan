@@ -10,7 +10,8 @@ import { cn } from "@/lib/utils";
 export const DownloadButton: FC<{
   size?: "small" | "normal";
   className?: string;
-}> = ({ size, className }) => {
+  inverted?: boolean;
+}> = ({ size, className, inverted }) => {
   const [_browser, setBrowser] = useState<string | null>("your browser");
   const [link, setLink] = useState<string | null>(null);
 
@@ -60,6 +61,7 @@ export const DownloadButton: FC<{
         size == "small" ? "h-9" : "h-12",
         className
       )}
+      variant={inverted ? "inverted" : undefined}
       asChild
     >
       <Link
