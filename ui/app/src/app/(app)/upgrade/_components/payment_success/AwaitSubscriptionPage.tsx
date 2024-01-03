@@ -86,7 +86,7 @@ export const AwaitSubscriptionPage: FC<{
         </div>
 
         <div className="mt-1 text-sm text-foreground/70">
-          Not loading, please email us at info@notan.ax
+          Not loading, please contact us about this issue.
         </div>
       </div>
     </div>
