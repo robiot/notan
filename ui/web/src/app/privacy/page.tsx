@@ -1,18 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { Container } from "@/components/common/Container";
 import { Hero, HeroHeading } from "@/components/common/Hero";
 import { getMail } from "@/lib/mail";
 
 export default function Privacy() {
-  const [mail, setMail] = useState("");
-
-  useEffect(() => {
-    setMail(getMail());
-  }, []);
-
   return (
     <>
       <Hero className="h-[30rem] bg-black flex justify-center">
@@ -413,7 +405,7 @@ export default function Privacy() {
           us:
         </p>
         <ul>
-          <li>By email: {mail}</li>
+          <li>By email: {getMail()}</li>
         </ul>
       </Container>
 
