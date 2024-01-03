@@ -5,7 +5,7 @@ export const CheckItem: FC<{
   children: string;
 }> = ({ children }) => {
   return (
-    <div className="flex items-center gap-3 w-52">
+    <div className="flex justify-center md:justify-start items-center gap-3 w-52">
       <Check />
       <div className="text-sm">{children}</div>
     </div>

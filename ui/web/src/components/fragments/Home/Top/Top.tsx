@@ -24,7 +24,7 @@ export const HomeTopSection = () => {
 
           <DownloadButton className="px-5" />
 
-          <div className="flex items-center gap-5">
+          <div className="flex flex-col md:flex-row items-center gap-5 gap-y-10 mt-6 md:mt-0">
             <CheckItem>No credit card required</CheckItem>
             <CheckItem>Free plan by default</CheckItem>
           </div>
