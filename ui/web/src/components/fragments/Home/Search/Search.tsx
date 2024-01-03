@@ -22,21 +22,21 @@ export const HomeSearchSection = () => {
             src="/general/square/1.png"
             width={1000}
             height={1000}
-            className="rounded-3xl border"
+            className="rounded-xl md:rounded-3xl border"
             alt="preview"
           />
           <Image
             src="/general/square/2.png"
             width={500}
             height={500}
-            className="rounded-3xl border"
+            className="rounded-xl md:rounded-3xl border"
             alt="preview"
           />
           <Image
             src="/general/square/3.png"
             width={1000}
             height={1000}
-            className="rounded-3xl border"
+            className="rounded-xl md:rounded-3xl border"
             alt="preview"
           />
         </div>
