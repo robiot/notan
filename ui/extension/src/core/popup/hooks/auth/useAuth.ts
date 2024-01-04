@@ -6,7 +6,15 @@ import { deprecadedUseOldAuth } from "./deprecatedUseOldAuth";
 
 const cookieName = "token";
 
-export const getTokenCookie = () => chrome.cookies.get({ url: enviroment.APP_URL, name: cookieName });
+// export const getTokenCookie = () => chrome.cookies.get({ url: enviroment.APP_URL, name: cookieName });
+
+export const getTokenCookie = async () => {
+  return new Promise<chrome.cookies.Cookie | undefined>((resolve) => {
+    chrome.cookies.get({ url: enviroment.APP_URL, name: cookieName }, (cookie) => {
+      resolve(cookie);
+    });
+  });
+};
 
 const setTokenCookie = (token: string) => {
   const current = new Date();
