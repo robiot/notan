@@ -31,7 +31,7 @@ export const PricingGrid = () => {
           </Button>
         </SubscriptionCard>
         <SubscriptionCard
-          title="Plus"
+          title="Premium"
           price="9.99€/month"
           perks={SubscrtiptionPerks.premium}
           gradient="purple"
