@@ -66,7 +66,7 @@ pub fn products() -> Vec<Product> {
                 billing_period: BillingPeriod::Monthly,
                 price_currencies: vec![PriceCurrency {
                     currency: stripe::Currency::EUR,
-                    price: 899,
+                    price: 999,
                 }],
             },
             Price {
@@ -83,8 +83,8 @@ pub fn products() -> Vec<Product> {
             no_domain_restrictions: true,
             max_notes_increase: 0,
             max_note_characters_increase: 0,
-            max_notes_base: Some(560),
-            max_note_characters_base: Some(2000),
+            max_notes_base: Some(2500),
+            max_note_characters_base: Some(5000),
         },
         max_own: None,
     });
