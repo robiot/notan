@@ -4,11 +4,11 @@ export const SubscrtiptionPerks = {
   premium: [
     {
       icon: <Book />,
-      text: "560 notes",
+      text: "2500 notes",
     },
     {
       icon: <Edit />,
-      text: "2000 max note length",
+      text: "5000 max note length",
     },
     {
       icon: <CheckCircle />,

@@ -1,4 +1,4 @@
-import { Book, CheckCircle, Edit } from "lucide-react";
+import { SubscrtiptionPerks } from "@notan/components/lib/subscription-perks";
 
 import { getPriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
 import { usePrices } from "@/hooks/billing/usePrices";
@@ -28,22 +28,7 @@ export const SubscriptionsSection = () => {
             key: "plus_monthly",
           },
         ]}
-        perks={[
-          {
-            icon: <Book />,
-            text: "190 notes",
-          },
-          {
-            icon: <Edit />,
-            text: "900 max note length",
-          },
-          {
-            icon: <CheckCircle />,
-            text: "No note limit per domain!",
-            tooltip:
-              "By default you can only create 10 notes for ex. wikipedia.com",
-          },
-        ]}
+        perks={SubscrtiptionPerks.plus}
         gradient="blue"
       />
       <SubscriptionCard
@@ -62,22 +47,7 @@ export const SubscriptionsSection = () => {
             period: "month",
           },
         ]}
-        perks={[
-          {
-            icon: <Book />,
-            text: "560 notes",
-          },
-          {
-            icon: <Edit />,
-            text: "2000 max note length",
-          },
-          {
-            icon: <CheckCircle />,
-            text: "No note limit per domain!",
-            tooltip:
-              "By default you can only create 10 notes for ex. wikipedia.com",
-          },
-        ]}
+        perks={SubscrtiptionPerks.premium}
         gradient="purple"
       />
     </div>
