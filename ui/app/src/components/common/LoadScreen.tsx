@@ -8,7 +8,7 @@ export const LoadScreen: FC<{ loading?: boolean }> = ({ loading }) => {
   return (
     <motion.div
       className={cn(
-        "z-50 fixed h-full w-full bg-background flex items-center justify-center pointer-events-none"
+        "z-[9999] fixed h-full w-full bg-background flex items-center justify-center pointer-events-none"
       )}
       variants={{
         hidden: { opacity: 0 },

@@ -1,22 +1,11 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
-import { FC, ReactNode, useEffect } from "react";
+import { FC, ReactNode } from "react";
 
-import { useAuth } from "@/hooks/useAuth";
+import { AuthContext } from "@/components/context/AuthContext";
 
 const AuthLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const router = useRouter();
-  const auth = useAuth();
-  const path = usePathname();
-
-  useEffect(() => {
-    if (auth.token) {
-      router.push("/");
-    }
-  }, [auth, router, path]);
-
-  return <>{children}</>;
+  return <AuthContext type="auth">{children}</AuthContext>;
 };
 
 export default AuthLayout;

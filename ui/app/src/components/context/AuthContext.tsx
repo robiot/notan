@@ -5,27 +5,35 @@ import { ApiResponse, hasError } from "@notan/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState, useTransition } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/lib/api";
 
 import { LoadScreen } from "../common/LoadScreen";
 
-// import { Spinner } from "@/components/ui/spinner";
-
-export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
-  const auth = useAuth();
+export const AuthContext: FC<{ children: ReactNode; type: "auth" | "app" }> = ({
+  children,
+  type,
+}) => {
   const router = useRouter();
+  const auth = useAuth();
   const path = usePathname();
 
-  const [isLoadingAuthCheck, setIsLoadingAuthCheck] = useState(true);
+  const [isPending, startTransition] = useTransition();
+  const [shouldLoad, setShouldLoad] = useState(true);
 
   useEffect(() => {
-    if (path !== "/login" && path !== "/signup" && !auth.token) {
-      router.push("/login");
+    if (type === "auth" && auth.token) {
+      startTransition(() => {
+        router.push("/");
+      });
+    } else if (type === "app" && !auth.token) {
+      startTransition(() => {
+        router.push("/login");
+      });
     } else {
-      setIsLoadingAuthCheck(false);
+      setShouldLoad(false);
     }
   }, [auth, router, path]);
 
@@ -57,21 +65,13 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
     },
   });
 
-  const isLoading = isLoadingAuthCheck || renewSession.isLoading;
+  const isLoading = shouldLoad || isPending || renewSession.isLoading;
 
   return (
     <>
       <LoadScreen loading={isLoading} />
-      {renewSession.isError ? (
-        <div className="flex-1 flex-col flex items-center justify-center text-center">
-          <span className="text-lg">Could not reach the server 😓.</span>
-          <span className="text-base text-foreground/80">
-            Check your internet connection and try again.
-          </span>
-        </div>
-      ) : (
-        <>{!isLoading && children}</>
-      )}
+
+      {!isLoading && children}
     </>
   );
 };
