@@ -1,35 +1,44 @@
 "use client";
 
-import { Separator } from "@notan/components/ui/separator";
-import Image from "next/image";
 import Link from "next/link";
 
-import { Container } from "@/components/common/Container";
-
+import { AuthSubtitle, AuthTitle, TitleWrapper } from "../_components/Titles";
 import { LoginForm } from "./_components/LoginForm";
 
 const LoginPage = () => {
   return (
-    <Container size="xs" className="flex">
-      <div className="flex flex-col items-center justify-center flex-1 gap-4">
-        <div className="flex flex-col items-center w-full gap-9">
-          <Image src={"/notan.svg"} alt="logo" width={160} height={60} />
+    <>
+      <div className="flex flex-col items-center gap-6">
+        <TitleWrapper>
+          <AuthTitle>Log in to your Account</AuthTitle>
+          {/* <AuthSubtitle>Welcome back! Select a method to log in:</AuthSubtitle> */}
+          <AuthSubtitle>Welcome back!</AuthSubtitle>
+        </TitleWrapper>
 
-          <LoginForm />
-        </div>
+        {/* <Button className="w-full font-normal gap-4 mt-4" variant="secondary">
+          <Image src="/icons/google.png" alt="google" width={24} height={24} />
+          Continue with Google
+        </Button>
 
-        <Separator orientation="horizontal" />
+        <div className="flex gap-5 w-full items-center">
+          <Separator orientation="horizontal" className="flex-1" />
+          <span className="text-sm">OR</span>
+          <Separator orientation="horizontal" className="flex-1" />
+        </div> */}
 
-        <div className="flex flex-col items-center w-full">
-          <span className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link href="/signup" className="text-blue-400">
-              Sign up
-            </Link>
-          </span>
-        </div>
+        <LoginForm />
+
+        {/* <Link href="/signup" className="text-sm text-blue-400">
+          Forgot Password?
+        </Link> */}
+        <span className="text-sm text-muted-foreground">
+          Don't have an account?{" "}
+          <Link href="/signup" className="text-blue-400">
+            Sign up
+          </Link>
+        </span>
       </div>
-    </Container>
+    </>
   );
 };
 

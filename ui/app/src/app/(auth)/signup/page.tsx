@@ -1,36 +1,37 @@
 "use client";
 
-import { Separator } from "@notan/components/ui/separator";
-import Image from "next/image";
 import Link from "next/link";
 
-import { Container } from "@/components/common/Container";
-
+import { AuthTitle, TitleWrapper } from "../_components/Titles";
 import { LoginForm } from "./_components/SignupForm";
 
 const SignupPage = () => {
   return (
-    <Container size="xs" className="flex">
-      <div className="flex flex-col items-center justify-center flex-1 gap-4">
-        <div className="flex flex-col items-center w-full">
-          <Image src={"/notan.svg"} alt="logo" width={160} height={60} />
+    <div className="flex flex-col items-center gap-6">
+      <TitleWrapper>
+        <AuthTitle>Sign up</AuthTitle>
+      </TitleWrapper>
 
-          <span className="text-2xl font-bold mt-8">Sign up</span>
-          <LoginForm />
-        </div>
+      {/* <Button className="w-full font-normal gap-4 mt-4" variant="secondary">
+        <Image src="/icons/google.png" alt="google" width={24} height={24} />
+        Continue with Google
+      </Button> */}
 
-        <Separator orientation="horizontal" />
+      {/* <div className="flex gap-5 w-full items-center">
+        <Separator orientation="horizontal" className="flex-1" />
+        <span className="text-sm">OR</span>
+        <Separator orientation="horizontal" className="flex-1" />
+      </div> */}
 
-        <div className="flex flex-col items-center w-full">
-          <span className="text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link href="/login" className="text-blue-400">
-              Log in
-            </Link>
-          </span>
-        </div>
-      </div>
-    </Container>
+      <LoginForm />
+
+      <span className="text-sm text-muted-foreground">
+        Already have an account?{" "}
+        <Link href="/login" className="text-blue-400">
+          Log in
+        </Link>
+      </span>
+    </div>
   );
 };
 

@@ -123,7 +123,7 @@ export const LoginForm = () => {
         {...register("password")}
       />
 
-      <p className="text-xs max-w-[90%] text-muted-foreground mb-4 mt-1">
+      <p className="text-xs text-muted-foreground mb-4 mt-4 text-center">
         By signing up, you agree that you have read our{" "}
         <Link
           href="https://notan.ax/terms"
@@ -148,7 +148,7 @@ export const LoginForm = () => {
         loading={signUp.isPending}
         disabled={!formState.isDirty}
       >
-        Sign up
+        Create account
       </Button>
     </form>
   );
