@@ -96,7 +96,7 @@ export const LoginForm = () => {
 
   return (
     <form
-      className="mt-3 flex flex-col w-full gap-2"
+      className="flex flex-col w-full gap-2"
       onSubmit={handleSubmit((values) => {
         signUp.mutate(values);
       })}

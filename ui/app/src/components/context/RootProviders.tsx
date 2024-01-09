@@ -2,6 +2,7 @@
 
 import { ToastProvider } from "@notan/components/ui/toast";
 import { Toaster } from "@notan/components/ui/toaster";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import * as Sentry from "@sentry/nextjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { FC, ReactNode } from "react";
@@ -26,8 +27,11 @@ if (process.env.NODE_ENV !== "development") {
 export const RootProviders: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
-      <ToastProvider />
+      <GoogleOAuthProvider clientId={enviroment.GOOGLE_OAUTH_CLIENT_ID}>
+        {children}
+        <ToastProvider />
+      </GoogleOAuthProvider>
+
       <Toaster />
     </QueryClientProvider>
   );

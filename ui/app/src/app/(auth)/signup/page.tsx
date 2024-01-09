@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { ContinueGoogleButton } from "../_components/ContinueGoogleButton";
+import { OrSeparator } from "../_components/OrSeparator";
 import { AuthTitle, TitleWrapper } from "../_components/Titles";
 import { LoginForm } from "./_components/SignupForm";
 
@@ -12,16 +14,9 @@ const SignupPage = () => {
         <AuthTitle>Sign up</AuthTitle>
       </TitleWrapper>
 
-      {/* <Button className="w-full font-normal gap-4 mt-4" variant="secondary">
-        <Image src="/icons/google.png" alt="google" width={24} height={24} />
-        Continue with Google
-      </Button> */}
+      <ContinueGoogleButton />
 
-      {/* <div className="flex gap-5 w-full items-center">
-        <Separator orientation="horizontal" className="flex-1" />
-        <span className="text-sm">OR</span>
-        <Separator orientation="horizontal" className="flex-1" />
-      </div> */}
+      <OrSeparator />
 
       <LoginForm />
 
