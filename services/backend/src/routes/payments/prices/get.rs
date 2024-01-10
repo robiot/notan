@@ -29,7 +29,7 @@ pub async fn handler(
     for product in state.products.clone() {
         for price in product.prices {
             let currency_price =
-                get_price_currency_from_price(price.clone(), stripe::Currency::EUR)?;
+                get_price_currency_from_price(price.clone(), stripe::Currency::USD)?;
 
             output.push(GetPricesResponse {
                 price_key: price.key,

@@ -1,22 +1,23 @@
 use std::net::SocketAddr;
 
 use crate::{
-    error::{Error, Result},
+    error::Result,
     jwt,
     routes::Response,
-    schemas,
     state::AppState,
-    utils::{self, validation},
+    utils::{
+        self,
+        database::user::{create_user, CreateUser},
+        validation,
+    },
 };
 
 use {
-    argon2::{password_hash::SaltString, Argon2, PasswordHasher},
     axum::{
         extract::{ConnectInfo, State},
         Json,
     },
     hyper::{HeaderMap, StatusCode},
-    rand::rngs::OsRng,
     serde::{Deserialize, Serialize},
     std::sync::Arc,
 };
@@ -49,39 +50,16 @@ pub async fn handler(
     utils::database::user::check_username_taken(username.clone(), &state.db).await?;
     utils::database::user::check_email_taken(email.clone(), &state.db).await?;
 
-    let salt = SaltString::generate(&mut OsRng);
-
-    // Argon2 with default params (Argon2id v19)
-    let argon2 = Argon2::default();
-
-    let password_hash = match argon2.hash_password(body.password.as_bytes(), &salt) {
-        Ok(hash) => hash.to_string(),
-        Err(_) => return Err(Error::InternalServerError),
-    };
-
-    let ip_from_cf = headers
-        .get("CF-Connecting-IP");
-
-    let ip = match ip_from_cf {
-        Some(ip) => match ip.to_str() {
-            Ok(ip) => ip.to_string(),
-            Err(_) => addr.ip().to_string(),
-        },
-        None => addr.ip().to_string(),
-    };
-
-    let user = sqlx::query_as::<sqlx::Postgres, schemas::user::User>(
-        r#"
-        INSERT INTO public.users (verified_mail, username, email, password, ip)
-        VALUES (false, $1, $2, $3, $4)
-        RETURNING *;
-        "#,
-    )
-    .bind(username.clone())
-    .bind(email.clone())
-    .bind(password_hash)
-    .bind(ip.clone())
-    .fetch_one(&state.db)
+    let user = create_user(CreateUser {
+        email: email.clone(),
+        username: Some(username.clone()),
+        password: Some(body.password.clone()),
+        name: None,
+        verified_mail: Some(false),
+        state: state.clone(),
+        addr: addr.clone(),
+        headers: headers.clone(),
+    })
     .await?;
 
     let token = jwt::user::User::generate(&user.id, &state.config.jwt_secret)?;

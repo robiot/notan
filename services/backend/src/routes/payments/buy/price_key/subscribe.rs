@@ -53,7 +53,7 @@ pub async fn handler(
 
     // Subscription
     let mut subscription_data = stripe::CreateSubscription::new(customer.id);
-    subscription_data.currency = Some(stripe::Currency::EUR);
+    subscription_data.currency = Some(stripe::Currency::USD);
     // #2
     subscription_data.payment_behavior =
         Some(stripe::SubscriptionPaymentBehavior::DefaultIncomplete);

@@ -28,6 +28,15 @@ pub enum Error {
     ParseError(#[from] oauth2::url::ParseError),
 
     #[error(transparent)]
+    OAuth2HttpError(
+        #[from]
+        oauth2::RequestTokenError<
+            oauth2::reqwest::Error<reqwest::Error>,
+            oauth2::StandardErrorResponse<oauth2::basic::BasicErrorResponseType>,
+        >,
+    ),
+
+    #[error(transparent)]
     ComponentRageError(#[from] time::error::ComponentRange),
 
     #[error(transparent)]
@@ -102,10 +111,10 @@ impl IntoResponse for Error {
             ),
             Error::UnprocessableEntity(identifier) => {
                 routes::Response::new_failure(StatusCode::UNPROCESSABLE_ENTITY, vec![identifier])
-            },
+            }
             Error::BadRequest(identifier) => {
                 routes::Response::new_failure(StatusCode::BAD_REQUEST, vec![identifier])
-            },
+            }
             _ => routes::Response::new_failure(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 vec![ResponseError {

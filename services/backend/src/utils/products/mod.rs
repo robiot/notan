@@ -65,7 +65,7 @@ pub fn products() -> Vec<Product> {
                 key: "premium_monthly".to_string(),
                 billing_period: BillingPeriod::Monthly,
                 price_currencies: vec![PriceCurrency {
-                    currency: stripe::Currency::EUR,
+                    currency: stripe::Currency::USD,
                     price: 999,
                 }],
             },
@@ -74,7 +74,7 @@ pub fn products() -> Vec<Product> {
 
                 billing_period: BillingPeriod::Yearly,
                 price_currencies: vec![PriceCurrency {
-                    currency: stripe::Currency::EUR,
+                    currency: stripe::Currency::USD,
                     price: 9999,
                 }],
             },
@@ -99,7 +99,7 @@ pub fn products() -> Vec<Product> {
                 key: "plus_monthly".to_string(),
                 billing_period: BillingPeriod::Monthly,
                 price_currencies: vec![PriceCurrency {
-                    currency: stripe::Currency::EUR,
+                    currency: stripe::Currency::USD,
                     price: 399,
                 }],
             },
@@ -107,7 +107,7 @@ pub fn products() -> Vec<Product> {
                 key: "plus_annually".to_string(),
                 billing_period: BillingPeriod::Yearly,
                 price_currencies: vec![PriceCurrency {
-                    currency: stripe::Currency::EUR,
+                    currency: stripe::Currency::USD,
                     price: 3999,
                 }],
             },
@@ -132,7 +132,7 @@ pub fn products() -> Vec<Product> {
             key: "ot_notes_1".to_string(),
             billing_period: BillingPeriod::OneTime,
             price_currencies: vec![PriceCurrency {
-                currency: stripe::Currency::EUR,
+                currency: stripe::Currency::USD,
                 price: 499,
             }],
         }],
@@ -155,7 +155,7 @@ pub fn products() -> Vec<Product> {
             key: "ot_note_length_1".to_string(),
             billing_period: BillingPeriod::OneTime,
             price_currencies: vec![PriceCurrency {
-                currency: stripe::Currency::EUR,
+                currency: stripe::Currency::USD,
                 price: 499,
             }],
         }],

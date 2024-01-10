@@ -1,6 +1,13 @@
 use hyper::StatusCode;
 
-use crate::{auth::check_auth, error::Result, routes::Response, schemas, state::AppState, utils::{limits, database::notes::get_note_count}};
+use crate::{
+    auth::check_auth,
+    error::Result,
+    routes::Response,
+    schemas,
+    state::AppState,
+    utils::{database::notes::get_note_count, limits},
+};
 
 use {axum::extract::State, hyper::HeaderMap, serde::Serialize, std::sync::Arc};
 
@@ -8,8 +15,11 @@ use {axum::extract::State, hyper::HeaderMap, serde::Serialize, std::sync::Arc};
 pub struct UserGetResponse {
     id: String,
     verified_mail: bool,
-    username: String,
+    username: Option<String>,
     email: String,
+
+    // google
+    is_connected_google: bool,
 
     // limits
     used_note_storage: i64,
@@ -33,7 +43,16 @@ pub async fn handler(
 
     let limits = limits::get_limits(id.clone(), state.clone()).await?;
 
-    let note_count = get_note_count(id, &state.db).await?;
+    let note_count = get_note_count(id.clone(), &state.db).await?;
+
+    // get optional google connection
+    let google_connection = sqlx::query_as::<
+        sqlx::Postgres,
+        schemas::user_google_connection::UserGoogleConnection,
+    >(r#"SELECT * FROM public.user_google_connections WHERE user_id = $1"#)
+    .bind(id.clone())
+    .fetch_optional(&state.db)
+    .await?;
 
     Ok(Response::new_success(
         StatusCode::OK,
@@ -42,6 +61,9 @@ pub async fn handler(
             email: user.email,
             username: user.username,
             verified_mail: user.verified_mail,
+
+            // google
+            is_connected_google: google_connection.is_some(),
 
             // limits
             total_note_storage: limits.max_notes,

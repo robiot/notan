@@ -31,11 +31,18 @@ pub async fn handler(
 
     utils::database::user::check_email_taken(email.clone(), &state.db).await?;
 
-    sqlx::query(r#"UPDATE public.users SET email = $1 WHERE id = $2"#)
-        .bind(email.clone())
-        .bind(id.clone())
-        .execute(&state.db)
-        .await?;
+    // set email, and set verified_mail to false
+    sqlx::query(
+        r#"
+        UPDATE public.users
+        SET email = $1, verified_mail = false
+        WHERE id = $2
+        "#,
+    )
+    .bind(email.clone())
+    .bind(id.clone())
+    .execute(&state.db)
+    .await?;
 
     // update stripe customer
 

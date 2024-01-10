@@ -6,3 +6,4 @@ pub mod user;
 pub mod owned_product;
 pub mod products_sync;
 pub mod price;
+pub mod user_google_connection;

@@ -50,21 +50,25 @@ pub async fn handler(
         }
     };
 
-    let db_hash = match PasswordHash::new(&user.password) {
-        Ok(hash) => hash,
-        Err(_) => return Err(Error::InternalServerError),
-    };
+    let token = if let Some(password) = user.password {
+        let db_hash = match PasswordHash::new(&password) {
+            Ok(hash) => hash,
+            Err(_) => return Err(Error::InternalServerError),
+        };
 
-    // Check password using argon2
-    if Argon2::default()
-        .verify_password(body.password.as_bytes(), &db_hash)
-        .is_err()
-    {
-        log::trace!("Invalid password for user: {}", email);
+        // Check password using argon2
+        if Argon2::default()
+            .verify_password(body.password.as_bytes(), &db_hash)
+            .is_err()
+        {
+            log::trace!("Invalid password for user: {}", email);
+            return Err(Error::Unauthorized);
+        }
+
+        jwt::user::User::generate(&user.id, &state.config.jwt_secret)?
+    } else {
         return Err(Error::Unauthorized);
-    }
-
-    let token = jwt::user::User::generate(&user.id, &state.config.jwt_secret)?;
+    };
 
     Ok(Response::new_success(
         StatusCode::OK,

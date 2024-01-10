@@ -5,9 +5,10 @@ use sqlx::types::chrono;
 pub struct User {
     pub id: String,
     pub verified_mail: bool,
-    pub username: String,
+    pub username: Option<String>,
     pub email: String,
-    pub password: String,
+    pub password: Option<String>,
+    pub name: Option<String>,
     pub ip: String,
     pub stripe_customer_id: Option<String>,
     pub created_at: chrono::DateTime<chrono::Utc>,
