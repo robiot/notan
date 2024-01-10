@@ -69,7 +69,7 @@ pub async fn handler(
         Some(token_url),
     )
     .set_redirect_uri(
-        RedirectUrl::new("http://localhost:3000".to_string()).expect("Invalid redirect URL"),
+        RedirectUrl::new(state.config.google_oauth_redirect_url.to_string()).expect("Invalid redirect URL"),
     );
 
     let auth_code = AuthorizationCode::new(body.google_auth_code);
