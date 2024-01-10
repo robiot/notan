@@ -43,7 +43,7 @@ export const ProductCard: FC<{
         {getDescriptionForPriceKey(price?.price_key)}
       </p>
       <div className="flex justify-between gap-2 mt-4">
-        <span className="text-lg font-bold">{price.price / 100}€</span>
+        <span className="text-lg font-bold">${price.price / 100}</span>
         <span>
           {product.data?.owns}/{product.data?.max} bought
         </span>

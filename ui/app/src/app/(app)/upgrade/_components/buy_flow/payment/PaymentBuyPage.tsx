@@ -23,7 +23,7 @@ const PriceFormated = () => {
 
   return (
     <>
-      {price?.price! / 100}€
+      ${price?.price! / 100}
       {flow.flowState.product_info?.subscription_period !== undefined && (
         <>/{flow.flowState.product_info?.subscription_period?.period}</>
       )}

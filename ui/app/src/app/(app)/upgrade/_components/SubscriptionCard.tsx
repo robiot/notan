@@ -58,7 +58,7 @@ export const SubscriptionCard: FC<{
       )}
     >
       <span className="text-3xl font-semibold">{title}</span>
-      <span className="text-lg font-bold">{price.price / 100}€/month</span>
+      <span className="text-lg font-bold">${price.price / 100}/month</span>
 
       <div className="text-md text-foreground/90 mt-5">
         {perks.map((perk) => (

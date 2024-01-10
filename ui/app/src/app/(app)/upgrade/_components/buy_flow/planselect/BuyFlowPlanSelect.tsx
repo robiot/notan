@@ -39,7 +39,7 @@ const Alternative: FC<{
         )}
       </span>
       <span className="font-medium">
-        {price.price / 100}€/{alternative.period}
+        ${price.price / 100}/{alternative.period}
       </span>
     </Button>
   );
