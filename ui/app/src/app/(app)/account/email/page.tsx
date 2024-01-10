@@ -1,11 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert } from "@notan/components/ui/alert";
 import { Button } from "@notan/components/ui/button";
 import { Input } from "@notan/components/ui/input";
 import { ApiResponse, hasError } from "@notan/utils/api";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
@@ -28,6 +30,7 @@ type EmailFormSchemaType = z.infer<typeof EmailFormSchema>;
 const AccountEmailContent: FC<{ email?: string }> = ({ email }) => {
   // const navigate = useNavigate();
   const router = useRouter();
+  const user = useUser();
 
   const {
     formState: { isDirty, errors },
@@ -71,6 +74,16 @@ const AccountEmailContent: FC<{ email?: string }> = ({ email }) => {
   return (
     <>
       <ItemTitleRow>Email</ItemTitleRow>
+
+      {user.data?.is_connected_google && (
+        <Alert className="text-sm mb-6">
+          <span className="flex gap-3">
+            <XCircle />
+            You can't change your email because you are connected with Google.
+            Set a password to disconnect and change your email.
+          </span>
+        </Alert>
+      )}
       <div className="flex flex-col gap-2">
         <Input
           placeholderStyle="alwaysVisible"
@@ -78,6 +91,7 @@ const AccountEmailContent: FC<{ email?: string }> = ({ email }) => {
           className="w-full"
           {...register("email")}
           error={errors.email?.message}
+          disabled={user.data?.is_connected_google}
         />
 
         <Button
@@ -86,7 +100,7 @@ const AccountEmailContent: FC<{ email?: string }> = ({ email }) => {
             updateUsername.mutate(data);
           })}
           loading={updateUsername.isPending}
-          disabled={!isDirty}
+          disabled={!isDirty || user.data?.is_connected_google}
         >
           Save
         </Button>

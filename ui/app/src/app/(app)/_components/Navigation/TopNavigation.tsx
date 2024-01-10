@@ -16,11 +16,11 @@ export const TopNavigation = () => {
     <>
       <nav className="bg-card w-full flex h-20 z-50 items-center justify-between px-4 border-border border-b">
         <Image
-          src={"/notan.svg"}
+          src={"/logo.svg"}
           alt="logo"
           width={105}
           height={50}
-          className="h-7`"
+          className="h-10 w-auto"
         />
 
         <div className="flex gap-2 items-center">

@@ -1,24 +1,27 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert } from "@notan/components/ui/alert";
 import { Button } from "@notan/components/ui/button";
 import { Input } from "@notan/components/ui/input";
 import { toast } from "@notan/components/ui/use-toast";
 import { ApiResponse, hasError } from "@notan/utils/api";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { ShieldQuestion } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { useUser } from "@/hooks/users/useUser";
 import { api } from "@/lib/api";
 import { zodPassword } from "@/lib/zodPresents";
 
 import { ItemTitleRow } from "../_components/ItemTitleRow";
 
 const PasswordFormSchema = z.object({
-  current_password: zodPassword,
+  current_password: z.string(),
   new_password: zodPassword,
 });
 
@@ -29,6 +32,7 @@ const AccountPasswordPage = () => {
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
 
   const router = useRouter();
+  const user = useUser();
 
   const {
     formState: { isDirty, errors },
@@ -70,17 +74,29 @@ const AccountPasswordPage = () => {
     <>
       <ItemTitleRow>Password</ItemTitleRow>
 
+      {user.data?.is_connected_google && (
+        <Alert className="text-sm mb-6">
+          <span className="flex gap-3">
+            <ShieldQuestion />
+            You don't have a password set. If you are using Google, a password
+            is not nessicary. Set a password if you want to change your mail.
+          </span>
+        </Alert>
+      )}
+
       <div className="flex flex-col gap-2">
-        <Input
-          placeholderStyle="alwaysVisible"
-          placeholder="Current password"
-          className="w-full"
-          type="password"
-          showPassword={currentPasswordVisible}
-          setShowPassword={setCurrentPasswordVisible}
-          {...register("current_password")}
-          error={errors.current_password?.message}
-        />
+        {!user.data?.is_connected_google && (
+          <Input
+            placeholderStyle="alwaysVisible"
+            placeholder="Current password"
+            className="w-full"
+            type="password"
+            showPassword={currentPasswordVisible}
+            setShowPassword={setCurrentPasswordVisible}
+            {...register("current_password")}
+            error={errors.current_password?.message}
+          />
+        )}
         <Input
           placeholderStyle="alwaysVisible"
           placeholder="New password"
@@ -94,6 +110,7 @@ const AccountPasswordPage = () => {
         <Button
           className="w-full"
           onClick={handleSubmit((data) => {
+            console.log("clicked");
             updatePassword.mutate(data);
           })}
           loading={updatePassword.isPending}

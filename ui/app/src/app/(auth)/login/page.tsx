@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { ContinueGoogleButton } from "../_components/ContinueGoogleButton";
+import { OrSeparator } from "../_components/OrSeparator";
 import { AuthSubtitle, AuthTitle, TitleWrapper } from "../_components/Titles";
 import { LoginForm } from "./_components/LoginForm";
 
@@ -15,9 +17,9 @@ const LoginPage = () => {
         </TitleWrapper>
 
         <div className="flex flex-col w-full gap-6">
-          {/* <ContinueGoogleButton />
+          <ContinueGoogleButton />
 
-          <OrSeparator /> */}
+          <OrSeparator />
 
           <LoginForm />
 

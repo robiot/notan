@@ -7,8 +7,10 @@ import { api } from "@/lib/api";
 type User = {
   id: string;
   email: string;
-  username: string;
+  username?: string;
   verified_mail: boolean;
+
+  is_connected_google: boolean;
 
   max_note_length: number;
   total_note_storage: number;

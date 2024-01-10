@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { ContinueGoogleButton } from "../_components/ContinueGoogleButton";
+import { OrSeparator } from "../_components/OrSeparator";
 import { AuthTitle, TitleWrapper } from "../_components/Titles";
 import { LoginForm } from "./_components/SignupForm";
 
@@ -12,9 +14,9 @@ const SignupPage = () => {
         <AuthTitle>Sign up</AuthTitle>
       </TitleWrapper>
 
-      {/* <ContinueGoogleButton />
+      <ContinueGoogleButton />
 
-      <OrSeparator /> */}
+      <OrSeparator />
 
       <LoginForm />
 
