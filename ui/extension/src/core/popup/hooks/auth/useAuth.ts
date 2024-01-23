@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 
 import { enviroment } from "../../lib/enviroment";
-import { deprecadedUseOldAuth } from "./deprecatedUseOldAuth";
 
 const cookieName = "token";
 
@@ -11,6 +10,14 @@ const cookieName = "token";
 export const getTokenCookie = async () => {
   return new Promise<chrome.cookies.Cookie | undefined>((resolve) => {
     chrome.cookies.get({ url: enviroment.APP_URL, name: cookieName }, (cookie) => {
+      resolve(cookie);
+    });
+  });
+};
+
+export const getOldDomainTokenCookie = async () => {
+  return new Promise<chrome.cookies.Cookie | undefined>((resolve) => {
+    chrome.cookies.get({ url: "https://app.notan.ax", name: cookieName }, (cookie) => {
       resolve(cookie);
     });
   });
@@ -34,17 +41,15 @@ const setTokenCookie = (token: string) => {
 
 const useToken = () => {
   const [token, setToken] = useState<string | undefined>();
-  const oldAuth = deprecadedUseOldAuth();
 
   useEffect(() => {
     (async () => {
+      // hehe lot of token migration
       const token = await getTokenCookie();
-      const oldToken = oldAuth?.token;
+      const { value: oldToken } = await getOldDomainTokenCookie();
 
       if (!token && oldToken !== undefined) {
         setTokenCookie(oldToken);
-        // remove old token
-        oldAuth.logout();
       } else if (token?.value) {
         setTokenCookie(token.value);
       }
