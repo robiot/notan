@@ -44,12 +44,11 @@ const useToken = () => {
 
   useEffect(() => {
     (async () => {
-      // hehe lot of token migration
       const token = await getTokenCookie();
-      const { value: oldToken } = await getOldDomainTokenCookie();
+      const oldToken = await getOldDomainTokenCookie();
 
-      if (!token && oldToken !== undefined) {
-        setTokenCookie(oldToken);
+      if (!token && oldToken !== null) {
+        setTokenCookie(oldToken.value);
       } else if (token?.value) {
         setTokenCookie(token.value);
       }
