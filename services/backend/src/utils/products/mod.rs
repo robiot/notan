@@ -29,12 +29,11 @@ pub struct Price {
 
 #[derive(Clone, Hash)]
 pub struct Perks {
-    pub no_domain_restrictions: bool,
-    pub max_notes_increase: i32,
-    pub max_note_characters_increase: i32,
+    pub max_tags: Option<i32>,
+    pub max_per_domain: Option<i32>,
 
-    pub max_notes_base: Option<i32>,
-    pub max_note_characters_base: Option<i32>,
+    pub max_notes: Option<i32>,
+    pub max_note_characters: Option<i32>,
 }
 
 #[derive(Clone, Hash)]
@@ -48,47 +47,20 @@ pub struct Product {
     pub max_own: Option<i32>,
 }
 
-// Update this everytime you update the products, now using hash instead
-// pub static mut PRODUCTS_VERSION: &str = "1.0.0";
+pub fn free() -> Perks {
+    Perks {
+        max_tags: Some(5),
+        max_per_domain: Some(5),
+
+        max_notes: Some(15),
+        max_note_characters: Some(300),
+    }
+}
 
 pub fn products() -> Vec<Product> {
     let mut products = Vec::new();
 
     // Subscriptions
-    products.push(Product {
-        id: "prod_premium".to_string(),
-        title: "Premium".to_string(),
-        description: "Premium".to_string(),
-        kind: ProductKind::Subscription,
-        prices: vec![
-            Price {
-                key: "premium_monthly".to_string(),
-                billing_period: BillingPeriod::Monthly,
-                price_currencies: vec![PriceCurrency {
-                    currency: stripe::Currency::USD,
-                    price: 999,
-                }],
-            },
-            Price {
-                key: "premium_annually".to_string(),
-
-                billing_period: BillingPeriod::Yearly,
-                price_currencies: vec![PriceCurrency {
-                    currency: stripe::Currency::USD,
-                    price: 9999,
-                }],
-            },
-        ],
-        perks: Perks {
-            no_domain_restrictions: true,
-            max_notes_increase: 0,
-            max_note_characters_increase: 0,
-            max_notes_base: Some(2500),
-            max_note_characters_base: Some(5000),
-        },
-        max_own: None,
-    });
-
     products.push(Product {
         id: "prod_plus".to_string(),
         title: "Plus".to_string(),
@@ -100,7 +72,7 @@ pub fn products() -> Vec<Product> {
                 billing_period: BillingPeriod::Monthly,
                 price_currencies: vec![PriceCurrency {
                     currency: stripe::Currency::USD,
-                    price: 399,
+                    price: 800,
                 }],
             },
             Price {
@@ -108,65 +80,52 @@ pub fn products() -> Vec<Product> {
                 billing_period: BillingPeriod::Yearly,
                 price_currencies: vec![PriceCurrency {
                     currency: stripe::Currency::USD,
-                    price: 3999,
+                    price: 7200,
                 }],
             },
         ],
         perks: Perks {
-            no_domain_restrictions: true,
-            max_notes_increase: 0,
-            max_note_characters_increase: 0,
-            max_notes_base: Some(190),
-            max_note_characters_base: Some(900),
+            max_tags: Some(15),
+            max_per_domain: Some(20),
+
+            max_notes: None,
+            max_note_characters: None,
         },
         max_own: None,
     });
 
-    // One time
     products.push(Product {
-        id: "prod_ot_notes_1".to_string(),
-        title: "+10 Max notes".to_string(),
-        description: "Increase max note limit by 10".to_string(),
-        kind: ProductKind::OneTime,
-        prices: vec![Price {
-            key: "ot_notes_1".to_string(),
-            billing_period: BillingPeriod::OneTime,
-            price_currencies: vec![PriceCurrency {
-                currency: stripe::Currency::USD,
-                price: 499,
-            }],
-        }],
-        perks: Perks {
-            no_domain_restrictions: false,
-            max_notes_increase: 10,
-            max_note_characters_increase: 0,
-            max_notes_base: None,
-            max_note_characters_base: None,
-        },
-        max_own: Some(1),
-    });
+        id: "prod_pro".to_string(),
+        title: "Pro".to_string(),
+        description: "Pro".to_string(),
+        kind: ProductKind::Subscription,
+        prices: vec![
+            Price {
+                key: "pro_monthly".to_string(),
+                billing_period: BillingPeriod::Monthly,
+                price_currencies: vec![PriceCurrency {
+                    currency: stripe::Currency::USD,
+                    price: 1200,
+                }],
+            },
+            Price {
+                key: "pro_annually".to_string(),
 
-    products.push(Product {
-        id: "prod_ot_note_length_1".to_string(),
-        title: "+100 Max length".to_string(),
-        description: "Increase max note character limit by 100".to_string(),
-        kind: ProductKind::OneTime,
-        prices: vec![Price {
-            key: "ot_note_length_1".to_string(),
-            billing_period: BillingPeriod::OneTime,
-            price_currencies: vec![PriceCurrency {
-                currency: stripe::Currency::USD,
-                price: 499,
-            }],
-        }],
+                billing_period: BillingPeriod::Yearly,
+                price_currencies: vec![PriceCurrency {
+                    currency: stripe::Currency::USD,
+                    price: 12000,
+                }],
+            },
+        ],
         perks: Perks {
-            no_domain_restrictions: false,
-            max_notes_increase: 0,
-            max_note_characters_increase: 100,
-            max_notes_base: None,
-            max_note_characters_base: None,
+            max_tags: None,
+            max_per_domain: None,
+
+            max_notes: None,
+            max_note_characters: None,
         },
-        max_own: Some(1),
+        max_own: None,
     });
     products
 }

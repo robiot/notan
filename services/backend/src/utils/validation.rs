@@ -199,7 +199,7 @@ pub async fn validate_url_usage(
         }
     };
 
-    if !limits.no_domain_restrictions {
+    if let Some(max_per_domain) = limits.max_per_domain {
         let mut count: i32 = 0;
 
         let notes = sqlx::query_as::<sqlx::Postgres, schemas::note::Note>(
@@ -234,12 +234,13 @@ pub async fn validate_url_usage(
             }
         }
 
-        if count >= 10 {
+        if count >= max_per_domain {
             return Err(Error::UnprocessableEntity(ResponseError {
                 message: "Limit has been reached for domain".to_string(),
                 name: "max_notes_for_domain".to_string(),
             }));
         }
     }
+
     Ok(())
 }

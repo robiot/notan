@@ -182,7 +182,7 @@ pub async fn ensure_stripe_products(state: Arc<AppState>) -> Result<()> {
                             metadata: None,
                             nickname: None,
                             product_data: None,
-                            tax_behavior: None,
+                            tax_behavior: Some(stripe::PriceTaxBehavior::Inclusive),
                             tiers: None,
                             tiers_mode: None,
                             transfer_lookup_key: None,

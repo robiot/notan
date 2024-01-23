@@ -22,10 +22,9 @@ pub struct UserGetResponse {
     is_connected_google: bool,
 
     // limits
+    max_note_length: i32,
     used_note_storage: i64,
     total_note_storage: i32,
-    max_note_length: i32,
-    has_unlimited_notes_per_domain: bool,
 }
 
 pub async fn handler(
@@ -66,10 +65,9 @@ pub async fn handler(
             is_connected_google: google_connection.is_some(),
 
             // limits
+            max_note_length: limits.max_note_characters,
             total_note_storage: limits.max_notes,
             used_note_storage: note_count,
-            max_note_length: limits.max_note_characters,
-            has_unlimited_notes_per_domain: limits.no_domain_restrictions,
         }),
     ))
 }
