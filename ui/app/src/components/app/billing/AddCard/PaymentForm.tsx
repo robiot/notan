@@ -3,7 +3,7 @@ import { PaymentElement, useElements } from "@stripe/react-stripe-js";
 import { StripePaymentElementChangeEvent } from "@stripe/stripe-js";
 import { FC, ReactNode, useEffect, useState } from "react";
 
-import { BuyFlowFooter } from "@/app/(app)/upgrade/_components/buy_flow/BuyFlowFooter";
+import { BuyFlowFooter } from "@/components/common/FlowFooter";
 import { cn } from "@/lib/utils";
 
 export const PaymentForm: FC<{

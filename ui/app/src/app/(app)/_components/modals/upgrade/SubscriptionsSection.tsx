@@ -14,13 +14,14 @@ export const SubscriptionsSection = () => {
     <div className="grid lg:grid-cols-2 gap-4">
       <SubscriptionCard
         price={getPriceByPriceKey("plus_monthly", prices.data)}
+        price_annually={getPriceByPriceKey("plus_annually", prices.data)}
         title="Plus"
         alternatives={[
           {
             title: "Annualy",
             key: "plus_annually",
             period: "year",
-            save_percentage: 16,
+            save_percentage: 15,
           },
           {
             title: "Monthly",
@@ -29,26 +30,25 @@ export const SubscriptionsSection = () => {
           },
         ]}
         perks={SubscrtiptionPerks.plus}
-        gradient="blue"
       />
       <SubscriptionCard
-        price={getPriceByPriceKey("premium_monthly", prices.data)}
-        title="Premium"
+        price={getPriceByPriceKey("pro_monthly", prices.data)}
+        price_annually={getPriceByPriceKey("pro_annually", prices.data)}
+        title="Pro"
         alternatives={[
           {
             title: "Annualy",
-            key: "premium_annually",
-            save_percentage: 16,
+            key: "pro_annually",
+            save_percentage: 15,
             period: "year",
           },
           {
             title: "Monthly",
-            key: "premium_monthly",
+            key: "pro_monthly",
             period: "month",
           },
         ]}
         perks={SubscrtiptionPerks.premium}
-        gradient="purple"
       />
     </div>
   );

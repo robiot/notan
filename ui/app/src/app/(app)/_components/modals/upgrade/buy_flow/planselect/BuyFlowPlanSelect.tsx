@@ -1,14 +1,15 @@
 import { Button } from "@notan/components/ui/button";
 import { DialogHeader, DialogTitle } from "@notan/components/ui/dialog";
+import { Separator } from "@notan/components/ui/separator";
 import { FC, useEffect } from "react";
 
+import { BuyFlowFooterNotice } from "@/components/common/FlowFooter";
 import { getPriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
 import { Price, usePrices } from "@/hooks/billing/usePrices";
 import { cn } from "@/lib/utils";
 
 import { useBuyFlow } from "../../hooks/useBuyFlow";
 import { AlternativeT } from "../BuyFlowDialog";
-import { BuyFlowFooterNotice } from "../BuyFlowFooter";
 
 const Alternative: FC<{
   price?: Price;
@@ -38,9 +39,21 @@ const Alternative: FC<{
           </span>
         )}
       </span>
-      <span className="font-medium">
-        ${price.price / 100}/{alternative.period}
-      </span>
+      {alternative.period == "month" && (
+        <span className="font-medium">
+          ${price.price / 100} / {alternative.period}
+        </span>
+      )}
+
+      {alternative.period == "year" && (
+        <div className="flex gap-4 h-full items-center">
+          <span className="font-medium text-sm">
+            ${price.price / 100} / {alternative.period}
+          </span>
+          <Separator orientation="vertical" />
+          <span className="font-medium">${price.price / 100 / 12} / month</span>
+        </div>
+      )}
     </Button>
   );
 };

@@ -2,7 +2,7 @@ import { Button } from "@notan/components/ui/button";
 import { AddressElement } from "@stripe/react-stripe-js";
 import { FC, ReactNode } from "react";
 
-import { BuyFlowFooter } from "@/app/(app)/upgrade/_components/buy_flow/BuyFlowFooter";
+import { BuyFlowFooter } from "@/components/common/FlowFooter";
 import { cn } from "@/lib/utils";
 
 export const AddressForm: FC<{

@@ -1,48 +1,58 @@
-import { Book, CheckCircle, Edit, XCircle } from "lucide-react";
+import { Book, Check, CheckCircle, Edit, X, XCircle } from "lucide-react";
 
 export const SubscrtiptionPerks = {
   premium: [
     {
-      icon: <Book />,
-      text: "2500 notes",
+      icon: <Check />,
+      text: "Unlimited tags",
     },
     {
-      icon: <Edit />,
-      text: "5000 max note length",
+      icon: <Check />,
+      text: "No limits per domain",
     },
     {
-      icon: <CheckCircle />,
-      text: "No note limit per domain!",
-      tooltip: "By default you can only create 10 notes for ex. wikipedia.com",
+      icon: <Check />,
+      text: "Unlimited notes",
+    },
+    {
+      icon: <Check />,
+      text: "Unlimited note length",
     },
   ],
   plus: [
     {
-      icon: <Book />,
-      text: "190 notes",
+      icon: <Check />,
+      text: "Up to 15 tags",
     },
     {
-      icon: <Edit />,
-      text: "900 max note length",
+      icon: <Check />,
+      text: "20 notes per domain",
     },
     {
-      icon: <CheckCircle />,
-      text: "No note limit per domain!",
-      tooltip: "By default you can only create 10 notes for ex. wikipedia.com",
+      icon: <Check />,
+      text: "Unlimited notes",
+    },
+    {
+      icon: <Check />,
+      text: "Unlimited note length",
     },
   ],
   free: [
     {
-      icon: <Book />,
-      text: "25 notes",
+      icon: <Check />,
+      text: "Up to 5 tags",
     },
     {
-      icon: <Edit />,
-      text: "300 max note length",
+      icon: <Check />,
+      text: "5 notes per domain",
     },
     {
-      icon: <CheckCircle />,
-      text: "10 notes per domain",
+      icon: <X />,
+      text: "Unlimited notes",
+    },
+    {
+      icon: <X />,
+      text: "Unlimited note length",
     },
   ],
 };

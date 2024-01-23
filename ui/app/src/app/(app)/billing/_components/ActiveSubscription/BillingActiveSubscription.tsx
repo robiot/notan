@@ -22,7 +22,7 @@ export const BillingActiveSubscriptions: FC = () => {
     !activeSubscription.data?.subscription
   ) {
     return (
-      <p>
+      <p className="text-sm">
         You don't have an active subscription. Start a subscription on the
         Upgrade page.
       </p>

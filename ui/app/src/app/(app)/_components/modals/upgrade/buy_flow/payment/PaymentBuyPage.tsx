@@ -8,12 +8,15 @@ import { DialogClose } from "@notan/components/ui/dialog";
 import { CreditCard } from "lucide-react";
 import { useState } from "react";
 
+import {
+  BuyFlowFooter,
+  FooterBackButton,
+} from "@/components/common/FlowFooter";
 import { useBuy } from "@/hooks/actions/useBuy";
 import { usePriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
 import { useUser } from "@/hooks/users/useUser";
 
 import { useBuyFlow } from "../../hooks/useBuyFlow";
-import { BuyFlowFooter, FooterBackButton } from "../BuyFlowFooter";
 import { PaymentMethods } from "./PaymentMethods";
 
 const PriceFormated = () => {

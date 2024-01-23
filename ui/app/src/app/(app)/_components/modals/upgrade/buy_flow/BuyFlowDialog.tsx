@@ -6,11 +6,11 @@ import {
 } from "@notan/components/ui/dialog";
 import { FC, ReactNode } from "react";
 
+import { FooterBackButton } from "@/components/common/FlowFooter";
 import { usePriceByPriceKey } from "@/hooks/billing/usePriceByPriceKey";
 
 import { useBuyFlow } from "../hooks/useBuyFlow";
 import { BuyFlowAddCard } from "./add/BuyFlowAddCard";
-import { FooterBackButton } from "./BuyFlowFooter";
 import { BuyFlowPayment } from "./payment/BuyFlowPayment";
 import { BuyFlowPlanSelect } from "./planselect/BuyFlowPlanSelect";
 import { BuyFlowSuccessPage } from "./success/BuyFlowSuccessPage";

@@ -5,13 +5,7 @@ import packageJson from "../../package.json" assert { type: "json" };
 type Manifest = chrome.runtime.ManifestV3;
 
 const getHostPermissions = () => {
-  if (process.env.VITE_APP_URL) {
-    const url = new URL(process.env.VITE_APP_URL);
-
-    return [`*://*.${url.hostname}/`];
-  }
-
-  return [];
+  return ["http://*/*", "https://*/*"];
 };
 
 class ManifestParser {

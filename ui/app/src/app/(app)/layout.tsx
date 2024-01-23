@@ -4,6 +4,7 @@ import { FC, ReactNode } from "react";
 
 import { AuthContext } from "@/components/context/AuthContext";
 
+import { PaymentSuccessDialog } from "./_components/modals/upgrade/payment_success/PaymentSuccessDialog";
 import { UsernameModal } from "./_components/modals/username/UsernameModal";
 import { SideNavigationBar } from "./_components/Navigation/SideNavigationBar";
 import { TopNavigation } from "./_components/Navigation/TopNavigation";
@@ -11,6 +12,8 @@ import { TopNavigation } from "./_components/Navigation/TopNavigation";
 const AppLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <AuthContext type="app">
+      <PaymentSuccessDialog />
+
       <div className="flex-1 flex flex-col max-h-screen">
         <UsernameModal />
         <TopNavigation />

@@ -24,7 +24,7 @@ export const DownloadButton: FC<{
       "https://chromewebstore.google.com/detail/notan/hbjpkligkpghgjacpmfoccjjijkmngkg";
 
     const firefoxUrl =
-      "https://addons.mozilla.org/en-US/firefox/addon/notan/?utm_source=notan.ax";
+      "https://addons.mozilla.org/en-US/firefox/addon/notan/?utm_source=getnotan.com";
 
     switch (browser && browser.name) {
       case "chrome":

@@ -11,7 +11,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { motion } from "framer-motion";
 import { FC, ReactNode, useEffect, useState } from "react";
 
-import { FooterBackButton } from "@/app/(app)/upgrade/_components/buy_flow/BuyFlowFooter";
+import { FooterBackButton } from "@/components/common/FlowFooter";
 import { usePaymentMethods } from "@/hooks/billing/usePaymentMethods";
 import { api } from "@/lib/api";
 import { StripeAppearance, stripePromise } from "@/lib/stripe";
