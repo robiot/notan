@@ -54,8 +54,12 @@ export default function AccountPage() {
         </div>
         <div className="flex flex-col">
           Get the extension to start using Notan in your browser.
-          <Link href="https://notan.ax" className="font-bold" target="_blank">
-            https://notan.ax
+          <Link
+            href="https://getnotan.com"
+            className="font-bold"
+            target="_blank"
+          >
+            https://getnotan.com
           </Link>
         </div>
       </div>

@@ -1,4 +1,4 @@
-# app.notan.ax
+# app.getnotan.com
 
 ### Env????
 Yes there are a lot of stuff for env, please fill in.

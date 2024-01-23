@@ -6,7 +6,7 @@
 ## To build
 
 ### Copy .env.example to .env
-And change the api url to `https://api.notan.ax`
+And change the api url to `https://api.getnotan.com`
 
 ### Install dependencies
 ```

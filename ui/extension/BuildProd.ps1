@@ -21,8 +21,8 @@ if (!(Test-Path release)) {
 Remove-Item release/* -Force
 
 # Set these enviroment variables for the build
-$env:VITE_API_URL = "https://api.notan.ax"
-$env:VITE_APP_URL = "https://app.notan.ax"
+$env:VITE_API_URL = "https://api.getnotan.com"
+$env:VITE_APP_URL = "https://app.getnotan.com"
 
 # build for chrome
 pnpm build

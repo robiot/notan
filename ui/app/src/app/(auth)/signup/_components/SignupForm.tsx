@@ -126,7 +126,7 @@ export const LoginForm = () => {
       <p className="text-xs text-muted-foreground mb-4 mt-4 text-center">
         By signing up, you agree that you have read our{" "}
         <Link
-          href="https://notan.ax/terms"
+          href="https://getnotan.com/terms"
           className="text-blue-500"
           target="_blank"
         >
@@ -134,7 +134,7 @@ export const LoginForm = () => {
         </Link>{" "}
         and{" "}
         <Link
-          href="https://notan.ax/privacy"
+          href="https://getnotan.com/privacy"
           className="text-blue-500"
           target="_blank"
         >
