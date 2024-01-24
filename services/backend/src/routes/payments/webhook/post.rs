@@ -44,7 +44,7 @@ pub async fn handler(
     ) {
         Ok(event) => event,
         Err(e) => {
-            log::info!("body: {}", body);
+            // log::info!("body: {}", body);
             log::warn!("Failed to parse webhook: {:?}", e);
             return Ok(Response::new_success(StatusCode::OK, None));
             // return Err(Error::BadRequest(ResponseError {

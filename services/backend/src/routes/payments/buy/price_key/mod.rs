@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-pub mod intent;
 pub mod subscribe;
 
 #[derive(Deserialize)]

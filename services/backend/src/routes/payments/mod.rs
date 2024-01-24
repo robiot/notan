@@ -16,13 +16,6 @@ use {
 pub fn router(app_state: Arc<AppState>) -> Router<Arc<AppState>> {
     // /payments
     Router::new()
-        //
-        // Buy
-        //
-        .route(
-            "/buy/:price_key/intent",
-            post(buy::price_key::intent::handler),
-        )
         .route(
             "/buy/:price_key/subscribe",
             post(buy::price_key::subscribe::handler),
