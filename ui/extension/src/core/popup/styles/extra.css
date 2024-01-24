@@ -32,7 +32,7 @@ input:-webkit-autofill:active {
 /* Scrollbar */
 ::-webkit-scrollbar {
   /* Customize the scrollbar width */
-  @apply w-2;
+  @apply w-2 h-1;
 }
 
 ::-webkit-scrollbar-track {

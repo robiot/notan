@@ -1,6 +1,5 @@
-import { Button } from "@notan/components/ui/button";
 import { Separator } from "@notan/components/ui/separator";
-import { Link as LinkIcon, Plus } from "lucide-react";
+import { Link as LinkIcon } from "lucide-react";
 import { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -12,11 +11,12 @@ import { useUser } from "@/core/popup/hooks/user/useUser";
 import { faviconFromUrl } from "@/core/popup/lib/favicon";
 import { zodRequiredString } from "@/core/popup/lib/zodPresents";
 
+import { Tags } from "./tags/Tags";
 import { URLInput } from "./URLInput";
 
 export const NoteFormSchema = z.object({
   title: zodRequiredString,
-  url: zodRequiredString,
+  url: z.string(),
   note: z.string(),
 });
 
@@ -29,7 +29,7 @@ export const NoteView: FC<{
 
   return (
     <Container>
-      <div className="flex flex-col gap-2 items-center py-5">
+      <div className="flex flex-col gap-2 items-center py-5 pt-4">
         <input
           className="text-2xl font-bold focus:!outline-none bg-transparent text-center"
           placeholder="Title"
@@ -42,24 +42,21 @@ export const NoteView: FC<{
           {...register("title")}
         />
 
-        <div className="flex gap-2 items-center w-fit">
-          <Link to={watch("url")} target="_blank">
-            {faviconFromUrl(watch("url")) !== undefined ? (
-              <img src={faviconFromUrl(watch("url"))} alt="" className="w-5 h-5 rounded" />
-            ) : (
-              <LinkIcon className="text-sm h-4 w-4" />
-            )}
-          </Link>
+        {watch("url") !== undefined && (
+          <div className="flex gap-2 items-center w-fit">
+            <Link to={watch("url")} target="_blank">
+              {faviconFromUrl(watch("url")) !== undefined ? (
+                <img src={faviconFromUrl(watch("url"))} alt="" className="w-5 h-5 rounded" />
+              ) : (
+                <LinkIcon className="text-sm h-4 w-4" />
+              )}
+            </Link>
 
-          <URLInput placeholder="URL" maxLength={200} currentValue={watch("url")} {...register("url")} />
-        </div>
+            <URLInput placeholder="URL" maxLength={200} currentValue={watch("url")} {...register("url")} />
+          </div>
+        )}
 
-        <div className="flex items-center gap-5">
-          <span>No tags</span>
-          <Button variant="secondary" size="icon" className="h-6 w-6">
-            <Plus className="w-5 h-5" />
-          </Button>
-        </div>
+        <Tags />
       </div>
 
       <Separator />
