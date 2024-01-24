@@ -14,47 +14,45 @@ export const Limits = () => {
 
   if (activeSubscription.isLoading || !user) return <Spinner />;
 
-  if (
-    !activeSubscription.data?.notFound &&
-    activeSubscription.data?.subscription
-  ) {
-    return <></>;
-  }
-
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between">
-        <span className="text-sm">Notes</span>
-        <span className="text-sm">
-          {user.data?.used_note_storage}/{user.data?.total_note_storage}
-        </span>
-      </div>
-      <div className="py-2 flex flex-col gap-1">
-        <div className="rounded-full h-3 w-full bg-accent relative overflow-hidden">
-          {user.data?.used_note_storage !== undefined &&
-            user.data?.total_note_storage !== undefined && (
-              <>
-                <div
-                  className={cn(
-                    "rounded-full h-3",
-                    user.data?.used_note_storage >=
-                      user.data?.total_note_storage
-                      ? "bg-red-500"
-                      : "bg-primary"
+      {activeSubscription.data?.notFound &&
+        !activeSubscription.data?.subscription && (
+          <>
+            <div className="flex justify-between">
+              <span className="text-sm">Notes</span>
+              <span className="text-sm">
+                {user.data?.used_note_storage}/{user.data?.total_note_storage}
+              </span>
+            </div>
+            <div className="py-2 flex flex-col gap-1">
+              <div className="rounded-full h-3 w-full bg-accent relative overflow-hidden">
+                {user.data?.used_note_storage !== undefined &&
+                  user.data?.total_note_storage !== undefined && (
+                    <>
+                      <div
+                        className={cn(
+                          "rounded-full h-3",
+                          user.data?.used_note_storage >=
+                            user.data?.total_note_storage
+                            ? "bg-red-500"
+                            : "bg-primary"
+                        )}
+                        style={{
+                          width: `${Math.min(
+                            (user.data?.used_note_storage /
+                              user.data?.total_note_storage) *
+                              100,
+                            100
+                          )}%`,
+                        }}
+                      />
+                    </>
                   )}
-                  style={{
-                    width: `${Math.min(
-                      (user.data?.used_note_storage /
-                        user.data?.total_note_storage) *
-                        100,
-                      100
-                    )}%`,
-                  }}
-                />
-              </>
-            )}
-        </div>
-      </div>
+              </div>
+            </div>
+          </>
+        )}
 
       <UpgradeModal>
         <Button className="w-full flex gap-2 mt-4">

@@ -7,7 +7,7 @@ import { createAppUrl } from "../../lib/urlUtils";
 export const UpgradeButton = () => {
   return (
     <Button variant="ok" className="flex gap-2 w-full mt-6" asChild>
-      <Link to={createAppUrl("/upgrade")} target="_blank">
+      <Link to={createAppUrl("/?upgrade=true")} target="_blank">
         Upgrade
         <Pocket className="w-5" />
       </Link>

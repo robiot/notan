@@ -27,20 +27,20 @@ const Alternative: FC<{
       variant="outline"
       onClick={onClick}
       className={cn(
-        "flex justify-between text-base font-normal h-14",
-        selected && "border-primary border-4"
+        "flex justify-between text-sm font-normal h-12",
+        selected && "border-primary border-2"
       )}
     >
-      <span>
+      <span className="text-sm">
         {alternative.title}
         {alternative.save_percentage && (
-          <span className="bg-green-600 text-sm ml-2 rounded px-1 py-[2px] font-bold">
+          <span className="bg-green-700 text-xs ml-2 rounded px-1 py-[2px] font-bold">
             Save {alternative.save_percentage}%
           </span>
         )}
       </span>
       {alternative.period == "month" && (
-        <span className="font-medium">
+        <span className="font-bold">
           ${price.price / 100} / {alternative.period}
         </span>
       )}
@@ -51,7 +51,7 @@ const Alternative: FC<{
             ${price.price / 100} / {alternative.period}
           </span>
           <Separator orientation="vertical" />
-          <span className="font-medium">${price.price / 100 / 12} / month</span>
+          <span className="font-bold">${price.price / 100 / 12} / month</span>
         </div>
       )}
     </Button>
@@ -91,7 +91,7 @@ export const BuyFlowPlanSelect: FC<{
           {buyFlow.flowState.title}
         </DialogTitle>
       </DialogHeader>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         {alternatives?.map((alternative) => (
           <Alternative
             key={`sub_alternative_${alternative.key}`}

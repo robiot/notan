@@ -27,7 +27,7 @@ export const BuyFlowSuccessPage = () => {
             className="mt-12 px-12 w-fit"
             onClick={() => {
               // remove all query params
-              router.push("/upgrade");
+              router.push("/");
             }}
           >
             Done

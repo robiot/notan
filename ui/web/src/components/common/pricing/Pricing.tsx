@@ -27,7 +27,7 @@ export const PricingGrid = () => {
           gradient="blue"
         >
           <Button variant="inverted" className="w-full font-bold" asChild>
-            <Link href={enviroment.APP_URL + "/upgrade"}>Upgrade</Link>
+            <Link href={enviroment.APP_URL + "/?upgrade=true"}>Upgrade</Link>
           </Button>
         </SubscriptionCard>
         <SubscriptionCard
@@ -37,7 +37,7 @@ export const PricingGrid = () => {
           gradient="purple"
         >
           <Button variant="inverted" className="w-full font-bold" asChild>
-            <Link href={enviroment.APP_URL + "/upgrade"}>Upgrade</Link>
+            <Link href={enviroment.APP_URL + "/?upgrade=true"}>Upgrade</Link>
           </Button>
         </SubscriptionCard>
       </div>
