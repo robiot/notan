@@ -9,7 +9,7 @@ import { ViewNotePage } from "./pages/notes/view/ViewNotePage";
 export const Popup = () => {
   const location = useLocation();
 
-  const overwriteLocation: undefined | string = undefined;
+  const overwriteLocation: undefined | string = "/notes/create";
 
   return (
     <Routes location={overwriteLocation ?? location.pathname}>

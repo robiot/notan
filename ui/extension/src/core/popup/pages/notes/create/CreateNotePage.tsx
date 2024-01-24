@@ -6,6 +6,7 @@ import { ApiResponse, hasError } from "@notan/utils/api";
 import { Topbar } from "@popup/components/app/Topbar";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { Link2Off } from "lucide-react";
 import { FC } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -75,15 +76,20 @@ const CreateNoteContent: FC<{ values: NoteFormSchemaType }> = ({ values }) => {
           <Button variant="ghost" size="lg" asChild>
             <Link to="/">BACK</Link>
           </Button>
-          <Button
-            variant="ghost"
-            size="lg"
-            loading={createNote.isPending}
-            onClick={form.handleSubmit((data) => {
-              createNote.mutate(data);
-            })}>
-            CREATE
-          </Button>
+          <div className="flex gap-1">
+            <Button variant="ghost" size="icon">
+              <Link2Off className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="lg"
+              loading={createNote.isPending}
+              onClick={form.handleSubmit((data) => {
+                createNote.mutate(data);
+              })}>
+              CREATE
+            </Button>
+          </div>
         </div>
       </Topbar>
 

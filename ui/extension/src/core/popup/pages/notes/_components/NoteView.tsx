@@ -1,5 +1,6 @@
+import { Button } from "@notan/components/ui/button";
 import { Separator } from "@notan/components/ui/separator";
-import { Link as LinkIcon } from "lucide-react";
+import { Link as LinkIcon, Plus } from "lucide-react";
 import { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -51,6 +52,13 @@ export const NoteView: FC<{
           </Link>
 
           <URLInput placeholder="URL" maxLength={200} currentValue={watch("url")} {...register("url")} />
+        </div>
+
+        <div className="flex items-center gap-5">
+          <span>No tags</span>
+          <Button variant="secondary" size="icon" className="h-6 w-6">
+            <Plus className="w-5 h-5" />
+          </Button>
         </div>
       </div>
 
