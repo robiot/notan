@@ -22,7 +22,7 @@ export const PricingGrid = () => {
         </SubscriptionCard>
         <SubscriptionCard
           title="Plus"
-          price="$3.99/month"
+          price="$8/month"
           perks={SubscrtiptionPerks.plus}
           gradient="blue"
         >
@@ -32,7 +32,7 @@ export const PricingGrid = () => {
         </SubscriptionCard>
         <SubscriptionCard
           title="Premium"
-          price="$9.99/month"
+          price="$12/month"
           perks={SubscrtiptionPerks.premium}
           gradient="purple"
         >
