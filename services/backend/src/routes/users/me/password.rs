@@ -53,20 +53,21 @@ pub async fn handler(
     };
 
     if let Some(password) = user.password {
-        if body.current_password.is_none() {
-            return Err(Error::Unauthorized);
-        }
+        // check if user has password provided in body
+        if let Some(current_password_input) = body.current_password.clone() {
+            let current_password_hash = match PasswordHash::new(&password) {
+                Ok(hash) => hash,
+                Err(_) => return Err(Error::InternalServerError),
+            };
 
-        let current_password_hash = match PasswordHash::new(&password) {
-            Ok(hash) => hash,
-            Err(_) => return Err(Error::InternalServerError),
-        };
-
-        // Check password using argon2
-        if Argon2::default()
-            .verify_password(password.as_bytes(), &current_password_hash)
-            .is_err()
-        {
+            // Check password using argon2
+            if Argon2::default()
+                .verify_password(current_password_input.as_bytes(), &current_password_hash)
+                .is_err()
+            {
+                return Err(Error::Unauthorized);
+            }
+        } else {
             return Err(Error::Unauthorized);
         }
     } else {
