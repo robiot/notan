@@ -1,5 +1,5 @@
 import "@/assets/style/font.css";
-import "./styles/index.css";
+import "@notan/components/styles/globals.css";
 import "./styles/extra.css";
 
 import React from "react";

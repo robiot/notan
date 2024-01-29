@@ -8,8 +8,8 @@ body {
   /* max-width: 360px; */
   /* max-height: 530px; */
   margin: 0;
-
-  @apply bg-background text-foreground;
+  
+  @apply bg-background text-foreground border-0 outline-0;
 }
 
 #app {
@@ -21,26 +21,12 @@ body {
   font-family: "Noto Sans", sans-serif;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  transition: background-color 2147483647s;
-  -webkit-text-fill-color: hsl(var(--secondary-foreground)) !important;
+.transparent-scroll:active::-webkit-scrollbar-thumb,
+.transparent-scroll:focus::-webkit-scrollbar-thumb,
+.transparent-scroll:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  /* Customize the scrollbar width */
-  @apply w-2 h-1;
-}
-
-::-webkit-scrollbar-track {
-  /* Customize the scrollbar track */
-  @apply bg-background;
-}
-
-::-webkit-scrollbar-thumb {
-  /* Customize the scrollbar thumb */
-  @apply bg-accent rounded-full;
+.transparent-scroll::-webkit-scrollbar-thumb {
+    visibility: hidden;
 }

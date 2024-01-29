@@ -24,6 +24,8 @@ export const useOtherNotesForCurrentDomain = (notes: UseQueryResult<Note[], Erro
       return notes.data
         .filter((note) => !notesForCurrentPage.data?.some((n) => n.id === note.id))
         .filter((note) => {
+          if (!note.url) return false;
+
           // url might not be a valid url so check that
           try {
             const noteUrlObject = new URL(note.url);

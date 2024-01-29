@@ -23,6 +23,8 @@ export const useNotesForCurrentPage = (notes: UseQueryResult<Note[], Error>) => 
       const urlWithoutProtocol = urlWithoutHash.split("://")[1];
 
       return notes.data.filter((note) => {
+        if (!note.url) return false;
+
         const noteUrlWithoutHash = note.url.split("#")[0];
         const noteUrlWithoutProtocol = noteUrlWithoutHash.split("://")[1];
 

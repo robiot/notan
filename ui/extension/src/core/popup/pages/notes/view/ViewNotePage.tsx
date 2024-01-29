@@ -39,7 +39,7 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
           title: data.title,
           url: data.url,
           note: data.note,
-          tags: [],
+          tags: data.tags,
           remind_at: undefined,
         })
         .catch((error: AxiosError) => {
@@ -168,8 +168,9 @@ export const ViewNotePage = () => {
         id={id}
         values={{
           title: note.data.title,
-          url: note.data.url,
+          url: note.data.url ?? undefined,
           note: note.data.note,
+          tags: note.data.tags,
         }}
       />
     </>

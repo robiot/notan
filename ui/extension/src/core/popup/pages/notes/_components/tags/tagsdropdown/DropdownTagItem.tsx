@@ -1,0 +1,125 @@
+import { Button } from "@notan/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@notan/components/ui/dropdown-menu";
+import { toast } from "@notan/components/ui/use-toast";
+import { ApiResponse, hasError } from "@notan/utils/api";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { MoreVertical } from "lucide-react";
+import { FC } from "react";
+
+import { UpgradeButton } from "@/core/popup/components/app/UpgradeButton";
+import { useTagByID } from "@/core/popup/hooks/tags/useTagByID";
+import { Tag } from "@/core/popup/hooks/tags/useTags";
+import { api } from "@/core/popup/lib/api";
+import { cn } from "@/core/popup/lib/utils";
+
+import { NoteUseForm } from "../../NoteView";
+import { TagDeleteButton } from "../morebuttons/DeleteButton";
+import { colors, TagView } from "../TagView";
+
+export const DropdownTagItem: FC<{ form: NoteUseForm; tag: Tag; refetch: () => void }> = ({ form, tag, refetch }) => {
+  const tagCustomData = useTagByID(tag.id);
+
+  const updateTag = useMutation({
+    mutationKey: ["updateTag", tag.id],
+    mutationFn: async (color: string) => {
+      console.log("called");
+      const response = await api
+        .patch<ApiResponse<unknown>>(`/tags/${tag.id}`, {
+          color,
+        })
+        .catch((error: AxiosError) => {
+          if (hasError(error.response, "max_tags")) {
+            toast({
+              title: "Max tags reached",
+              description: "Upgrade to edit your tags",
+              action: <UpgradeButton />,
+            });
+          } else {
+            toast({
+              title: "Error",
+              description: "Something went wrong",
+            });
+          }
+        });
+
+      if (!response) return;
+
+      await tagCustomData.refetch();
+      refetch();
+    },
+  });
+
+  return (
+    <DropdownMenuItem
+      key={`tag_${tag.id}`}
+      className="flex gap-3 justify-between cursor-pointer focus:bg-accent/40"
+      onClick={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        console.log("called");
+
+        // only add if not already added
+        if (form.getValues("tags").includes(tag.id)) return;
+
+        form.setValue("tags", [...form.getValues("tags"), tag.id], {
+          shouldDirty: true,
+        });
+      }}>
+      <TagView tag={tag} />
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="min-w-[1.5rem] w-6 h-6"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+            }}>
+            <MoreVertical className="w-5 h-5" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <TagDeleteButton
+            tag={tag}
+            refetch={() => {
+              refetch();
+              form.setValue(
+                "tags",
+                form.getValues("tags").filter((t) => t !== tag.id),
+              );
+            }}
+          />
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Color</DropdownMenuLabel>
+            {Object.entries(colors).map(([colorKey, color]) => (
+              <DropdownMenuItem
+                className="flex gap-3"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+
+                  updateTag.mutate(colorKey);
+                }}>
+                <div className={cn("w-3 h-3 rounded-full", color.style)} />
+                {color.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </DropdownMenuItem>
+  );
+};

@@ -9,7 +9,7 @@ export type Note = {
   note: string;
   tags: string[];
   title: string;
-  url: string;
+  url?: string;
   remind_at: string;
   created_at: string;
 };

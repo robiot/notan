@@ -15,30 +15,29 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { Trash } from "lucide-react";
 import { useRef } from "react";
-import { useParams } from "react-router-dom";
+import { FC } from "react";
 
+import { Tag } from "@/core/popup/hooks/tags/useTags";
 import { api } from "@/core/popup/lib/api";
 
-export const TagDeleteButton = () => {
-  const { id } = useParams();
-
+export const TagDeleteButton: FC<{
+  tag: Tag;
+  refetch: () => void;
+}> = ({ tag, refetch }) => {
   // hacky way of opening, but when using state for open, it wont close when clicking X
   const triggerReference = useRef<HTMLButtonElement>(null);
 
   const deleteTag = useMutation({
-    mutationKey: ["deleteTag", id],
+    mutationKey: ["deleteTag", tag],
     mutationFn: async () => {
-      const response = await api.delete<ApiResponse<unknown>>(`/tags/${id}`).catch((error: AxiosError) => {
+      console.log("called");
+      const response = await api.delete<ApiResponse<unknown>>(`/tags/${tag.id}`).catch((error: AxiosError) => {
         hasError(error.response);
       });
 
       if (!response) return;
 
-      try {
-        console.log("todo");
-        // eslint-disable-next-line no-empty
-      } catch {}
-      // navigate("/");
+      refetch();
     },
   });
 

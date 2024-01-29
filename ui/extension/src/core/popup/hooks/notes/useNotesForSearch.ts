@@ -18,7 +18,7 @@ export const useNotesForSearch = (notes: UseQueryResult<Note[], Error>, search: 
       return notes.data.filter((note) => {
         const title = note.title.toLowerCase();
         const noteText = note.note.toLowerCase();
-        const url = note.url.toLowerCase();
+        const url = note.url?.toLowerCase() ?? "";
 
         const searchLower = search.toLowerCase();
 

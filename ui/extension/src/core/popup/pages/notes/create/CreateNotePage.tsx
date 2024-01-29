@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@notan/components/ui/button";
@@ -35,7 +36,7 @@ const CreateNoteContent: FC<{ values: NoteFormSchemaType }> = ({ values }) => {
           title: data.title,
           url: data.url,
           note: data.note,
-          tags: [],
+          tags: data.tags,
           remind_at: undefined,
         })
         .catch((error: AxiosError) => {
@@ -123,6 +124,7 @@ export const CreateNotePage = () => {
         title: getValidTabTitle(tab.data?.title),
         url: getValidTabUrl(tab.data?.url),
         note: "",
+        tags: [],
       }}
     />
   );
