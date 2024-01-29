@@ -6,5 +6,6 @@ pub struct Tag {
     pub id: String,
     pub user_id: String,
     pub name: String,
+    pub color: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }

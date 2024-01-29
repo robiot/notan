@@ -3,7 +3,8 @@ use std::sync::Arc;
 use crate::{
     error::{Error, Result},
     routes::ResponseError,
-    state::AppState, schemas,
+    schemas,
+    state::AppState,
 };
 
 use super::limits::Limits;
@@ -153,92 +154,137 @@ pub fn validate_note_body(note: String, limits: Limits) -> Result<()> {
     Ok(())
 }
 
-// validate url
-pub fn validate_url(url: String) -> Result<()> {
-    // check if url is empty
-    if url.is_empty() {
+pub fn validate_tag_name(tag: String) -> Result<()> {
+    // check if tag name is empty
+    if tag.is_empty() {
         return Err(Error::UnprocessableEntity(ResponseError {
-            message: "Url is empty".to_string(),
-            name: "url_empty".to_string(),
+            message: "Tag name is empty".to_string(),
+            name: "tag_name_empty".to_string(),
         }));
     }
-    // check if url is too long
-    if url.len() > 250 {
+
+    if tag.len() > 30 as usize {
         return Err(Error::UnprocessableEntity(ResponseError {
-            message: "Url is too long".to_string(),
-            name: "url_long".to_string(),
+            message: "Note is too long".to_string(),
+            name: "tag_name_long".to_string(),
         }));
     }
 
     Ok(())
 }
 
+pub fn validate_tag_color(color: String) -> Result<()> {
+    // check is color is empty, then check that its a valid color, only red, orange, yellow, green, blue, purple, pink, gray
+    if color.is_empty() {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Tag color is empty".to_string(),
+            name: "tag_color_empty".to_string(),
+        }));
+    }
+
+    let colors: Vec<&str> = vec!["red", "orange", "green", "blue", "purple", "pink", "gray"];
+
+    // check if color is valid
+    if !colors.contains(&color.as_str()) {
+        return Err(Error::UnprocessableEntity(ResponseError {
+            message: "Tag color is invalid".to_string(),
+            name: "tag_color_invalid".to_string(),
+        }));
+    }
+    Ok(())
+}
+
+// validate url
+pub fn validate_url(url: Option<String>) -> Result<()> {
+    if let Some(url) = url {
+        // check if url is empty
+        if url.is_empty() {
+            return Err(Error::UnprocessableEntity(ResponseError {
+                message: "Url is empty".to_string(),
+                name: "url_empty".to_string(),
+            }));
+        }
+        // check if url is too long
+        if url.len() > 250 {
+            return Err(Error::UnprocessableEntity(ResponseError {
+                message: "Url is too long".to_string(),
+                name: "url_long".to_string(),
+            }));
+        }
+    }
+
+    Ok(())
+}
+
 pub async fn validate_url_usage(
-    url: String,
+    url: Option<String>,
     limits: Limits,
     user_id: String,
     state: &Arc<AppState>,
 ) -> Result<()> {
-    // check if url is empty
-    let url = match url::Url::parse(&url) {
-        Ok(url) => url,
-        Err(_) => {
-            return Err(Error::UnprocessableEntity(ResponseError {
-                message: "Url is invalid".to_string(),
-                name: "url_invalid".to_string(),
-            }));
-        }
-    };
-    let domain = match url.domain() {
-        Some(domain) => domain,
-        None => {
-            return Err(Error::UnprocessableEntity(ResponseError {
-                message: "Url is invalid".to_string(),
-                name: "url_invalid".to_string(),
-            }));
-        }
-    };
-
-    if let Some(max_per_domain) = limits.max_per_domain {
-        let mut count: i32 = 0;
-
-        let notes = sqlx::query_as::<sqlx::Postgres, schemas::note::Note>(
-            r#"SELECT * FROM public.notes WHERE user_id = $1"#,
-        )
-        .bind(user_id.clone())
-        .fetch_all(&state.db)
-        .await?;
-
-        for note in notes {
-            let note_url = match url::Url::parse(&note.url) {
-                Ok(url) => url,
-                Err(_) => {
-                    return Err(Error::UnprocessableEntity(ResponseError {
-                        message: "Url is invalid".to_string(),
-                        name: "url_invalid".to_string(),
-                    }));
-                }
-            };
-            let note_domain = match note_url.domain() {
-                Some(domain) => domain,
-                None => {
-                    return Err(Error::UnprocessableEntity(ResponseError {
-                        message: "Url is invalid".to_string(),
-                        name: "url_invalid".to_string(),
-                    }));
-                }
-            };
-
-            if domain == note_domain {
-                count += 1;
+    if let Some(url) = url {
+        // check if url is empty
+        let url = match url::Url::parse(&url) {
+            Ok(url) => url,
+            Err(_) => {
+                return Err(Error::UnprocessableEntity(ResponseError {
+                    message: "Url is invalid".to_string(),
+                    name: "url_invalid".to_string(),
+                }));
             }
-        }
+        };
+        let domain = match url.domain() {
+            Some(domain) => domain,
+            None => {
+                return Err(Error::UnprocessableEntity(ResponseError {
+                    message: "Url is invalid".to_string(),
+                    name: "url_invalid".to_string(),
+                }));
+            }
+        };
 
-        if count >= max_per_domain {
-            return Err(Error::UnprocessableEntity(ResponseError {
-                message: "Limit has been reached for domain".to_string(),
-                name: "max_notes_for_domain".to_string(),
-            }));
+        if let Some(max_per_domain) = limits.max_per_domain {
+            let mut count: i32 = 0;
+
+            let notes = sqlx::query_as::<sqlx::Postgres, schemas::note::Note>(
+                r#"SELECT * FROM public.notes WHERE user_id = $1"#,
+            )
+            .bind(user_id.clone())
+            .fetch_all(&state.db)
+            .await?;
+
+            for note in notes {
+                if let Some(note_url) = note.url {
+                    let note_url = match url::Url::parse(&note_url) {
+                        Ok(url) => url,
+                        Err(_) => {
+                            return Err(Error::UnprocessableEntity(ResponseError {
+                                message: "Url is invalid".to_string(),
+                                name: "url_invalid".to_string(),
+                            }));
+                        }
+                    };
+                    let note_domain = match note_url.domain() {
+                        Some(domain) => domain,
+                        None => {
+                            return Err(Error::UnprocessableEntity(ResponseError {
+                                message: "Url is invalid".to_string(),
+                                name: "url_invalid".to_string(),
+                            }));
+                        }
+                    };
+                    if domain == note_domain {
+                        count += 1;
+                    }
+                }
+            }
+
+            if count >= max_per_domain {
+                return Err(Error::UnprocessableEntity(ResponseError {
+                    message: "Limit has been reached for domain".to_string(),
+                    name: "max_notes_for_domain".to_string(),
+                }));
+            }
         }
     }
 

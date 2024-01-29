@@ -5,7 +5,7 @@ use crate::{
     schemas,
     state::AppState,
     utils::{
-        database::{tags::connect_tags_to_note, notes::get_note_count},
+        database::{notes::get_note_count, tags::connect_tags_to_note},
         limits,
         validation::{validate_note_body, validate_title, validate_url, validate_url_usage},
     },
@@ -15,11 +15,18 @@ use super::NoteDataBody;
 
 use {axum::extract::State, axum::Json, hyper::HeaderMap, hyper::StatusCode, std::sync::Arc};
 
+// body
+
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct NotePostResponse {
+    id: String,
+}
+
 pub async fn handler(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
     Json(body): Json<NoteDataBody>,
-) -> Result<Response<bool>> {
+) -> Result<Response<NotePostResponse>> {
     let id = check_auth(headers.clone(), state.clone()).await?;
 
     let limits = limits::get_limits(id.clone(), state.clone()).await?;
@@ -56,5 +63,8 @@ pub async fn handler(
 
     connect_tags_to_note(note.id.clone(), body.tags.clone(), &state.db).await?;
 
-    Ok(Response::new_success(StatusCode::OK, None))
+    Ok(Response::new_success(
+        StatusCode::OK,
+        Some(NotePostResponse { id: note.id }),
+    ))
 }

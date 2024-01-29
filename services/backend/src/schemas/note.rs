@@ -6,7 +6,7 @@ pub struct Note {
     pub id: String,
     pub user_id: String,
     pub title: String,
-    pub url: String,
+    pub url: Option<String>,
     pub note: String,
     pub remind_at: Option<chrono::DateTime<chrono::Utc>>,
     pub created_at: chrono::DateTime<chrono::Utc>,

@@ -107,6 +107,7 @@ url: http://{}:{}
         .nest("/auth", routes::auth::router(app_state.clone()))
         .nest("/users", routes::users::router(app_state.clone()))
         .nest("/notes", routes::notes::router(app_state.clone()))
+        .nest("/tags", routes::tags::router(app_state.clone()))
         .nest("/payments", routes::payments::router(app_state.clone()))
         .nest("/updates", routes::updates::router(app_state.clone()))
         .fallback(routes::not_found::handler)

@@ -13,18 +13,12 @@ pub mod post;
 pub mod id;
 
 #[derive(Serialize)]
-pub struct TagItem {
-    pub id: String,
-    pub name: String,
-}
-
-#[derive(Serialize)]
 pub struct NotesGetResponseItem {
     pub id: String,
     pub title: String,
-    pub url: String,
+    pub url: Option<String>,
     pub note: String,
-    pub tags: Vec<TagItem>,
+    pub tags: Vec<String>,
     pub remind_at: Option<sqlx::types::chrono::DateTime<Utc>>,
     pub created_at: sqlx::types::chrono::DateTime<Utc>,
 }
@@ -32,7 +26,7 @@ pub struct NotesGetResponseItem {
 #[derive(Serialize, Deserialize)]
 pub struct NoteDataBody {
     pub title: String,
-    pub url: String,
+    pub url: Option<String>,
     pub note: String,
     pub tags: Vec<String>,
     pub remind_at: Option<sqlx::types::chrono::DateTime<Utc>>,
