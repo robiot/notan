@@ -43,11 +43,18 @@ export const TagDeleteButton: FC<{
 
   return (
     <Dialog>
-      <DialogTrigger ref={triggerReference} className="hidden" />
+      <DialogTrigger
+        ref={triggerReference}
+        className="hidden"
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      />
       <DropdownMenuItem
         className="flex gap-3"
         onClick={(event) => {
           event.preventDefault();
+          event.stopPropagation();
 
           triggerReference.current?.click();
         }}>
@@ -63,7 +70,13 @@ export const TagDeleteButton: FC<{
         </DialogHeader>
         <DialogFooter className="flex flex-row w-full items-center justify-center gap-2">
           <DialogClose asChild>
-            <Button variant="ghost" size="lg" className="w-32">
+            <Button
+              variant="ghost"
+              size="lg"
+              className="w-32"
+              onClick={(event) => {
+                event.stopPropagation();
+              }}>
               Cancel
             </Button>
           </DialogClose>
@@ -72,7 +85,10 @@ export const TagDeleteButton: FC<{
             size="lg"
             className="w-32"
             loading={deleteTag.isPending}
-            onClick={() => deleteTag.mutate()}>
+            onClick={(event) => {
+              event.stopPropagation();
+              deleteTag.mutate();
+            }}>
             Delete
           </Button>
         </DialogFooter>

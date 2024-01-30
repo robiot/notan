@@ -32,7 +32,7 @@ const AddTagSchema = z.object({
 export type AddTagSchemaType = z.infer<typeof AddTagSchema>;
 
 export const AddTagButton: FC<{
-  refetch: () => void;
+  refetch: () => Promise<void>;
 }> = ({ refetch }) => {
   // hacky way of opening, but when using state for open, it wont close when clicking X
   const triggerReference = useRef<HTMLButtonElement>(null);
@@ -67,7 +67,7 @@ export const AddTagButton: FC<{
       if (!response) return;
 
       closeReference.current?.click();
-      refetch();
+      await refetch();
     },
   });
 
@@ -89,14 +89,14 @@ export const AddTagButton: FC<{
           <DialogTitle>Create tag</DialogTitle>
         </DialogHeader>
 
-        <form className="my-2">
+        <div className="my-2">
           <Input
             placeholder="Name"
             inputSize="small"
             {...form.register("name")}
             error={form.formState.errors.name?.message}
           />
-        </form>
+        </div>
         <DialogFooter className="flex flex-row w-full items-center justify-center gap-2">
           <DialogClose asChild>
             <Button variant="ghost" size="lg" className="w-32" ref={closeReference}>

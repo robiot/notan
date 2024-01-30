@@ -8,55 +8,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@notan/components/ui/dropdown-menu";
-import { toast } from "@notan/components/ui/use-toast";
-import { ApiResponse, hasError } from "@notan/utils/api";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { MoreVertical } from "lucide-react";
 import { FC } from "react";
 
-import { UpgradeButton } from "@/core/popup/components/app/UpgradeButton";
 import { useTagByID } from "@/core/popup/hooks/tags/useTagByID";
 import { Tag } from "@/core/popup/hooks/tags/useTags";
-import { api } from "@/core/popup/lib/api";
-import { cn } from "@/core/popup/lib/utils";
 
 import { NoteUseForm } from "../../NoteView";
 import { TagDeleteButton } from "../morebuttons/DeleteButton";
 import { colors, TagView } from "../TagView";
+import { ColorItem } from "./ColorItem";
 
-export const DropdownTagItem: FC<{ form: NoteUseForm; tag: Tag; refetch: () => void }> = ({ form, tag, refetch }) => {
+export const DropdownTagItem: FC<{ form: NoteUseForm; tag: Tag; refetch: () => Promise<void> }> = ({
+  form,
+  tag,
+  refetch,
+}) => {
   const tagCustomData = useTagByID(tag.id);
-
-  const updateTag = useMutation({
-    mutationKey: ["updateTag", tag.id],
-    mutationFn: async (color: string) => {
-      console.log("called");
-      const response = await api
-        .patch<ApiResponse<unknown>>(`/tags/${tag.id}`, {
-          color,
-        })
-        .catch((error: AxiosError) => {
-          if (hasError(error.response, "max_tags")) {
-            toast({
-              title: "Max tags reached",
-              description: "Upgrade to edit your tags",
-              action: <UpgradeButton />,
-            });
-          } else {
-            toast({
-              title: "Error",
-              description: "Something went wrong",
-            });
-          }
-        });
-
-      if (!response) return;
-
-      await tagCustomData.refetch();
-      refetch();
-    },
-  });
 
   return (
     <DropdownMenuItem
@@ -104,18 +72,14 @@ export const DropdownTagItem: FC<{ form: NoteUseForm; tag: Tag; refetch: () => v
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuLabel>Color</DropdownMenuLabel>
-            {Object.entries(colors).map(([colorKey, color]) => (
-              <DropdownMenuItem
-                className="flex gap-3"
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-
-                  updateTag.mutate(colorKey);
-                }}>
-                <div className={cn("w-3 h-3 rounded-full", color.style)} />
-                {color.name}
-              </DropdownMenuItem>
+            {Object.entries(colors).map((color) => (
+              <ColorItem
+                color={color}
+                tag={tag}
+                refetch={async () => {
+                  await Promise.all([refetch(), tagCustomData.refetch()]);
+                }}
+              />
             ))}
           </DropdownMenuGroup>
         </DropdownMenuContent>

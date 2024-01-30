@@ -21,14 +21,21 @@ export const TagsDropdown: FC<{ form: NoteUseForm }> = ({ form }) => {
   return (
     <>
       {tags.data.map((tag) => (
-        <DropdownTagItem key={`tag_${tag.id}`} form={form} tag={tag} refetch={() => tags.refetch()} />
+        <DropdownTagItem
+          key={`tag_${tag.id}`}
+          form={form}
+          tag={tag}
+          refetch={async () => {
+            await tags.refetch();
+          }}
+        />
       ))}
 
       {tags.data.length > 0 && <DropdownMenuSeparator />}
 
       <AddTagButton
-        refetch={() => {
-          tags.refetch();
+        refetch={async () => {
+          await tags.refetch();
         }}
       />
     </>

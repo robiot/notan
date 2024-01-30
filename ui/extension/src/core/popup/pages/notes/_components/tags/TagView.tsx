@@ -6,6 +6,7 @@ import { useTagByID } from "@/core/popup/hooks/tags/useTagByID";
 import { Tag } from "@/core/popup/hooks/tags/useTags";
 import { cn } from "@/core/popup/lib/utils";
 
+export type Color = [string, { style: string; name: string }];
 export const colors = {
   purple: { style: "bg-purple-700 text-white", name: "Purple" },
   green: { style: "bg-green-700 text-white", name: "Green" },
@@ -25,7 +26,11 @@ export const TagView: FC<{ children?: ReactNode; tag: Tag }> = ({ children, tag 
     );
 
   return (
-    <div className={cn("px-1 py-[0.1rem] rounded text-sm flex gap-1 items-center", colors[tag.color].style)}>
+    <div
+      className={cn(
+        "px-1 py-[0.1rem] rounded text-sm flex gap-1 items-center whitespace-nowrap",
+        colors[tag.color].style,
+      )}>
       {tag.name}
       {children}
     </div>
