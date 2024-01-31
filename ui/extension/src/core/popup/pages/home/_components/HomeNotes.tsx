@@ -1,8 +1,9 @@
+import { Button } from "@notan/components/ui/button";
 import { Spinner } from "@notan/components/ui/spinner";
 import { FC } from "react";
-import { Link } from "react-router-dom";
 
 import { useCurrentTabInfo } from "@/core/popup/hooks/generic/useCurrentTabInfo";
+import { useCreateNote } from "@/core/popup/hooks/notes/useCreateNote";
 import { useNotes } from "@/core/popup/hooks/notes/useNotes";
 import { useOtherNotesForCurrentDomain } from "@/core/popup/hooks/notes/useNotesForCurrentDomain";
 import { useNotesForCurrentPage } from "@/core/popup/hooks/notes/useNotesForCurrentPage";
@@ -15,6 +16,7 @@ import { NotesOnCurrentPage } from "./NotesOnCurrentPage";
 export const HomeNotes: FC<{ search: string }> = ({ search }) => {
   const notes = useNotes();
   const currentTab = useCurrentTabInfo();
+  const createNote = useCreateNote();
 
   const notesCurrentPage = useNotesForCurrentPage(notes);
   const notesDomain = useOtherNotesForCurrentDomain(notes);
@@ -41,9 +43,15 @@ export const HomeNotes: FC<{ search: string }> = ({ search }) => {
       {(!notesCurrentPage.data || notesCurrentPage.data.length === 0) && (
         <div className="flex items-center mt-2 gap-4 flex-col">
           <span className="text-center text-base">You don't have any notes for this page 😒.</span>
-          <Link to={"/notes/create"} className="text-center text-sm text-blue-500">
+          <Button
+            className="text-center text-sm text-blue-500 h-fit p-0 hover:bg-transparent"
+            variant="ghost"
+            loading={createNote.isPending}
+            onClick={() => {
+              createNote.mutate();
+            }}>
             Create one
-          </Link>
+          </Button>
         </div>
       )}
 

@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { UseQueryResult } from "@tanstack/react-query";
 
+import { useTags } from "../tags/useTags";
 import { Note } from "./useNotes";
 
 export const useNotesForSearch = (notes: UseQueryResult<Note[], Error>, search: string) => {
+  const tags = useTags();
+
   return useQuery({
     queryKey: ["notesForSearch", notes.data, search],
     enabled: notes.data !== undefined && !!search,

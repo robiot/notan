@@ -1,18 +1,24 @@
 import { Button } from "@notan/components/ui/button";
-import { Input } from "@notan/components/ui/input";
 import { Topbar } from "@popup/components/app/Topbar";
 import { User } from "lucide-react";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
 import { createAppUrl } from "../../lib/urlUtils";
 import { CreateNoteButton } from "./_components/buttons/CreateNoteButton";
 import { HomeNotes } from "./_components/HomeNotes";
+import { HomeSearch } from "./_components/search/HomeSearch";
+
+type Data = {
+  search: string;
+};
+
+export type HomeForm = UseFormReturn<Data, any, undefined>;
 
 export const HomePage = () => {
-  const form = useForm<{ search: string }>();
+  const form = useForm<Data>();
 
   const [search] = useDebounce(form.watch("search"), 300);
 
@@ -28,12 +34,7 @@ export const HomePage = () => {
             <User />
           </Link>
         </Button>
-        <Input
-          inputSize="small"
-          placeholder="Search notes, use * to show all"
-          className="w-full focus-visible:ring-0"
-          {...form.register("search")}
-        />
+        <HomeSearch form={form} />
 
         <CreateNoteButton />
       </Topbar>
