@@ -21,37 +21,40 @@ export const HomeSearch: FC<{ form: HomeForm }> = ({ form }) => {
       onOpenChange={() => {
         document.body.style.pointerEvents = "";
       }}>
-      <div className="flex relative w-full">
+      <div className="flex relative flex-1">
         <DropdownMenuTrigger className="absolute h-full w-full -z-10" />
         <Input
           type="text"
           autoComplete="off"
           inputSize="small"
-          placeholder="Search notes, use * to show all"
+          placeholder="Search notes by title, content, or tag"
           className="w-full focus-visible:ring-0"
-          onFocus={() => {
+          onClick={() => {
             console.log("called");
             setDropdownOpen(true);
             form.setFocus("search");
             document.body.style.pointerEvents = "";
           }}
           onBlur={() => {
-            setDropdownOpen(false);
+            form.setFocus("search");
           }}
           {...form.register("search")}
         />
       </div>
+
+      {/* ehhh this needs to be thought about */}
+      {/* save in search like, view:all, or just hidden page?!?*/}
       <DropdownMenuContent
+        tabIndex={undefined}
+        className="w-48 mt-0"
         onInteractOutside={() => {
-          //   setDropdownOpen(false);
+          setDropdownOpen(false);
           console.log("close buddy");
         }}>
-        <DropdownMenuLabel>你来了</DropdownMenuLabel>
+        <DropdownMenuLabel>Select a view</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
+        <DropdownMenuItem>All notes</DropdownMenuItem>
+        <DropdownMenuItem>Tag</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
