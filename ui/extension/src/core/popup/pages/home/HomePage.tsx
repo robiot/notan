@@ -1,13 +1,14 @@
 import { Button } from "@notan/components/ui/button";
 import { Input } from "@notan/components/ui/input";
 import { Topbar } from "@popup/components/app/Topbar";
-import { Plus, User } from "lucide-react";
+import { User } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
 import { createAppUrl } from "../../lib/urlUtils";
+import { CreateNoteButton } from "./_components/buttons/CreateNoteButton";
 import { HomeNotes } from "./_components/HomeNotes";
 
 export const HomePage = () => {
@@ -33,11 +34,8 @@ export const HomePage = () => {
           className="w-full focus-visible:ring-0"
           {...form.register("search")}
         />
-        <Button variant="ghost" size="icon" asChild>
-          <Link to="/notes/create">
-            <Plus />
-          </Link>
-        </Button>
+
+        <CreateNoteButton />
       </Topbar>
 
       <div className="flex flex-col overflow-auto gap-2 p-2 h-full max-h-full">

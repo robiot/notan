@@ -12,6 +12,7 @@ import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Note } from "@/core/popup/hooks/notes/useNotes";
+import { useLastOpenNote } from "@/core/popup/hooks/persist/useLastOpenNote";
 import { faviconFromUrl } from "@/core/popup/lib/favicon";
 import { calculateTimeAgo, cn } from "@/core/popup/lib/utils";
 
@@ -19,6 +20,7 @@ import { TagViewOne } from "../../notes/_components/tags/TagView";
 
 export const NotePreview: FC<{ note: Note }> = ({ note }) => {
   const navigate = useNavigate();
+  const lastOpenNote = useLastOpenNote();
 
   return (
     <ContextMenu>
@@ -33,6 +35,7 @@ export const NotePreview: FC<{ note: Note }> = ({ note }) => {
             onClick={(event) => {
               event.preventDefault();
 
+              lastOpenNote.update(note.id);
               navigate(`/notes/view/${note.id}`);
             }}>
             <div>

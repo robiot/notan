@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { Container } from "@/core/popup/components/app/Container";
 import { UpgradeButton } from "@/core/popup/components/app/UpgradeButton";
+import { useLastOpenNote } from "@/core/popup/hooks/persist/useLastOpenNote";
 import { useUser } from "@/core/popup/hooks/user/useUser";
 import { faviconFromUrl } from "@/core/popup/lib/favicon";
 import { zodRequiredString } from "@/core/popup/lib/zodPresents";
@@ -30,11 +31,21 @@ export const NoteView: FC<{
   form: NoteUseForm;
 }> = ({ form }) => {
   const user = useUser();
+  const lastOpenedNote = useLastOpenNote();
 
   const { register, watch } = form;
 
   return (
-    <div className="overflow-y-scroll">
+    <form
+      className="overflow-y-scroll"
+      onChange={() => {
+        lastOpenedNote.update(lastOpenedNote.id, {
+          title: form.getValues("title"),
+          note: form.getValues("note"),
+          tags: form.getValues("tags"),
+          url: form.getValues("url"),
+        });
+      }}>
       <Container>
         <div className="flex flex-col gap-2 items-center py-4 pt-4">
           <input
@@ -72,7 +83,7 @@ export const NoteView: FC<{
           <TextareaAutosize
             spellCheck="false"
             placeholder="Type a note here"
-            className="flex h-full min-h-[20rem] text-sm bg-transparent w-full focus:outline-none resize-none overflow-hidden"
+            className="flex h-full min-h-[20rem] text-[0.9rem] bg-transparent w-full focus:outline-none resize-none overflow-hidden"
             maxLength={user.data?.max_note_length ?? 300}
             {...register("note")}
           />
@@ -88,6 +99,6 @@ export const NoteView: FC<{
           )}
         </div>
       </Container>
-    </div>
+    </form>
   );
 };

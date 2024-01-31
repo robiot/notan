@@ -3,8 +3,11 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useLastOpenNote } from "@/core/popup/hooks/persist/useLastOpenNote";
+
 export const UnsavedChangesModal: FC<{ loading?: boolean; onSave: () => void }> = ({ loading, onSave }) => {
   const navigate = useNavigate();
+  const lastOpenNote = useLastOpenNote();
 
   return (
     <DialogContent>
@@ -18,6 +21,8 @@ export const UnsavedChangesModal: FC<{ loading?: boolean; onSave: () => void }> 
           size="lg"
           className="w-32"
           onClick={() => {
+            lastOpenNote.clear();
+
             navigate("/");
           }}>
           Discard

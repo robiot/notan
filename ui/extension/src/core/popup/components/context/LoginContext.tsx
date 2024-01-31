@@ -6,12 +6,14 @@ import { FC, ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../hooks/auth/useAuth";
+import { useLastOpenNote } from "../../hooks/persist/useLastOpenNote";
 import { api } from "../../lib/api";
 import { LoadScreen } from "../app/LoadScreen";
 
 export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const lastOpenNote = useLastOpenNote();
 
   const { pathname } = useLocation();
 
@@ -22,7 +24,14 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
       navigate("/auth/login");
       // setIsLoadingAuthCheck(false);
     } else if (pathname.startsWith("/auth") && auth.token) {
-      navigate("/");
+      // kindof weird to have it here, but it works
+      console.log("lastOpenNote.id", lastOpenNote.id);
+
+      if (lastOpenNote.id) {
+        navigate(`/notes/view/${lastOpenNote.id}`);
+      } else {
+        navigate("/");
+      }
       // setIsLoadingAuthCheck(false);
     } else {
       setIsLoadingAuthCheck(false);
@@ -55,7 +64,7 @@ export const LoginContext: FC<{ children: ReactNode }> = ({ children }) => {
     },
   });
 
-  const isLoading = renewSession.isLoading || isLoadingAuthCheck;
+  const isLoading = isLoadingAuthCheck;
 
   return (
     <>

@@ -2,34 +2,44 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@notan/components/ui/button";
 import { Dialog, DialogTrigger } from "@notan/components/ui/dialog";
 import { DropdownMenu, DropdownMenuTrigger } from "@notan/components/ui/dropdown-menu";
+import { Spinner } from "@notan/components/ui/spinner";
 import { toast } from "@notan/components/ui/use-toast";
 import { ApiResponse, hasError } from "@notan/utils/api";
 import { Topbar } from "@popup/components/app/Topbar";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { MoreHorizontal } from "lucide-react";
+import { Link2, Link2Off, MoreHorizontal } from "lucide-react";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { LoadScreen } from "@/core/popup/components/app/LoadScreen";
 import { UpgradeButton } from "@/core/popup/components/app/UpgradeButton";
+import { useLastOpenNote } from "@/core/popup/hooks/persist/useLastOpenNote";
 import { api } from "@/core/popup/lib/api";
 
 import { NoteFormSchema, NoteFormSchemaType, NoteView } from "../_components/NoteView";
 import { MoreDropdown } from "./_components/MoreDropdown";
 import { UnsavedChangesModal } from "./_components/UnsavedChangesModal";
 
-const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id }) => {
+const ViewNoteContent: FC<{
+  values: NoteFormSchemaType;
+  id: string;
+
+  defaultDirty: boolean;
+}> = ({ values, id, defaultDirty }) => {
   const navigate = useNavigate();
+  const lastOpenNote = useLastOpenNote();
 
   const {
     formState: { isDirty, ...formState },
     ...form
   } = useForm<NoteFormSchemaType>({
     resolver: zodResolver(NoteFormSchema),
+
     defaultValues: values,
   });
+
+  const isReallyDirty = isDirty || defaultDirty;
 
   const updateNote = useMutation({
     mutationKey: ["updateNote", id],
@@ -62,7 +72,9 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
 
       if (!response) return;
 
-      navigate("/");
+      // remove data, since it is saved
+      lastOpenNote.update(lastOpenNote.id);
+      form.reset(data);
     },
   });
 
@@ -76,8 +88,10 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
                 variant="ghost"
                 size="lg"
                 onClick={(event) => {
-                  if (!isDirty) {
+                  if (!isReallyDirty) {
                     event.preventDefault();
+
+                    lastOpenNote.clear();
                     navigate("/");
                   }
                 }}>
@@ -87,22 +101,37 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
 
             <UnsavedChangesModal
               onSave={form.handleSubmit((data) => {
+                lastOpenNote.clear();
                 updateNote.mutate(data);
+
+                navigate("/");
               })}
               loading={updateNote.isPending}
             />
           </Dialog>
 
           <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                console.log(form.getValues("url"));
+
+                if (form.getValues("url") == undefined) {
+                  form.setValue("title", values.title);
+                  form.setValue("url", values.url);
+                } else {
+                  // eslint-disable-next-line unicorn/no-useless-undefined
+                  form.setValue("url", undefined);
+                  form.setValue("title", "");
+                }
+              }}>
+              {form.watch("url") !== undefined ? <Link2Off className="h-5 w-5" /> : <Link2 className="h-5 w-5" />}
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  loading={updateNote.isPending}
-                  onClick={form.handleSubmit((data) => {
-                    updateNote.mutate(data);
-                  })}>
+                <Button variant="ghost" size="icon">
                   <MoreHorizontal />
                 </Button>
               </DropdownMenuTrigger>
@@ -113,7 +142,7 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
               variant="ghost"
               size="lg"
               loading={updateNote.isPending}
-              disabled={!isDirty}
+              disabled={!isReallyDirty}
               onClick={form.handleSubmit((data) => {
                 updateNote.mutate(data);
               })}>
@@ -135,6 +164,8 @@ const ViewNoteContent: FC<{ values: NoteFormSchemaType; id }> = ({ values, id })
 
 export const ViewNotePage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const lastOpenNote = useLastOpenNote();
 
   const note = useQuery({
     queryKey: ["note", id],
@@ -150,8 +181,15 @@ export const ViewNotePage = () => {
           }>
         >(`/notes/${id}`)
         .catch((error: AxiosError) => {
-          // error if generic error
-          hasError(error.response);
+          if (hasError(error.response, "not_found")) {
+            lastOpenNote.clear();
+            navigate("/");
+          } else {
+            toast({
+              title: "Error",
+              description: "An unknown error occurred while fetching the note",
+            });
+          }
         });
 
       if (!response) return;
@@ -160,18 +198,27 @@ export const ViewNotePage = () => {
     },
   });
 
-  if (note.isFetching || !note.data) return <LoadScreen loading />;
+  if (lastOpenNote.data == undefined && (note.isFetching || !note.data))
+    return (
+      <div className="flex flex-col items-center">
+        <Topbar />
+        <Spinner size="sm" className=" mt-3" />
+      </div>
+    );
 
   return (
     <>
       <ViewNoteContent
         id={id}
-        values={{
-          title: note.data.title,
-          url: note.data.url ?? undefined,
-          note: note.data.note,
-          tags: note.data.tags,
-        }}
+        defaultDirty={lastOpenNote.data !== undefined}
+        values={
+          lastOpenNote.data ?? {
+            title: note.data.title,
+            url: note.data.url ?? undefined,
+            note: note.data.note,
+            tags: note.data.tags,
+          }
+        }
       />
     </>
   );

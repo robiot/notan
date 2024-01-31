@@ -17,11 +17,13 @@ import { Trash } from "lucide-react";
 import { useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { useLastOpenNote } from "@/core/popup/hooks/persist/useLastOpenNote";
 import { api } from "@/core/popup/lib/api";
 
 export const DeleteButton = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const lastOpenNote = useLastOpenNote();
 
   // hacky way of opening, but when using state for open, it wont close when clicking X
   const triggerReference = useRef<HTMLButtonElement>(null);
@@ -35,6 +37,7 @@ export const DeleteButton = () => {
 
       if (!response) return;
 
+      lastOpenNote.clear();
       navigate("/");
     },
   });
