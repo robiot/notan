@@ -8,6 +8,7 @@ import { useNotes } from "@/core/popup/hooks/notes/useNotes";
 import { useOtherNotesForCurrentDomain } from "@/core/popup/hooks/notes/useNotesForCurrentDomain";
 import { useNotesForCurrentPage } from "@/core/popup/hooks/notes/useNotesForCurrentPage";
 import { useNotesForSearch } from "@/core/popup/hooks/notes/useNotesForSearch";
+import { cn } from "@/core/popup/lib/utils";
 
 import { NotesForSearch } from "./NotesForSearch";
 import { NotesOnCurrentDomain } from "./NotesOnCurrentDomain";
@@ -38,26 +39,29 @@ export const HomeNotes: FC<{ search: string }> = ({ search }) => {
 
   if (search) return <NotesForSearch notes={notesSearch.data} />;
 
+  if (notesCurrentPage.data.length === 0 && notesDomain.data.length === 0)
+    return (
+      <div className="flex items-center mt-2 gap-4 flex-col">
+        <span className="text-center text-base">You don't have any notes for this page 😒.</span>
+        <Button
+          className="text-center text-sm text-blue-500 h-fit p-0 hover:bg-transparent"
+          variant="ghost"
+          loading={createNote.isPending}
+          onClick={() => {
+            createNote.mutate();
+          }}>
+          Create one
+        </Button>
+      </div>
+    );
+
   return (
     <>
-      {(!notesCurrentPage.data || notesCurrentPage.data.length === 0) && (
-        <div className="flex items-center mt-2 gap-4 flex-col">
-          <span className="text-center text-base">You don't have any notes for this page 😒.</span>
-          <Button
-            className="text-center text-sm text-blue-500 h-fit p-0 hover:bg-transparent"
-            variant="ghost"
-            loading={createNote.isPending}
-            onClick={() => {
-              createNote.mutate();
-            }}>
-            Create one
-          </Button>
-        </div>
-      )}
-
       <NotesOnCurrentPage notes={notesCurrentPage.data} />
 
-      <NotesOnCurrentDomain notes={notesDomain?.data} currentTab={currentTab.data.url} />
+      <div className={cn(notesCurrentPage.data.length > 0 && "mt-3", "flex flex-col gap-2")}>
+        <NotesOnCurrentDomain notes={notesDomain?.data} currentTab={currentTab.data.url} />
+      </div>
     </>
   );
 };

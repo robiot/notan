@@ -28,7 +28,10 @@ export const NotePreview: FC<{ note: Note }> = ({ note }) => {
         <Button
           variant="ghost"
           title={note.url}
-          className={cn("flex justify-start items-start font-normal gap-3 text-start p-2 bg-card h-fit")}
+          className={cn(
+            "flex justify-start font-normal gap-3 text-start p-2 bg-card h-fit",
+            note.tags.length > 0 || note.note.length > 0 ? "items-start" : "items-center",
+          )}
           asChild>
           <Link
             to={note.url ?? ""}
@@ -39,15 +42,13 @@ export const NotePreview: FC<{ note: Note }> = ({ note }) => {
               navigate(`/notes/view/${note.id}`);
             }}>
             <div>
-              {note.url ? (
-                <img src={faviconFromUrl(note.url)} alt="" className="min-w-[1.5rem] w-6 h-6 rounded" />
-              ) : (
-                <></>
-              )}
+              {note.url && <img src={faviconFromUrl(note.url)} alt="" className="min-w-[1.5rem] w-6 h-6 rounded" />}
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 justify-center h-fit">
               <span className="truncate flex-1 w-72">{note.title}</span>
-              <span className="text-sm text-card-foreground/70 truncate flex-1 w-72">{note.note}</span>
+              {note.note.length > 0 && (
+                <span className="text-sm text-card-foreground/70 truncate flex-1 w-72">{note.note}</span>
+              )}
               {note.tags.length > 0 && (
                 <div className="flex h-fit gap-2 w-full max-w-full overflow-x-auto transparent-scroll py-2">
                   {note.tags?.map((tag) => (

@@ -9,7 +9,7 @@ export const NotesOnCurrentDomain: FC<{ notes?: Note[]; currentTab: string }> = 
 
   return (
     <>
-      <div className="flex justify-between text-sm py-1 mt-3">
+      <div className="flex justify-between text-sm py-1">
         <span>
           Other notes on <b>{new URL(currentTab).hostname}</b>
         </span>

@@ -27,7 +27,7 @@ export const useLastOpenNote = create(
         }),
     }),
     {
-      name: "auth",
+      name: "last-open-note",
     },
   ),
 );

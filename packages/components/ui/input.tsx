@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, X } from "lucide-react";
 import * as React from "react";
 import { useId } from "react";
 
@@ -35,7 +35,9 @@ export interface InputProperties
     VariantProps<typeof inputVariants> {
   error?: string;
   showPassword?: boolean;
+  hasClearButton?: boolean;
   setShowPassword?: (n: boolean) => void;
+  clearField?: () => void;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProperties>(
@@ -49,6 +51,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProperties>(
       error,
       showPassword,
       setShowPassword,
+      clearField,
       ...properties
     },
     reference
@@ -101,6 +104,18 @@ const Input = React.forwardRef<HTMLInputElement, InputProperties>(
               ) : (
                 <EyeOff className="text-xs" size={"1.3rem"} />
               )}
+            </button>
+          )}
+
+          {clearField !== undefined && (
+            <button
+              className="peer-placeholder-shown:hidden absolute right-0 top-0 h-full flex items-center pr-3"
+              onClick={() => {
+                clearField();
+              }}
+              type="button"
+            >
+              <X className="text-xs" size={"1.3rem"} />
             </button>
           )}
         </div>

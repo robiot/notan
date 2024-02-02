@@ -2,10 +2,12 @@ import { Button } from "@notan/components/ui/button";
 import { Topbar } from "@popup/components/app/Topbar";
 import { User } from "lucide-react";
 import { useEffect } from "react";
+import { FC } from "react/ts5.0";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
+import { useActiveSearch } from "../../hooks/persist/useActiveSearch";
 import { createAppUrl } from "../../lib/urlUtils";
 import { CreateNoteButton } from "./_components/buttons/CreateNoteButton";
 import { HomeNotes } from "./_components/HomeNotes";
@@ -17,14 +19,28 @@ type Data = {
 
 export type HomeForm = UseFormReturn<Data, any, undefined>;
 
-export const HomePage = () => {
-  const form = useForm<Data>();
+export const HomePage: FC<{
+  values: {
+    search?: string;
+  };
+}> = ({ values }) => {
+  const searchFromBefore = useActiveSearch();
+
+  const form = useForm<Data>({
+    defaultValues: {
+      search: searchFromBefore.search,
+    },
+  });
 
   const [search] = useDebounce(form.watch("search"), 300);
 
   useEffect(() => {
     form.setFocus("search");
   }, []);
+
+  useEffect(() => {
+    searchFromBefore.set(form.getValues("search"));
+  }, [form.watch("search")]);
 
   return (
     <>
