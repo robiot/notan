@@ -19,11 +19,7 @@ type Data = {
 
 export type HomeForm = UseFormReturn<Data, any, undefined>;
 
-export const HomePage: FC<{
-  values: {
-    search?: string;
-  };
-}> = ({ values }) => {
+export const HomePage: FC = () => {
   const searchFromBefore = useActiveSearch();
 
   const form = useForm<Data>({
