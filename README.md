@@ -2,7 +2,7 @@
 
 <img width="1886" height="893" alt="image" src="https://github.com/user-attachments/assets/d1bcd358-9665-4f76-b19d-4b3530a365bc" />
 
-A full-stack starter project built around a Chrome Extension, featuring:
+## A full-stack starter project built around a Chrome Extension, featuring:
 * 🔌 Chrome Extension (Manifest V3)
 * 🖥️ Rust backend
 * 💳 Stripe payments integration
